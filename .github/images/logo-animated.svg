@@ -1,0 +1,53 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes drawHouse {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes growBar {
+      0% { transform: scaleY(0); }
+      100% { transform: scaleY(1); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 0.4; }
+    }
+
+    .house-path {
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      animation: drawHouse 2s ease-in-out infinite alternate;
+    }
+
+    .bar {
+      transform-origin: bottom;
+      transform: scaleY(0);
+      animation: growBar 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite alternate;
+    }
+
+    .bar-1 { animation-delay: 0.2s; }
+    .bar-2 { animation-delay: 0.4s; }
+    .bar-3 { animation-delay: 0.6s; }
+
+    .roof-accent {
+      opacity: 0;
+      animation: fadeIn 1.5s ease-in-out infinite alternate;
+      animation-delay: 1s;
+    }
+  </style>
+
+  <defs>
+    <linearGradient id="logo-gradient-anim" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+  
+  <path class="house-path" d="M100 30L170 85V155C170 163.284 163.284 170 155 170H45C36.7157 170 30 163.284 30 155V85L100 30Z" 
+        stroke="url(#logo-gradient-anim)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <rect class="bar bar-1" x="70" y="120" width="15" height="25" rx="7.5" fill="url(#logo-gradient-anim)" />
+  <rect class="bar bar-2" x="92.5" y="100" width="15" height="45" rx="7.5" fill="url(#logo-gradient-anim)" />
+  <rect class="bar bar-3" x="115" y="110" width="15" height="35" rx="7.5" fill="url(#logo-gradient-anim)" />
+
+  <path class="roof-accent" d="M55 85L100 50L145 85" stroke="url(#logo-gradient-anim)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

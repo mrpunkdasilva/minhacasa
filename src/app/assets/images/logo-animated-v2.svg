@@ -1,0 +1,84 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* Gradient Flow Animation */
+    @keyframes gradientFlow {
+      0% { stop-color: #6366F1; }
+      50% { stop-color: #A855F7; }
+      100% { stop-color: #10B981; }
+    }
+
+    /* House Draw Animation */
+    @keyframes advancedDraw {
+      from { stroke-dashoffset: 800; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Organic Bar Growth */
+    @keyframes organicGrow {
+      0% { transform: scaleY(0); opacity: 0; }
+      70% { transform: scaleY(1.1); opacity: 1; }
+      100% { transform: scaleY(1); opacity: 1; }
+    }
+
+    /* Floating Movement */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* Pulse for Roof */
+    @keyframes pulseOpacity {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.5; }
+    }
+
+    .main-structure {
+      stroke-dasharray: 800;
+      stroke-dashoffset: 800;
+      animation: advancedDraw 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .canvas-float {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .bar {
+      transform-origin: 100px 150px; /* Aligned to the base of the bars */
+      opacity: 0;
+      animation: organicGrow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .bar-1 { animation-delay: 1.2s; }
+    .bar-2 { animation-delay: 1.4s; }
+    .bar-3 { animation-delay: 1.6s; }
+
+    .roof-accent {
+      animation: pulseOpacity 3s ease-in-out infinite;
+    }
+
+    .stop-1 { animation: gradientFlow 5s infinite alternate; }
+    .stop-2 { animation: gradientFlow 5s infinite alternate-reverse; }
+  </style>
+
+  <defs>
+    <linearGradient id="advanced-gradient-v2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop class="stop-1" offset="0%" stop-color="#6366F1" />
+      <stop class="stop-2" offset="100%" stop-color="#10B981" />
+    </linearGradient>
+  </defs>
+  
+  <g class="canvas-float">
+    <!-- Advanced House Shell -->
+    <path class="main-structure" 
+          d="M100 35L165 85V150C165 158.284 158.284 165 150 165H50C41.7157 165 35 158.284 35 150V85L100 35Z" 
+          stroke="url(#advanced-gradient-v2)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Interior Growth Bars -->
+    <rect class="bar bar-1" x="72" y="115" width="14" height="25" rx="7" fill="url(#advanced-gradient-v2)" />
+    <rect class="bar bar-2" x="93" y="95" width="14" height="45" rx="7" fill="url(#advanced-gradient-v2)" />
+    <rect class="bar bar-3" x="114" y="105" width="14" height="35" rx="7" fill="url(#advanced-gradient-v2)" />
+
+    <!-- Modern Roof Accent -->
+    <path class="roof-accent" d="M60 85L100 55L140 85" stroke="url(#advanced-gradient-v2)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" />
+  </g>
+</svg>

@@ -1,0 +1,20 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logo-gradient" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366F1"/> <!-- Indigo 500 -->
+      <stop offset="1" stop-color="#10B981"/> <!-- Emerald 500 -->
+    </linearGradient>
+  </defs>
+  
+  <!-- Modern Abstract House Silhouette -->
+  <path d="M100 30L170 85V155C170 163.284 163.284 170 155 170H45C36.7157 170 30 163.284 30 155V85L100 30Z" 
+        stroke="url(#logo-gradient)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Integrated Growth Bars (Rounded 'Pills' style) -->
+  <rect x="70" y="120" width="15" height="25" rx="7.5" fill="url(#logo-gradient)" />
+  <rect x="92.5" y="100" width="15" height="45" rx="7.5" fill="url(#logo-gradient)" />
+  <rect x="115" y="110" width="15" height="35" rx="7.5" fill="url(#logo-gradient)" />
+
+  <!-- Subtle 'Roof' Accent for depth -->
+  <path d="M55 85L100 50L145 85" stroke="url(#logo-gradient)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+</svg>
