@@ -48,7 +48,6 @@ export default function PetsView() {
           ))}
         </div>
 
-        {/* Content */}
         <div className="mt-8 animate-in fade-in duration-500">
           {activeTab === "pets" && <PetList />}
           {activeTab === "health" && <HealthRecords />}

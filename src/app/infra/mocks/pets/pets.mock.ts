@@ -64,7 +64,7 @@ export const petServicesMock: PetService[] = [
     id: "ps-1",
     petId: "p-1",
     serviceType: ServiceType.BATH,
-    date: new Date("2024-03-16"), // Amanhã
+    date: new Date("2024-03-16"),
     price: 80.0,
     location: "Pet Shop Alegria",
   },

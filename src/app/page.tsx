@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import ContextualLoading from "@/app/view/components/contextual-loading/contextual-loading";
 import DashboardView from "@/app/view/pages/dashboard/dashboard.view";
-import Header from "@/app/view/components/header/header";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -18,8 +17,6 @@ export default function Home() {
 
   return (
     <main className="bg-black min-h-screen">
-      <Header />
-
       <DashboardView />
     </main>
   );

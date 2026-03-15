@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/infra/lib/utils";
+import {
+  SidebarProvider,
+  SidebarInset,
+} from "@/app/view/components/ui/sidebar";
+import { AppSidebar } from "@/app/view/components/header/app-sidebar";
+import Header from "@/app/view/components/header/header";
+import { TooltipProvider } from "@/app/view/components/ui/tooltip";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -17,6 +24,7 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
 export const metadata: Metadata = {
   title: "MinhaCasa | Organização e Finanças",
   description:
@@ -74,7 +82,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black h-full`}
       >
-        {children}
+        <TooltipProvider delayDuration={0}>
+          <SidebarProvider defaultOpen={true}>
+            <AppSidebar />
+            <SidebarInset className="flex flex-col bg-black">
+              <Header />
+              <main className="flex-1 overflow-y-auto">{children}</main>
+            </SidebarInset>
+          </SidebarProvider>
+        </TooltipProvider>
       </body>
     </html>
   );

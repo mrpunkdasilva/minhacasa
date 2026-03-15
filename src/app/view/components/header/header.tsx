@@ -1,76 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import LogoComponent from "@/app/view/components/ui/logo/logo";
+import { SidebarTrigger } from "@/app/view/components/ui/sidebar";
+import { Separator } from "@/app/view/components/ui/separator";
 
 export default function Header() {
   return (
-    <header className="relative flex w-full flex-col items-center py-4 bg-black">
-      <div className="flex w-full items-center justify-between px-8 max-w-5xl">
-        <nav className="flex items-center gap-6">
-          <Link
-            href="/"
-            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
-          >
-            Dashboard
-          </Link>
-          <Link
-            href="/invoices"
-            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
-          >
-            Invoices
-          </Link>
-          <Link
-            href="/market"
-            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
-          >
-            Market
-          </Link>
-          <Link
-            href="/infrastructure"
-            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
-          >
-            Infrastructure
-          </Link>
-          <Link
-            href="/wishlist"
-            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
-          >
-            Wishlist
-          </Link>
-          <Link
-            href="/pets"
-            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
-          >
-            Pets
-          </Link>
-          <Link
-            href="/cleaning"
-            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
-          >
-            Cleaning
-          </Link>
-        </nav>
-
-        <Link href="/">
-          <LogoComponent isAnimated={false} w={55} />
-        </Link>
-
-        <div className="flex items-center gap-4">
-          <Link
-            href="/invoices/new"
-            className="text-sm font-medium bg-white text-black px-4 py-2 rounded-md hover:bg-opacity-90 transition-all"
-          >
-            New Invoice
-          </Link>
-        </div>
+    <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-zinc-800 bg-black px-4">
+      <SidebarTrigger className="-ml-1 text-zinc-400 hover:text-white" />
+      <Separator orientation="vertical" className="mr-2 h-4 bg-zinc-800" />
+      <div className="flex-1">
+        <h2 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest">
+          MinhaCasa
+        </h2>
       </div>
-      <div
-        className="absolute bottom-0 left-0 right-0 h-[1px]"
-        style={{
-          background: "linear-gradient(to right, #6366F1, #10B981)",
-        }}
-      />
     </header>
   );
 }

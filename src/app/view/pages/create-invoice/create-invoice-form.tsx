@@ -10,7 +10,7 @@ import {
   CaretUpDown,
 } from "@phosphor-icons/react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/app/infra/lib/utils";
 import { Button } from "@/app/view/components/ui/button";
 import {
   Form,
