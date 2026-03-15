@@ -1,12 +1,13 @@
 import { invoicesMock } from "@/app/infra/mocks/invoice/invoice.mock";
+import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 
 export default function InvoicesListView() {
   const totals = invoicesMock.reduce(
     (acc, inv) => {
       acc.total += inv.price;
-      if (inv.status === "paid") acc.paid += inv.price;
-      if (inv.status === "unpaid") acc.unpaid += inv.price;
-      if (inv.status === "overdue") acc.overdue += inv.price;
+      if (inv.status === InvoiceStatus.paid) acc.paid += inv.price;
+      if (inv.status === InvoiceStatus.unpaid) acc.unpaid += inv.price;
+      if (inv.status === InvoiceStatus.overdue) acc.overdue += inv.price;
       return acc;
     },
     { total: 0, paid: 0, unpaid: 0, overdue: 0 },
@@ -63,14 +64,14 @@ export default function InvoicesListView() {
                 <td className="px-6 py-4 text-center">
                   <span
                     className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
-                      invoice.status === "paid"
+                      invoice.status === InvoiceStatus.paid
                         ? "bg-emerald-500/20 text-emerald-500"
-                        : invoice.status === "overdue"
+                        : invoice.status === InvoiceStatus.overdue
                           ? "bg-rose-500/20 text-rose-500"
                           : "bg-amber-500/20 text-amber-500"
                     }`}
                   >
-                    {invoice.status}
+                    {getStatusLabel(invoice.status)}
                   </span>
                 </td>
               </tr>
@@ -80,6 +81,21 @@ export default function InvoicesListView() {
       </div>
     </div>
   );
+}
+
+function getStatusLabel(status: InvoiceStatus) {
+  switch (status) {
+    case InvoiceStatus.paid:
+      return "Pago";
+    case InvoiceStatus.unpaid:
+      return "Pendente";
+    case InvoiceStatus.overdue:
+      return "Atrasado";
+    case InvoiceStatus.scheduled:
+      return "Agendado";
+    default:
+      return status;
+  }
 }
 
 function StatCard({

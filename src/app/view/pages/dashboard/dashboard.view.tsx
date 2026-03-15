@@ -1,15 +1,16 @@
 import { invoicesMock } from "@/app/infra/mocks/invoice/invoice.mock";
+import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 
 export default function DashboardView() {
   const totalInvoices = invoicesMock.reduce((acc, inv) => acc + inv.price, 0);
   const totalPaid = invoicesMock
-    .filter((inv) => inv.status === "paid")
+    .filter((inv) => inv.status === InvoiceStatus.paid)
     .reduce((acc, inv) => acc + inv.price, 0);
   const totalPending = invoicesMock
-    .filter((inv) => inv.status === "unpaid")
+    .filter((inv) => inv.status === InvoiceStatus.unpaid)
     .reduce((acc, inv) => acc + inv.price, 0);
   const totalOverdue = invoicesMock
-    .filter((inv) => inv.status === "overdue")
+    .filter((inv) => inv.status === InvoiceStatus.overdue)
     .reduce((acc, inv) => acc + inv.price, 0);
 
   return (

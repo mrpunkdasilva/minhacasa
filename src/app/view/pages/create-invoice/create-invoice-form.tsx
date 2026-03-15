@@ -44,27 +44,34 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "O nome deve ter pelo menos 2 caracteres.",
   }),
-  price: z.preprocess(
-    (val) => Number(val),
-    z.number().positive({
-      message: "O preço deve ser um valor positivo.",
-    }),
-  ),
+  price: z.number().positive({
+    message: "O preço deve ser um valor positivo.",
+  }),
   dueDate: z.date({
-    required_error: "A data de vencimento é obrigatória.",
+    message: "A data de vencimento é obrigatória.",
   }),
   description: z.string().optional(),
   category: z.nativeEnum(Category, {
-    required_error: "Selecione uma categoria.",
+    message: "Selecione uma categoria.",
   }),
   status: z.nativeEnum(InvoiceStatus, {
-    required_error: "Selecione um status.",
+    message: "Selecione um status.",
   }),
   isRecurring: z.boolean().default(false),
 });
 
+type FormValues = {
+  name: string;
+  price: number;
+  dueDate: Date;
+  description?: string;
+  category: Category;
+  status: InvoiceStatus;
+  isRecurring?: boolean;
+};
+
 export function CreateInvoiceForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -75,7 +82,7 @@ export function CreateInvoiceForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: FormValues) {
     console.log(values);
   }
 
@@ -111,6 +118,7 @@ export function CreateInvoiceForm() {
                     step="0.01"
                     placeholder="0.00"
                     {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 </FormControl>
                 <FormMessage />
