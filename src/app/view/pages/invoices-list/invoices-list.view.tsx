@@ -1,5 +1,7 @@
 import { invoicesMock } from "@/app/infra/mocks/invoice/invoice.mock";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
 export default function InvoicesListView() {
   const totals = invoicesMock.reduce(
@@ -15,8 +17,17 @@ export default function InvoicesListView() {
 
   return (
     <div className="container mx-auto py-12 px-4 max-w-5xl">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold tracking-tighter">Suas Contas</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+        <h1 className="text-3xl font-bold tracking-tighter text-white">
+          Suas Contas
+        </h1>
+        <Link
+          href="/view/pages/invoices/new"
+          className="bg-emerald-500 hover:bg-emerald-600 text-black px-4 py-2 rounded-md text-sm font-bold transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
+        >
+          <Plus size={16} />
+          Nova Fatura
+        </Link>
       </div>
 
       {/* Statistics Section */}
@@ -47,10 +58,15 @@ export default function InvoicesListView() {
               {invoicesMock.map((invoice) => (
                 <tr
                   key={invoice.uuid}
-                  className="hover:bg-zinc-800/30 transition-colors"
+                  className="hover:bg-zinc-800/30 transition-colors group"
                 >
                   <td className="px-6 py-4 font-medium text-white text-nowrap">
-                    {invoice.name}
+                    <Link
+                      href={`/view/pages/invoices/${invoice.uuid}`}
+                      className="hover:text-emerald-500 transition-colors"
+                    >
+                      {invoice.name}
+                    </Link>
                   </td>
                   <td className="px-6 py-4 text-zinc-400 text-nowrap">
                     {new Date(invoice.dueDate).toLocaleDateString("pt-BR")}
