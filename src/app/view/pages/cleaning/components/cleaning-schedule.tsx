@@ -9,7 +9,9 @@ export default function CleaningSchedule() {
   return (
     <div className="space-y-12">
       {frequencies.map((freq) => {
-        const tasksByFreq = cleaningTasksMock.filter(t => t.frequency === freq);
+        const tasksByFreq = cleaningTasksMock.filter(
+          (t) => t.frequency === freq,
+        );
         if (tasksByFreq.length === 0) return null;
 
         return (
@@ -18,11 +20,11 @@ export default function CleaningSchedule() {
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
               Rotina {freq}
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {tasksByFreq.map((task) => (
-                <div 
-                  key={task.id} 
+                <div
+                  key={task.id}
                   className="bg-zinc-900 border border-zinc-800 rounded-lg p-5 hover:border-zinc-700 transition-all flex flex-col justify-between"
                 >
                   <div>
@@ -37,9 +39,11 @@ export default function CleaningSchedule() {
                       )}
                     </div>
                     <h3 className="text-white font-bold mb-1">{task.title}</h3>
-                    <p className="text-xs text-zinc-500 line-clamp-2">{task.description}</p>
+                    <p className="text-xs text-zinc-500 line-clamp-2">
+                      {task.description}
+                    </p>
                   </div>
-                  
+
                   <div className="mt-6 flex items-center justify-between">
                     <span className="text-[10px] text-zinc-600 font-mono italic">
                       ~ {task.estimatedTime} min

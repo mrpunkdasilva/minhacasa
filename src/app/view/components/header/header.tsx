@@ -8,25 +8,46 @@ export default function Header() {
     <header className="relative flex w-full flex-col items-center py-4 bg-black">
       <div className="flex w-full items-center justify-between px-8 max-w-5xl">
         <nav className="flex items-center gap-6">
-          <Link href="/" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+          <Link
+            href="/"
+            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
+          >
             Dashboard
           </Link>
-          <Link href="/invoices" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+          <Link
+            href="/invoices"
+            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
+          >
             Invoices
           </Link>
-          <Link href="/market" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+          <Link
+            href="/market"
+            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
+          >
             Market
           </Link>
-          <Link href="/infrastructure" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+          <Link
+            href="/infrastructure"
+            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
+          >
             Infrastructure
           </Link>
-          <Link href="/wishlist" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+          <Link
+            href="/wishlist"
+            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
+          >
             Wishlist
           </Link>
-          <Link href="/pets" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+          <Link
+            href="/pets"
+            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
+          >
             Pets
           </Link>
-          <Link href="/cleaning" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+          <Link
+            href="/cleaning"
+            className="text-sm font-medium hover:text-primary transition-colors text-zinc-400"
+          >
             Cleaning
           </Link>
         </nav>
@@ -36,7 +57,10 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <Link href="/invoices/new" className="text-sm font-medium bg-white text-black px-4 py-2 rounded-md hover:bg-opacity-90 transition-all">
+          <Link
+            href="/invoices/new"
+            className="text-sm font-medium bg-white text-black px-4 py-2 rounded-md hover:bg-opacity-90 transition-all"
+          >
             New Invoice
           </Link>
         </div>

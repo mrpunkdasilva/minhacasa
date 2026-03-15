@@ -6,7 +6,7 @@ export const invoiceMock: InvoiceEntity = {
   uuid: "inv-001",
   name: "Energia Elétrica",
   dueDate: new Date("2024-03-20"),
-  price: 150.50,
+  price: 150.5,
   description: "Conta de luz referente ao mês de fevereiro.",
   category: Category.UTILITIES,
   status: InvoiceStatus.unpaid,
@@ -19,7 +19,7 @@ export const invoicesMock: InvoiceEntity[] = [
     uuid: "inv-002",
     name: "Internet Fiber",
     dueDate: new Date("2024-03-15"),
-    price: 99.90,
+    price: 99.9,
     description: "Mensalidade do plano de internet.",
     category: Category.SERVICES,
     status: InvoiceStatus.paid,
@@ -34,5 +34,5 @@ export const invoicesMock: InvoiceEntity[] = [
     category: Category.FOOD,
     status: InvoiceStatus.overdue,
     isRecurring: false,
-  }
+  },
 ];

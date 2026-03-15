@@ -21,8 +21,12 @@ export default function CleaningView() {
       <div className="flex flex-col space-y-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tighter">Gestão de Limpeza</h1>
-            <p className="text-zinc-500 mt-2">Mantenha sua casa em ordem com rotinas e checklists organizados.</p>
+            <h1 className="text-3xl font-bold tracking-tighter">
+              Gestão de Limpeza
+            </h1>
+            <p className="text-zinc-500 mt-2">
+              Mantenha sua casa em ordem com rotinas e checklists organizados.
+            </p>
           </div>
           <button className="bg-white text-black px-6 py-2 rounded-md font-bold text-sm hover:bg-zinc-200 transition-all">
             + Nova Tarefa
@@ -32,11 +36,13 @@ export default function CleaningView() {
         {/* Tabs */}
         <div className="flex border-b border-zinc-800 overflow-x-auto no-scrollbar">
           {tabs.map((tab) => (
-            <button 
+            <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
-                activeTab === tab.id ? "text-emerald-500" : "text-zinc-500 hover:text-white"
+                activeTab === tab.id
+                  ? "text-emerald-500"
+                  : "text-zinc-500 hover:text-white"
               }`}
             >
               {tab.label}

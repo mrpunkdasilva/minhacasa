@@ -15,15 +15,19 @@ export default function MarketView() {
       <div className="flex flex-col space-y-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tighter">Mercado</h1>
-          <p className="text-zinc-500 mt-2">Sua lista de compras, despensa e análise de gastos em um só lugar.</p>
+          <p className="text-zinc-500 mt-2">
+            Sua lista de compras, despensa e análise de gastos em um só lugar.
+          </p>
         </div>
 
         {/* Tabs */}
         <div className="flex border-b border-zinc-800">
-          <button 
+          <button
             onClick={() => setActiveTab("shopping")}
             className={`px-6 py-3 text-sm font-medium transition-colors relative ${
-              activeTab === "shopping" ? "text-emerald-500" : "text-zinc-500 hover:text-white"
+              activeTab === "shopping"
+                ? "text-emerald-500"
+                : "text-zinc-500 hover:text-white"
             }`}
           >
             Lista de Compras
@@ -31,10 +35,12 @@ export default function MarketView() {
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500" />
             )}
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab("inventory")}
             className={`px-6 py-3 text-sm font-medium transition-colors relative ${
-              activeTab === "inventory" ? "text-emerald-500" : "text-zinc-500 hover:text-white"
+              activeTab === "inventory"
+                ? "text-emerald-500"
+                : "text-zinc-500 hover:text-white"
             }`}
           >
             Minha Despensa
@@ -42,10 +48,12 @@ export default function MarketView() {
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500" />
             )}
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab("analysis")}
             className={`px-6 py-3 text-sm font-medium transition-colors relative ${
-              activeTab === "analysis" ? "text-emerald-500" : "text-zinc-500 hover:text-white"
+              activeTab === "analysis"
+                ? "text-emerald-500"
+                : "text-zinc-500 hover:text-white"
             }`}
           >
             Análise de Gastos

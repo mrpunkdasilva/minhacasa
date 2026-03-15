@@ -1,5 +1,15 @@
-import { HomeAsset, MaintenanceTask, SystemComponent, UtilityReading } from "@/app/domain/entity/infrastructure/infrastructure.entities";
-import { AssetCategory, SystemType, UtilityType, MaintenanceFrequency } from "@/app/domain/enums/infrastructure/infrastructure.enums";
+import {
+  HomeAsset,
+  MaintenanceTask,
+  SystemComponent,
+  UtilityReading,
+} from "@/app/domain/entity/infrastructure/infrastructure.entities";
+import {
+  AssetCategory,
+  SystemType,
+  UtilityType,
+  MaintenanceFrequency,
+} from "@/app/domain/enums/infrastructure/infrastructure.enums";
 
 export const assetsMock: HomeAsset[] = [
   {
@@ -27,7 +37,7 @@ export const assetsMock: HomeAsset[] = [
     location: "Sala de Estar",
     purchaseDate: new Date("2023-05-20"),
     warrantyUntil: new Date("2024-05-20"),
-  }
+  },
 ];
 
 export const maintenanceTasksMock: MaintenanceTask[] = [
@@ -57,7 +67,7 @@ export const maintenanceTasksMock: MaintenanceTask[] = [
     nextDueDate: new Date("2024-01-10"), // Overdue
     frequency: MaintenanceFrequency.ANNUAL,
     status: "overdue",
-  }
+  },
 ];
 
 export const systemComponentsMock: SystemComponent[] = [
@@ -81,7 +91,7 @@ export const systemComponentsMock: SystemComponent[] = [
     name: "Aquecedor de Passagem Rinnai",
     location: "Área Externa",
     details: "Gás Natural (GN), Vazão 20L/min",
-  }
+  },
 ];
 
 export const utilityReadingsMock: UtilityReading[] = [
@@ -105,5 +115,5 @@ export const utilityReadingsMock: UtilityReading[] = [
     readingDate: new Date("2024-03-01"),
     value: 452.1,
     unit: "m³",
-  }
+  },
 ];

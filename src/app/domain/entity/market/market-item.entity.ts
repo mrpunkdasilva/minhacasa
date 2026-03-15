@@ -6,8 +6,8 @@ export interface MarketItem {
   category: MarketCategory;
   quantity: number;
   unit: "un" | "kg" | "g" | "l" | "ml" | "pct";
-  isBought?: boolean; // For Shopping List
-  isInStock?: boolean; // For Inventory
-  expirationDate?: Date; // For Inventory
+  isBought?: boolean;
+  isInStock?: boolean;
+  expirationDate?: Date;
   lastPrice?: number;
 }

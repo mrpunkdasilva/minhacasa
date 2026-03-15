@@ -23,17 +23,21 @@ export default function PetsView() {
       <div className="flex flex-col space-y-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tighter">Pet Care</h1>
-          <p className="text-zinc-500 mt-2">Gestão completa da saúde, alimentação e bem-estar dos seus pets.</p>
+          <p className="text-zinc-500 mt-2">
+            Gestão completa da saúde, alimentação e bem-estar dos seus pets.
+          </p>
         </div>
 
         {/* Tabs */}
         <div className="flex border-b border-zinc-800 overflow-x-auto no-scrollbar">
           {tabs.map((tab) => (
-            <button 
+            <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
-                activeTab === tab.id ? "text-emerald-500" : "text-zinc-500 hover:text-white"
+                activeTab === tab.id
+                  ? "text-emerald-500"
+                  : "text-zinc-500 hover:text-white"
               }`}
             >
               {tab.label}

@@ -1,4 +1,8 @@
-import { PetType, HealthRecordType, ServiceType } from "../../enums/pets/pet.enums";
+import {
+  PetType,
+  HealthRecordType,
+  ServiceType,
+} from "../../enums/pets/pet.enums";
 
 export interface Pet {
   id: string;
@@ -34,7 +38,7 @@ export interface PetNutrition {
   id: string;
   petId: string;
   foodName: string;
-  currentStock: number; // in kg
-  maxStock: number; // in kg
-  dailyAmount: number; // in grams
+  currentStock: number;
+  maxStock: number;
+  dailyAmount: number;
 }

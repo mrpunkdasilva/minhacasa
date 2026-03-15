@@ -9,8 +9,12 @@ export default function WishlistView() {
       <div className="flex flex-col space-y-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tighter">Lista de Desejos</h1>
-            <p className="text-zinc-500 mt-2">Planeje suas conquistas e acompanhe seu progresso de economia.</p>
+            <h1 className="text-3xl font-bold tracking-tighter">
+              Lista de Desejos
+            </h1>
+            <p className="text-zinc-500 mt-2">
+              Planeje suas conquistas e acompanhe seu progresso de economia.
+            </p>
           </div>
           <button className="bg-white text-black px-6 py-2 rounded-md font-bold text-sm hover:bg-zinc-200 transition-all">
             + Adicionar Desejo
@@ -31,7 +35,7 @@ export default function WishlistView() {
               </select>
             </div>
           </div>
-          
+
           <WishlistGrid />
         </div>
       </div>

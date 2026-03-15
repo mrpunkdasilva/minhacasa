@@ -1,5 +1,11 @@
-import { CleaningTask, CleaningLog } from "@/app/domain/entity/cleaning/cleaning.entities";
-import { CleaningFrequency, CleaningRoom } from "@/app/domain/enums/cleaning/cleaning.enums";
+import {
+  CleaningTask,
+  CleaningLog,
+} from "@/app/domain/entity/cleaning/cleaning.entities";
+import {
+  CleaningFrequency,
+  CleaningRoom,
+} from "@/app/domain/enums/cleaning/cleaning.enums";
 
 export const cleaningTasksMock: CleaningTask[] = [
   {
@@ -55,7 +61,7 @@ export const cleaningTasksMock: CleaningTask[] = [
     frequency: CleaningFrequency.MONTHLY,
     estimatedTime: 60,
     isHeavyCleaning: true,
-  }
+  },
 ];
 
 export const cleaningLogsMock: CleaningLog[] = [
@@ -70,5 +76,5 @@ export const cleaningLogsMock: CleaningLog[] = [
     taskId: "ct-6",
     completedAt: new Date("2024-03-01"),
     notes: "Forno estava bem sujo.",
-  }
+  },
 ];

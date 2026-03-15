@@ -1,4 +1,7 @@
-import { CleaningFrequency, CleaningRoom } from "../../enums/cleaning/cleaning.enums";
+import {
+  CleaningFrequency,
+  CleaningRoom,
+} from "../../enums/cleaning/cleaning.enums";
 
 export interface CleaningTask {
   id: string;
@@ -6,7 +9,7 @@ export interface CleaningTask {
   description: string;
   room: CleaningRoom;
   frequency: CleaningFrequency;
-  estimatedTime?: number; // in minutes
+  estimatedTime?: number;
   isHeavyCleaning: boolean;
 }
 

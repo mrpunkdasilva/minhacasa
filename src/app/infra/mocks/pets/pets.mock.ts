@@ -1,5 +1,14 @@
-import { Pet, HealthRecord, PetService, PetNutrition } from "@/app/domain/entity/pets/pet.entities";
-import { PetType, HealthRecordType, ServiceType } from "@/app/domain/enums/pets/pet.enums";
+import {
+  Pet,
+  HealthRecord,
+  PetService,
+  PetNutrition,
+} from "@/app/domain/entity/pets/pet.entities";
+import {
+  PetType,
+  HealthRecordType,
+  ServiceType,
+} from "@/app/domain/enums/pets/pet.enums";
 
 export const petsMock: Pet[] = [
   {
@@ -19,7 +28,7 @@ export const petsMock: Pet[] = [
     birthDate: new Date("2022-01-10"),
     weight: 4.2,
     gender: "Fêmea",
-  }
+  },
 ];
 
 export const healthRecordsMock: HealthRecord[] = [
@@ -47,7 +56,7 @@ export const healthRecordsMock: HealthRecord[] = [
     description: "V4 - Reforço Anual",
     date: new Date("2023-11-20"),
     nextDueDate: new Date("2024-11-20"),
-  }
+  },
 ];
 
 export const petServicesMock: PetService[] = [
@@ -56,7 +65,7 @@ export const petServicesMock: PetService[] = [
     petId: "p-1",
     serviceType: ServiceType.BATH,
     date: new Date("2024-03-16"), // Amanhã
-    price: 80.00,
+    price: 80.0,
     location: "Pet Shop Alegria",
   },
   {
@@ -64,9 +73,9 @@ export const petServicesMock: PetService[] = [
     petId: "p-2",
     serviceType: ServiceType.GROOMING,
     date: new Date("2024-03-20"),
-    price: 120.00,
+    price: 120.0,
     location: "Estética Animal",
-  }
+  },
 ];
 
 export const petNutritionMock: PetNutrition[] = [
@@ -85,5 +94,5 @@ export const petNutritionMock: PetNutrition[] = [
     currentStock: 1.2,
     maxStock: 7.5,
     dailyAmount: 65,
-  }
+  },
 ];

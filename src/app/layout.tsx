@@ -67,7 +67,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={cn("font-mono h-full", jetbrainsMono.variable)}>
+    <html
+      lang="pt-BR"
+      className={cn("font-mono h-full", jetbrainsMono.variable)}
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black h-full`}
       >

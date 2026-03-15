@@ -4,9 +4,21 @@ import { maintenanceTasksMock } from "@/app/infra/mocks/infrastructure/infrastru
 
 export default function MaintenanceSchedule() {
   const statusConfig = {
-    ok: { label: "Em Dia", className: "bg-emerald-500/10 text-emerald-500", icon: "✅" },
-    warning: { label: "Vence Logo", className: "bg-amber-500/10 text-amber-500", icon: "⚠️" },
-    overdue: { label: "Atrasado", className: "bg-rose-500/10 text-rose-500", icon: "🚨" },
+    ok: {
+      label: "Em Dia",
+      className: "bg-emerald-500/10 text-emerald-500",
+      icon: "✅",
+    },
+    warning: {
+      label: "Vence Logo",
+      className: "bg-amber-500/10 text-amber-500",
+      icon: "⚠️",
+    },
+    overdue: {
+      label: "Atrasado",
+      className: "bg-rose-500/10 text-rose-500",
+      icon: "🚨",
+    },
   };
 
   return (
@@ -31,11 +43,18 @@ export default function MaintenanceSchedule() {
           </thead>
           <tbody className="divide-y divide-zinc-800">
             {maintenanceTasksMock.map((task) => (
-              <tr key={task.id} className="hover:bg-zinc-800/30 transition-colors group">
+              <tr
+                key={task.id}
+                className="hover:bg-zinc-800/30 transition-colors group"
+              >
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold text-white">{task.title}</span>
-                    <span className="text-xs text-zinc-500">{task.description}</span>
+                    <span className="text-sm font-bold text-white">
+                      {task.title}
+                    </span>
+                    <span className="text-xs text-zinc-500">
+                      {task.description}
+                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-4">
@@ -47,15 +66,24 @@ export default function MaintenanceSchedule() {
                   {task.lastPerformedDate.toLocaleDateString("pt-BR")}
                 </td>
                 <td className="px-6 py-4">
-                  <span className={`text-sm font-bold font-mono ${
-                    task.status === "overdue" ? "text-rose-500" : task.status === "warning" ? "text-amber-500" : "text-white"
-                  }`}>
+                  <span
+                    className={`text-sm font-bold font-mono ${
+                      task.status === "overdue"
+                        ? "text-rose-500"
+                        : task.status === "warning"
+                          ? "text-amber-500"
+                          : "text-white"
+                    }`}
+                  >
                     {task.nextDueDate.toLocaleDateString("pt-BR")}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-center">
-                  <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusConfig[task.status].className}`}>
-                    {statusConfig[task.status].icon} {statusConfig[task.status].label}
+                  <span
+                    className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusConfig[task.status].className}`}
+                  >
+                    {statusConfig[task.status].icon}{" "}
+                    {statusConfig[task.status].label}
                   </span>
                 </td>
               </tr>

@@ -1,6 +1,10 @@
 import Header from "@/app/view/components/header/header";
 
-export default function EditInvoicePage({ params }: { params: { id: string } }) {
+export default function EditInvoicePage({
+  params,
+}: {
+  params: { id: string };
+}) {
   return (
     <main className="bg-black min-h-screen">
       <Header />

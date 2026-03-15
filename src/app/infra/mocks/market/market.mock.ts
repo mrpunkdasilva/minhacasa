@@ -9,7 +9,7 @@ export const shoppingListMock: MarketItem[] = [
     quantity: 1,
     unit: "pct",
     isBought: false,
-    lastPrice: 25.90,
+    lastPrice: 25.9,
   },
   {
     id: "sl-2",
@@ -18,7 +18,7 @@ export const shoppingListMock: MarketItem[] = [
     quantity: 12,
     unit: "un",
     isBought: true,
-    lastPrice: 4.50,
+    lastPrice: 4.5,
   },
   {
     id: "sl-3",
@@ -27,8 +27,8 @@ export const shoppingListMock: MarketItem[] = [
     quantity: 3,
     unit: "un",
     isBought: false,
-    lastPrice: 2.20,
-  }
+    lastPrice: 2.2,
+  },
 ];
 
 export const inventoryMock: MarketItem[] = [
@@ -58,5 +58,5 @@ export const inventoryMock: MarketItem[] = [
     unit: "kg",
     isInStock: true,
     expirationDate: new Date("2024-03-18"), // Vencendo logo
-  }
+  },
 ];

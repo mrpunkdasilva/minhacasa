@@ -1,4 +1,9 @@
-import { AssetCategory, SystemType, UtilityType, MaintenanceFrequency } from "../../enums/infrastructure/infrastructure.enums";
+import {
+  AssetCategory,
+  SystemType,
+  UtilityType,
+  MaintenanceFrequency,
+} from "../../enums/infrastructure/infrastructure.enums";
 
 export interface HomeAsset {
   id: string;
@@ -26,7 +31,7 @@ export interface SystemComponent {
   systemType: SystemType;
   name: string;
   location: string;
-  details: string; // e.g., "220V", "PPR 20mm", "SSID: Home_WiFi"
+  details: string;
 }
 
 export interface UtilityReading {
@@ -34,5 +39,5 @@ export interface UtilityReading {
   utilityType: UtilityType;
   readingDate: Date;
   value: number;
-  unit: string; // e.g., "m³", "kWh"
+  unit: string;
 }

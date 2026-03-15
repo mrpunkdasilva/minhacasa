@@ -3,7 +3,8 @@
 import { healthRecordsMock, petsMock } from "@/app/infra/mocks/pets/pets.mock";
 
 export default function HealthRecords() {
-  const getPetName = (id: string) => petsMock.find(p => p.id === id)?.name || "Unknown";
+  const getPetName = (id: string) =>
+    petsMock.find((p) => p.id === id)?.name || "Unknown";
 
   return (
     <div className="space-y-6">
@@ -27,9 +28,14 @@ export default function HealthRecords() {
           </thead>
           <tbody className="divide-y divide-zinc-800">
             {healthRecordsMock.map((record) => (
-              <tr key={record.id} className="hover:bg-zinc-800/30 transition-colors">
+              <tr
+                key={record.id}
+                className="hover:bg-zinc-800/30 transition-colors"
+              >
                 <td className="px-6 py-4">
-                  <span className="text-sm font-bold text-white">{getPetName(record.petId)}</span>
+                  <span className="text-sm font-bold text-white">
+                    {getPetName(record.petId)}
+                  </span>
                 </td>
                 <td className="px-6 py-4">
                   <span className="text-[10px] bg-zinc-800 text-emerald-400 px-2 py-1 rounded-full font-bold uppercase">
@@ -38,8 +44,14 @@ export default function HealthRecords() {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
-                    <span className="text-sm text-white">{record.description}</span>
-                    {record.vetName && <span className="text-[10px] text-zinc-500 uppercase tracking-tighter">Vet: {record.vetName}</span>}
+                    <span className="text-sm text-white">
+                      {record.description}
+                    </span>
+                    {record.vetName && (
+                      <span className="text-[10px] text-zinc-500 uppercase tracking-tighter">
+                        Vet: {record.vetName}
+                      </span>
+                    )}
                   </div>
                 </td>
                 <td className="px-6 py-4 text-xs text-zinc-400 font-mono">
@@ -51,7 +63,9 @@ export default function HealthRecords() {
                       {record.nextDueDate.toLocaleDateString("pt-BR")}
                     </span>
                   ) : (
-                    <span className="text-[10px] text-zinc-600 uppercase font-bold tracking-widest">Finalizado</span>
+                    <span className="text-[10px] text-zinc-600 uppercase font-bold tracking-widest">
+                      Finalizado
+                    </span>
                   )}
                 </td>
               </tr>

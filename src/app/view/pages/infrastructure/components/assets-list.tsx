@@ -19,8 +19,8 @@ export default function AssetsList() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {assetsMock.map((asset) => (
-          <div 
-            key={asset.id} 
+          <div
+            key={asset.id}
             className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 flex flex-col justify-between hover:border-zinc-700 transition-all"
           >
             <div>
@@ -28,18 +28,28 @@ export default function AssetsList() {
                 <span className="text-[10px] bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded uppercase font-bold tracking-wider">
                   {asset.category}
                 </span>
-                <span className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
-                  isWarrantyActive(asset.warrantyUntil) ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"
-                }`}>
-                  {isWarrantyActive(asset.warrantyUntil) ? "Em Garantia" : "Sem Garantia"}
+                <span
+                  className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
+                    isWarrantyActive(asset.warrantyUntil)
+                      ? "bg-emerald-500/10 text-emerald-500"
+                      : "bg-rose-500/10 text-rose-500"
+                  }`}
+                >
+                  {isWarrantyActive(asset.warrantyUntil)
+                    ? "Em Garantia"
+                    : "Sem Garantia"}
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-white mb-1">{asset.name}</h3>
+              <h3 className="text-lg font-bold text-white mb-1">
+                {asset.name}
+              </h3>
               <p className="text-sm text-zinc-500 mb-4 flex items-center gap-1">
                 📍 {asset.location}
               </p>
               {asset.description && (
-                <p className="text-xs text-zinc-400 italic mb-4">"{asset.description}"</p>
+                <p className="text-xs text-zinc-400 italic mb-4">
+                  "{asset.description}"
+                </p>
               )}
             </div>
 
@@ -49,8 +59,14 @@ export default function AssetsList() {
                 <span>Garantia até</span>
               </div>
               <div className="flex justify-between text-xs text-white mt-1 font-mono">
-                <span>{asset.purchaseDate?.toLocaleDateString("pt-BR") || "N/A"}</span>
-                <span className={isWarrantyActive(asset.warrantyUntil) ? "" : "text-rose-500"}>
+                <span>
+                  {asset.purchaseDate?.toLocaleDateString("pt-BR") || "N/A"}
+                </span>
+                <span
+                  className={
+                    isWarrantyActive(asset.warrantyUntil) ? "" : "text-rose-500"
+                  }
+                >
                   {asset.warrantyUntil?.toLocaleDateString("pt-BR") || "N/A"}
                 </span>
               </div>

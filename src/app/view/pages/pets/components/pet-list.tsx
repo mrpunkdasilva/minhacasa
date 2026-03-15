@@ -24,14 +24,14 @@ export default function PetList() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {petsMock.map((pet) => (
-          <div 
-            key={pet.id} 
+          <div
+            key={pet.id}
             className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 flex gap-6 items-center hover:border-zinc-700 transition-all"
           >
             <div className="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center text-3xl shrink-0">
               {pet.type === "Cachorro" ? "🐶" : "🐱"}
             </div>
-            
+
             <div className="flex-1">
               <div className="flex justify-between items-start mb-1">
                 <h3 className="text-xl font-bold text-white">{pet.name}</h3>
@@ -40,15 +40,23 @@ export default function PetList() {
                 </span>
               </div>
               <p className="text-sm text-zinc-500 mb-4">{pet.breed}</p>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-tighter">Idade</span>
-                  <span className="text-sm text-white font-medium">{calculateAge(pet.birthDate)} anos</span>
+                  <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-tighter">
+                    Idade
+                  </span>
+                  <span className="text-sm text-white font-medium">
+                    {calculateAge(pet.birthDate)} anos
+                  </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-tighter">Peso</span>
-                  <span className="text-sm text-white font-medium">{pet.weight} kg</span>
+                  <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-tighter">
+                    Peso
+                  </span>
+                  <span className="text-sm text-white font-medium">
+                    {pet.weight} kg
+                  </span>
                 </div>
               </div>
             </div>

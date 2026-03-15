@@ -1,4 +1,4 @@
-import { invoicesMock } from "@/app/infra/mocks/invoice.mock";
+import { invoicesMock } from "@/app/infra/mocks/invoice/invoice.mock";
 import { Category } from "@/app/domain/enums/category/category";
 
 export default function MarketAnalysis() {

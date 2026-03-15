@@ -1,23 +1,34 @@
 "use client";
 
-import { cleaningLogsMock, cleaningTasksMock } from "@/app/infra/mocks/cleaning/cleaning.mock";
+import {
+  cleaningLogsMock,
+  cleaningTasksMock,
+} from "@/app/infra/mocks/cleaning/cleaning.mock";
 
 export default function CleaningHistory() {
-  const getTaskName = (id: string) => cleaningTasksMock.find(t => t.id === id)?.title || "Desconhecido";
-  const isHeavy = (id: string) => cleaningTasksMock.find(t => t.id === id)?.isHeavyCleaning || false;
+  const getTaskName = (id: string) =>
+    cleaningTasksMock.find((t) => t.id === id)?.title || "Desconhecido";
+  const isHeavy = (id: string) =>
+    cleaningTasksMock.find((t) => t.id === id)?.isHeavyCleaning || false;
 
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center bg-rose-950/20 border border-rose-500/20 p-6 rounded-lg">
         <div>
-          <h2 className="text-xl font-bold text-rose-500">Histórico de Faxina Pesada</h2>
-          <p className="text-sm text-zinc-500">Últimos registros de limpezas intensas da casa.</p>
+          <h2 className="text-xl font-bold text-rose-500">
+            Histórico de Faxina Pesada
+          </h2>
+          <p className="text-sm text-zinc-500">
+            Últimos registros de limpezas intensas da casa.
+          </p>
         </div>
         <div className="text-right">
           <span className="text-2xl font-bold text-white font-mono">
-            {cleaningLogsMock.filter(log => isHeavy(log.taskId)).length}
+            {cleaningLogsMock.filter((log) => isHeavy(log.taskId)).length}
           </span>
-          <p className="text-[10px] text-zinc-500 uppercase tracking-tighter">Eventos registrados</p>
+          <p className="text-[10px] text-zinc-500 uppercase tracking-tighter">
+            Eventos registrados
+          </p>
         </div>
       </div>
 
@@ -25,14 +36,22 @@ export default function CleaningHistory() {
         {cleaningLogsMock.map((log) => (
           <div key={log.id} className="relative pl-10">
             {/* Timeline dot */}
-            <div className={`absolute left-[-5px] top-1.5 w-2.5 h-2.5 rounded-full ${isHeavy(log.taskId) ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]' : 'bg-zinc-700'}`} />
-            
+            <div
+              className={`absolute left-[-5px] top-1.5 w-2.5 h-2.5 rounded-full ${isHeavy(log.taskId) ? "bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]" : "bg-zinc-700"}`}
+            />
+
             <div className="flex flex-col gap-1">
               <span className="text-xs font-mono text-zinc-500">
-                {log.completedAt.toLocaleDateString("pt-BR", { day: 'numeric', month: 'long', year: 'numeric' })}
+                {log.completedAt.toLocaleDateString("pt-BR", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
               </span>
               <div className="flex items-center gap-3">
-                <h3 className="text-white font-bold text-lg">{getTaskName(log.taskId)}</h3>
+                <h3 className="text-white font-bold text-lg">
+                  {getTaskName(log.taskId)}
+                </h3>
                 {isHeavy(log.taskId) && (
                   <span className="text-[10px] bg-rose-500/10 text-rose-500 px-2 py-0.5 rounded font-bold uppercase">
                     Pesada

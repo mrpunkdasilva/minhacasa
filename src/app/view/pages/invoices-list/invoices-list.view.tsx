@@ -1,4 +1,4 @@
-import { invoicesMock } from "@/app/infra/mocks/invoice.mock";
+import { invoicesMock } from "@/app/infra/mocks/invoice/invoice.mock";
 
 export default function InvoicesListView() {
   const totals = invoicesMock.reduce(
@@ -9,7 +9,7 @@ export default function InvoicesListView() {
       if (inv.status === "overdue") acc.overdue += inv.price;
       return acc;
     },
-    { total: 0, paid: 0, unpaid: 0, overdue: 0 }
+    { total: 0, paid: 0, unpaid: 0, overdue: 0 },
   );
 
   return (
@@ -39,8 +39,13 @@ export default function InvoicesListView() {
           </thead>
           <tbody className="divide-y divide-zinc-800">
             {invoicesMock.map((invoice) => (
-              <tr key={invoice.uuid} className="hover:bg-zinc-800/30 transition-colors">
-                <td className="px-6 py-4 font-medium text-white">{invoice.name}</td>
+              <tr
+                key={invoice.uuid}
+                className="hover:bg-zinc-800/30 transition-colors"
+              >
+                <td className="px-6 py-4 font-medium text-white">
+                  {invoice.name}
+                </td>
                 <td className="px-6 py-4 text-zinc-400">
                   {new Date(invoice.dueDate).toLocaleDateString("pt-BR")}
                 </td>
@@ -50,14 +55,21 @@ export default function InvoicesListView() {
                   </span>
                 </td>
                 <td className="px-6 py-4 text-right text-white font-mono">
-                  {invoice.price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                  {invoice.price.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
                 </td>
                 <td className="px-6 py-4 text-center">
-                  <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
-                    invoice.status === "paid" ? "bg-emerald-500/20 text-emerald-500" :
-                    invoice.status === "overdue" ? "bg-rose-500/20 text-rose-500" :
-                    "bg-amber-500/20 text-amber-500"
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
+                      invoice.status === "paid"
+                        ? "bg-emerald-500/20 text-emerald-500"
+                        : invoice.status === "overdue"
+                          ? "bg-rose-500/20 text-rose-500"
+                          : "bg-amber-500/20 text-amber-500"
+                    }`}
+                  >
                     {invoice.status}
                   </span>
                 </td>
@@ -70,7 +82,15 @@ export default function InvoicesListView() {
   );
 }
 
-function StatCard({ title, value, color }: { title: string; value: number; color: "zinc" | "emerald" | "amber" | "rose" }) {
+function StatCard({
+  title,
+  value,
+  color,
+}: {
+  title: string;
+  value: number;
+  color: "zinc" | "emerald" | "amber" | "rose";
+}) {
   const colorMap = {
     zinc: "border-zinc-800 text-white",
     emerald: "border-emerald-500/30 text-emerald-500",
@@ -80,8 +100,12 @@ function StatCard({ title, value, color }: { title: string; value: number; color
 
   return (
     <div className={`bg-zinc-900 border ${colorMap[color]} rounded-lg p-5`}>
-      <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1">{title}</p>
-      <p className={`text-xl font-bold font-mono ${colorMap[color].split(" ").pop()}`}>
+      <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1">
+        {title}
+      </p>
+      <p
+        className={`text-xl font-bold font-mono ${colorMap[color].split(" ").pop()}`}
+      >
         {value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
       </p>
     </div>
