@@ -1,12 +1,29 @@
 import { invoicesMock } from "@/app/infra/mocks/invoice.mock";
 
 export default function InvoicesListView() {
+  const totals = invoicesMock.reduce(
+    (acc, inv) => {
+      acc.total += inv.price;
+      if (inv.status === "paid") acc.paid += inv.price;
+      if (inv.status === "unpaid") acc.unpaid += inv.price;
+      if (inv.status === "overdue") acc.overdue += inv.price;
+      return acc;
+    },
+    { total: 0, paid: 0, unpaid: 0, overdue: 0 }
+  );
+
   return (
     <div className="container mx-auto py-12 px-4 max-w-5xl">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold tracking-tighter">
-          Suas Contas
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tighter">Suas Contas</h1>
+      </div>
+
+      {/* Statistics Section */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
+        <StatCard title="Total" value={totals.total} color="zinc" />
+        <StatCard title="Pago" value={totals.paid} color="emerald" />
+        <StatCard title="Pendente" value={totals.unpaid} color="amber" />
+        <StatCard title="Atrasado" value={totals.overdue} color="rose" />
       </div>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
@@ -49,6 +66,24 @@ export default function InvoicesListView() {
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+function StatCard({ title, value, color }: { title: string; value: number; color: "zinc" | "emerald" | "amber" | "rose" }) {
+  const colorMap = {
+    zinc: "border-zinc-800 text-white",
+    emerald: "border-emerald-500/30 text-emerald-500",
+    amber: "border-amber-500/30 text-amber-500",
+    rose: "border-rose-500/30 text-rose-500",
+  };
+
+  return (
+    <div className={`bg-zinc-900 border ${colorMap[color]} rounded-lg p-5`}>
+      <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1">{title}</p>
+      <p className={`text-xl font-bold font-mono ${colorMap[color].split(" ").pop()}`}>
+        {value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+      </p>
     </div>
   );
 }

@@ -7,9 +7,11 @@ export default function ShoppingList() {
   const [items, setItems] = useState(shoppingListMock);
 
   const toggleBought = (id: string) => {
-    setItems(items.map(item => 
-      item.id === id ? { ...item, isBought: !item.isBought } : item
-    ));
+    setItems(
+      items.map((item) =>
+        item.id === id ? { ...item, isBought: !item.isBought } : item,
+      ),
+    );
   };
 
   return (
@@ -23,23 +25,25 @@ export default function ShoppingList() {
 
       <div className="grid gap-4">
         {items.map((item) => (
-          <div 
-            key={item.id} 
+          <div
+            key={item.id}
             className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
-              item.isBought 
-                ? "bg-zinc-900/50 border-zinc-800 opacity-50" 
+              item.isBought
+                ? "bg-zinc-900/50 border-zinc-800 opacity-50"
                 : "bg-zinc-900 border-zinc-800 hover:border-zinc-700"
             }`}
           >
             <div className="flex items-center gap-4">
-              <input 
-                type="checkbox" 
-                checked={item.isBought} 
+              <input
+                type="checkbox"
+                checked={item.isBought}
                 onChange={() => toggleBought(item.id)}
                 className="w-5 h-5 rounded border-zinc-700 bg-zinc-800 text-emerald-500 focus:ring-emerald-500"
               />
               <div>
-                <h3 className={`font-medium ${item.isBought ? "line-through text-zinc-500" : "text-white"}`}>
+                <h3
+                  className={`font-medium ${item.isBought ? "line-through text-zinc-500" : "text-white"}`}
+                >
                   {item.name}
                 </h3>
                 <span className="text-xs text-zinc-500">{item.category}</span>
@@ -50,7 +54,11 @@ export default function ShoppingList() {
                 {item.quantity} {item.unit}
               </span>
               <span className="text-xs text-zinc-500">
-                Est. {item.lastPrice?.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                Est.{" "}
+                {item.lastPrice?.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
               </span>
             </div>
           </div>

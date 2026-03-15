@@ -22,8 +22,8 @@ export default function Inventory() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {inventoryMock.map((item) => (
-          <div 
-            key={item.id} 
+          <div
+            key={item.id}
             className="bg-zinc-900 border border-zinc-800 rounded-lg p-5 hover:border-zinc-700 transition-all"
           >
             <div className="flex justify-between items-start mb-4">
@@ -38,19 +38,24 @@ export default function Inventory() {
 
             <div className="flex items-center gap-2">
               <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                <div 
-                  className={`h-full rounded-full ${isExpiringSoon(item.expirationDate!) ? 'bg-amber-500' : 'bg-emerald-500'}`}
-                  style={{ width: '80%' }} // Mocked stock level
+                <div
+                  className={`h-full rounded-full ${isExpiringSoon(item.expirationDate!) ? "bg-amber-500" : "bg-emerald-500"}`}
+                  style={{ width: "80%" }} // Mocked stock level
                 />
               </div>
               <span className="text-[10px] text-zinc-500">80%</span>
             </div>
 
             {item.expirationDate && (
-              <p className={`text-[10px] mt-4 font-medium uppercase tracking-wider ${
-                isExpiringSoon(item.expirationDate) ? "text-amber-500" : "text-zinc-500"
-              }`}>
-                Validade: {new Date(item.expirationDate).toLocaleDateString("pt-BR")}
+              <p
+                className={`text-[10px] mt-4 font-medium uppercase tracking-wider ${
+                  isExpiringSoon(item.expirationDate)
+                    ? "text-amber-500"
+                    : "text-zinc-500"
+                }`}
+              >
+                Validade:{" "}
+                {new Date(item.expirationDate).toLocaleDateString("pt-BR")}
                 {isExpiringSoon(item.expirationDate) && " (Vencendo logo!)"}
               </p>
             )}

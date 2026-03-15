@@ -17,6 +17,18 @@ export default function Header() {
           <Link href="/market" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
             Market
           </Link>
+          <Link href="/infrastructure" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+            Infrastructure
+          </Link>
+          <Link href="/wishlist" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+            Wishlist
+          </Link>
+          <Link href="/pets" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+            Pets
+          </Link>
+          <Link href="/cleaning" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+            Cleaning
+          </Link>
         </nav>
 
         <Link href="/">
