@@ -20,10 +20,10 @@ export default function MarketView() {
           </p>
         </div>
 
-        <div className="flex border-b border-zinc-800">
+        <div className="flex border-b border-zinc-800 overflow-x-auto no-scrollbar scrollbar-hide">
           <button
             onClick={() => setActiveTab("shopping")}
-            className={`px-6 py-3 text-sm font-medium transition-colors relative ${
+            className={`px-6 py-3 text-sm font-medium transition-colors relative whitespace-nowrap flex-shrink-0 ${
               activeTab === "shopping"
                 ? "text-emerald-500"
                 : "text-zinc-500 hover:text-white"
@@ -36,7 +36,7 @@ export default function MarketView() {
           </button>
           <button
             onClick={() => setActiveTab("inventory")}
-            className={`px-6 py-3 text-sm font-medium transition-colors relative ${
+            className={`px-6 py-3 text-sm font-medium transition-colors relative whitespace-nowrap flex-shrink-0 ${
               activeTab === "inventory"
                 ? "text-emerald-500"
                 : "text-zinc-500 hover:text-white"
@@ -49,7 +49,7 @@ export default function MarketView() {
           </button>
           <button
             onClick={() => setActiveTab("analysis")}
-            className={`px-6 py-3 text-sm font-medium transition-colors relative ${
+            className={`px-6 py-3 text-sm font-medium transition-colors relative whitespace-nowrap flex-shrink-0 ${
               activeTab === "analysis"
                 ? "text-emerald-500"
                 : "text-zinc-500 hover:text-white"
