@@ -74,42 +74,44 @@ export default function MarketAnalysis() {
             Histórico de Compras de Mercado
           </h3>
         </div>
-        <table className="w-full text-left">
-          <thead className="bg-zinc-900 text-zinc-500 text-[10px] uppercase font-bold tracking-widest">
-            <tr>
-              <th className="px-6 py-3">Data</th>
-              <th className="px-6 py-3">Local/Descrição</th>
-              <th className="px-6 py-3 text-right">Valor</th>
-              <th className="px-6 py-3 text-center">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-800">
-            {marketExpenses.map((expense) => (
-              <tr
-                key={expense.uuid}
-                className="hover:bg-zinc-800/20 transition-colors"
-              >
-                <td className="px-6 py-4 text-sm text-zinc-400">
-                  {new Date(expense.dueDate).toLocaleDateString("pt-BR")}
-                </td>
-                <td className="px-6 py-4 text-sm font-medium text-white">
-                  {expense.name}
-                </td>
-                <td className="px-6 py-4 text-sm text-right font-mono text-white">
-                  {expense.price.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </td>
-                <td className="px-6 py-4 text-center">
-                  <span className="bg-emerald-500/10 text-emerald-500 text-[10px] px-2 py-0.5 rounded-full font-bold">
-                    PAGO
-                  </span>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-zinc-900 text-zinc-500 text-[10px] uppercase font-bold tracking-widest">
+              <tr>
+                <th className="px-6 py-3 text-nowrap">Data</th>
+                <th className="px-6 py-3 text-nowrap">Local/Descrição</th>
+                <th className="px-6 py-3 text-right text-nowrap">Valor</th>
+                <th className="px-6 py-3 text-center text-nowrap">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-zinc-800">
+              {marketExpenses.map((expense) => (
+                <tr
+                  key={expense.uuid}
+                  className="hover:bg-zinc-800/20 transition-colors"
+                >
+                  <td className="px-6 py-4 text-sm text-zinc-400 text-nowrap">
+                    {new Date(expense.dueDate).toLocaleDateString("pt-BR")}
+                  </td>
+                  <td className="px-6 py-4 text-sm font-medium text-white text-nowrap">
+                    {expense.name}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-right font-mono text-white text-nowrap">
+                    {expense.price.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </td>
+                  <td className="px-6 py-4 text-center text-nowrap">
+                    <span className="bg-emerald-500/10 text-emerald-500 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                      PAGO
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

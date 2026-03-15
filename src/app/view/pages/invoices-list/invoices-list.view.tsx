@@ -28,56 +28,62 @@ export default function InvoicesListView() {
       </div>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-zinc-800/50 text-zinc-400 text-sm uppercase">
-            <tr>
-              <th className="px-6 py-4 font-medium">Nome</th>
-              <th className="px-6 py-4 font-medium">Vencimento</th>
-              <th className="px-6 py-4 font-medium">Categoria</th>
-              <th className="px-6 py-4 font-medium text-right">Valor</th>
-              <th className="px-6 py-4 font-medium text-center">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-800">
-            {invoicesMock.map((invoice) => (
-              <tr
-                key={invoice.uuid}
-                className="hover:bg-zinc-800/30 transition-colors"
-              >
-                <td className="px-6 py-4 font-medium text-white">
-                  {invoice.name}
-                </td>
-                <td className="px-6 py-4 text-zinc-400">
-                  {new Date(invoice.dueDate).toLocaleDateString("pt-BR")}
-                </td>
-                <td className="px-6 py-4">
-                  <span className="px-2 py-1 bg-zinc-800 rounded text-xs text-zinc-300">
-                    {invoice.category}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-right text-white font-mono">
-                  {invoice.price.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </td>
-                <td className="px-6 py-4 text-center">
-                  <span
-                    className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
-                      invoice.status === InvoiceStatus.paid
-                        ? "bg-emerald-500/20 text-emerald-500"
-                        : invoice.status === InvoiceStatus.overdue
-                          ? "bg-rose-500/20 text-rose-500"
-                          : "bg-amber-500/20 text-amber-500"
-                    }`}
-                  >
-                    {getStatusLabel(invoice.status)}
-                  </span>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-zinc-800/50 text-zinc-400 text-sm uppercase">
+              <tr>
+                <th className="px-6 py-4 font-medium text-nowrap">Nome</th>
+                <th className="px-6 py-4 font-medium text-nowrap">Vencimento</th>
+                <th className="px-6 py-4 font-medium text-nowrap">Categoria</th>
+                <th className="px-6 py-4 font-medium text-right text-nowrap">
+                  Valor
+                </th>
+                <th className="px-6 py-4 font-medium text-center text-nowrap">
+                  Status
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-zinc-800">
+              {invoicesMock.map((invoice) => (
+                <tr
+                  key={invoice.uuid}
+                  className="hover:bg-zinc-800/30 transition-colors"
+                >
+                  <td className="px-6 py-4 font-medium text-white text-nowrap">
+                    {invoice.name}
+                  </td>
+                  <td className="px-6 py-4 text-zinc-400 text-nowrap">
+                    {new Date(invoice.dueDate).toLocaleDateString("pt-BR")}
+                  </td>
+                  <td className="px-6 py-4 text-nowrap">
+                    <span className="px-2 py-1 bg-zinc-800 rounded text-xs text-zinc-300">
+                      {invoice.category}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right text-white font-mono text-nowrap">
+                    {invoice.price.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </td>
+                  <td className="px-6 py-4 text-center text-nowrap">
+                    <span
+                      className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
+                        invoice.status === InvoiceStatus.paid
+                          ? "bg-emerald-500/20 text-emerald-500"
+                          : invoice.status === InvoiceStatus.overdue
+                            ? "bg-rose-500/20 text-rose-500"
+                            : "bg-amber-500/20 text-amber-500"
+                      }`}
+                    >
+                      {getStatusLabel(invoice.status)}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

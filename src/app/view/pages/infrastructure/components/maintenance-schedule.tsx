@@ -31,65 +31,67 @@ export default function MaintenanceSchedule() {
       </div>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-zinc-800/50 text-zinc-400 text-xs uppercase tracking-wider font-bold">
-            <tr>
-              <th className="px-6 py-4">Tarefa</th>
-              <th className="px-6 py-4">Frequência</th>
-              <th className="px-6 py-4">Última Realização</th>
-              <th className="px-6 py-4">Próximo Vencimento</th>
-              <th className="px-6 py-4 text-center">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-800">
-            {maintenanceTasksMock.map((task) => (
-              <tr
-                key={task.id}
-                className="hover:bg-zinc-800/30 transition-colors group"
-              >
-                <td className="px-6 py-4">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-white">
-                      {task.title}
-                    </span>
-                    <span className="text-xs text-zinc-500">
-                      {task.description}
-                    </span>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
-                    {task.frequency}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-sm text-zinc-400 font-mono">
-                  {task.lastPerformedDate.toLocaleDateString("pt-BR")}
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`text-sm font-bold font-mono ${
-                      task.status === "overdue"
-                        ? "text-rose-500"
-                        : task.status === "warning"
-                          ? "text-amber-500"
-                          : "text-white"
-                    }`}
-                  >
-                    {task.nextDueDate.toLocaleDateString("pt-BR")}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-center">
-                  <span
-                    className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusConfig[task.status].className}`}
-                  >
-                    {statusConfig[task.status].icon}{" "}
-                    {statusConfig[task.status].label}
-                  </span>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-zinc-800/50 text-zinc-400 text-xs uppercase tracking-wider font-bold">
+              <tr>
+                <th className="px-6 py-4 text-nowrap">Tarefa</th>
+                <th className="px-6 py-4 text-nowrap">Frequência</th>
+                <th className="px-6 py-4 text-nowrap">Última Realização</th>
+                <th className="px-6 py-4 text-nowrap">Próximo Vencimento</th>
+                <th className="px-6 py-4 text-center text-nowrap">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-zinc-800">
+              {maintenanceTasksMock.map((task) => (
+                <tr
+                  key={task.id}
+                  className="hover:bg-zinc-800/30 transition-colors group"
+                >
+                  <td className="px-6 py-4 text-nowrap">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-white">
+                        {task.title}
+                      </span>
+                      <span className="text-xs text-zinc-500">
+                        {task.description}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-nowrap">
+                    <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-1 rounded">
+                      {task.frequency}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-zinc-400 font-mono text-nowrap">
+                    {task.lastPerformedDate.toLocaleDateString("pt-BR")}
+                  </td>
+                  <td className="px-6 py-4 text-nowrap">
+                    <span
+                      className={`text-sm font-bold font-mono ${
+                        task.status === "overdue"
+                          ? "text-rose-500"
+                          : task.status === "warning"
+                            ? "text-amber-500"
+                            : "text-white"
+                      }`}
+                    >
+                      {task.nextDueDate.toLocaleDateString("pt-BR")}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-center text-nowrap">
+                    <span
+                      className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${statusConfig[task.status].className}`}
+                    >
+                      {statusConfig[task.status].icon}{" "}
+                      {statusConfig[task.status].label}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
