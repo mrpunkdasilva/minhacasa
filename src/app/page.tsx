@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import ContextualLoading from "@/app/view/components/contextual-loading/contextual-loading";
-import LogoComponent from "@/app/view/components/ui/logo/logo";
-import CreateInvoicePage from "@/app/view/pages/create-invoice/create-invoice.view";
+import DashboardView from "@/app/view/pages/dashboard/dashboard.view";
+import Header from "@/app/view/components/header/header";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -18,11 +18,9 @@ export default function Home() {
 
   return (
     <main className="bg-black min-h-screen">
-      <header className="flex w-full justify-center">
-        <LogoComponent isAnimated={false} w={55} />
-      </header>
+      <Header />
 
-      <CreateInvoicePage />
+      <DashboardView />
     </main>
   );
 }
