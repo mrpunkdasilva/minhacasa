@@ -34,6 +34,7 @@
 
 - **Framework**: [Next.js](https://nextjs.org/) (App Router)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Formatting**: [Prettier](https://prettier.io/)
 - **Icons**: [Phosphor Icons](https://phosphoricons.com/)
 - **Components**: [Radix UI](https://www.radix-ui.com/) & [shadcn/ui](https://ui.shadcn.com/)
 - **Animations**: [tw-animate-css](https://github.com/leandrosimard/tw-animate-css)
