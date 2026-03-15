@@ -20,7 +20,6 @@ export default function MarketView() {
           </p>
         </div>
 
-        {/* Tabs */}
         <div className="flex border-b border-zinc-800">
           <button
             onClick={() => setActiveTab("shopping")}

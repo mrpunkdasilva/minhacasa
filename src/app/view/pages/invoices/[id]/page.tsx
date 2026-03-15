@@ -7,7 +7,6 @@ export default function EditInvoicePage({
 }) {
   return (
     <main className="bg-black min-h-screen">
-      <Header />
       <div className="container mx-auto py-12 px-4">
         <h1 className="text-3xl font-bold tracking-tighter mb-6 text-center">
           Editar Fatura: {params.id}

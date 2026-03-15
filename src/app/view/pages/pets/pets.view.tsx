@@ -28,7 +28,6 @@ export default function PetsView() {
           </p>
         </div>
 
-        {/* Tabs */}
         <div className="flex border-b border-zinc-800 overflow-x-auto no-scrollbar">
           {tabs.map((tab) => (
             <button
