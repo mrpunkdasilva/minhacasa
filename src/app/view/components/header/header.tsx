@@ -8,11 +8,14 @@ export default function Header() {
     <header className="relative flex w-full flex-col items-center py-4 bg-black">
       <div className="flex w-full items-center justify-between px-8 max-w-5xl">
         <nav className="flex items-center gap-6">
-          <Link href="/" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link href="/" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
             Dashboard
           </Link>
-          <Link href="/invoices" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link href="/invoices" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
             Invoices
+          </Link>
+          <Link href="/market" className="text-sm font-medium hover:text-primary transition-colors text-zinc-400">
+            Market
           </Link>
         </nav>
 
