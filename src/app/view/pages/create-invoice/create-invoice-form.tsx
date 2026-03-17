@@ -1,13 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
 import {
   Calendar as CalendarIcon,
-  Check,
-  CaretUpDown,
+  CircleNotch,
 } from "@phosphor-icons/react";
 
 import { cn } from "@/app/infra/lib/utils";
@@ -39,6 +39,7 @@ import {
 import { Checkbox } from "@/app/view/components/ui/checkbox";
 import { Category } from "@/app/domain/enums/category/category";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
+import { createInvoice } from "@/app/infra/actions/invoice.actions";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -60,17 +61,11 @@ const formSchema = z.object({
   isRecurring: z.boolean().default(false),
 });
 
-type FormValues = {
-  name: string;
-  price: number;
-  dueDate: Date;
-  description?: string;
-  category: Category;
-  status: InvoiceStatus;
-  isRecurring?: boolean;
-};
+type FormValues = z.infer<typeof formSchema>;
 
 export function CreateInvoiceForm() {
+  const [isPending, setIsPending] = useState(false);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -82,8 +77,17 @@ export function CreateInvoiceForm() {
     },
   });
 
-  function onSubmit(values: FormValues) {
-    console.log(values);
+  async function onSubmit(values: FormValues) {
+    setIsPending(true);
+    try {
+      await createInvoice({
+        ...values,
+        description: values.description || "",
+      });
+    } catch (error) {
+      console.error(error);
+      setIsPending(false);
+    }
   }
 
   return (
@@ -273,8 +277,11 @@ export function CreateInvoiceForm() {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Criar Fatura
+        <Button type="submit" className="w-full" disabled={isPending}>
+          {isPending ? (
+            <CircleNotch className="h-4 w-4 animate-spin mr-2" />
+          ) : null}
+          {isPending ? "Criando..." : "Criar Fatura"}
         </Button>
       </form>
     </Form>

@@ -1,10 +1,12 @@
-import { invoicesMock } from "@/app/infra/mocks/invoice/invoice.mock";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { getInvoices } from "@/app/infra/actions/invoice.actions";
 
-export default function InvoicesListView() {
-  const totals = invoicesMock.reduce(
+export default async function InvoicesListView() {
+  const invoices = await getInvoices();
+
+  const totals = invoices.reduce(
     (acc, inv) => {
       acc.total += inv.price;
       if (inv.status === InvoiceStatus.paid) acc.paid += inv.price;
@@ -55,48 +57,59 @@ export default function InvoicesListView() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800">
-              {invoicesMock.map((invoice) => (
-                <tr
-                  key={invoice.uuid}
-                  className="hover:bg-zinc-800/30 transition-colors group"
-                >
-                  <td className="px-6 py-4 font-medium text-white text-nowrap">
-                    <Link
-                      href={`/view/pages/invoices/${invoice.uuid}`}
-                      className="hover:text-emerald-500 transition-colors"
-                    >
-                      {invoice.name}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 text-zinc-400 text-nowrap">
-                    {new Date(invoice.dueDate).toLocaleDateString("pt-BR")}
-                  </td>
-                  <td className="px-6 py-4 text-nowrap">
-                    <span className="px-2 py-1 bg-zinc-800 rounded text-xs text-zinc-300">
-                      {invoice.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right text-white font-mono text-nowrap">
-                    {invoice.price.toLocaleString("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </td>
-                  <td className="px-6 py-4 text-center text-nowrap">
-                    <span
-                      className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
-                        invoice.status === InvoiceStatus.paid
-                          ? "bg-emerald-500/20 text-emerald-500"
-                          : invoice.status === InvoiceStatus.overdue
-                            ? "bg-rose-500/20 text-rose-500"
-                            : "bg-amber-500/20 text-amber-500"
-                      }`}
-                    >
-                      {getStatusLabel(invoice.status)}
-                    </span>
+              {invoices.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-zinc-500"
+                  >
+                    Nenhuma fatura encontrada.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                invoices.map((invoice) => (
+                  <tr
+                    key={invoice.uuid}
+                    className="hover:bg-zinc-800/30 transition-colors group"
+                  >
+                    <td className="px-6 py-4 font-medium text-white text-nowrap">
+                      <Link
+                        href={`/view/pages/invoices/${invoice.uuid}`}
+                        className="hover:text-emerald-500 transition-colors"
+                      >
+                        {invoice.name}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 text-zinc-400 text-nowrap">
+                      {new Date(invoice.dueDate).toLocaleDateString("pt-BR")}
+                    </td>
+                    <td className="px-6 py-4 text-nowrap">
+                      <span className="px-2 py-1 bg-zinc-800 rounded text-xs text-zinc-300">
+                        {invoice.category}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right text-white font-mono text-nowrap">
+                      {invoice.price.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </td>
+                    <td className="px-6 py-4 text-center text-nowrap">
+                      <span
+                        className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
+                          invoice.status === InvoiceStatus.paid
+                            ? "bg-emerald-500/20 text-emerald-500"
+                            : invoice.status === InvoiceStatus.overdue
+                              ? "bg-rose-500/20 text-rose-500"
+                              : "bg-amber-500/20 text-amber-500"
+                        }`}
+                      >
+                        {getStatusLabel(invoice.status)}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
