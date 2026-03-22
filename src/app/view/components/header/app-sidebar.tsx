@@ -106,7 +106,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Nova Fatura">
-                  <Link href="/view/pages/invoices/new">
+                  <Link href="/src/app/view/pages/invoices/new">
                     <PlusCircle className="size-4" />
                     <span>Nova Fatura</span>
                   </Link>

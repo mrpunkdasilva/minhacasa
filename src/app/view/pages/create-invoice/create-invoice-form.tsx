@@ -5,10 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
-import {
-  Calendar as CalendarIcon,
-  CircleNotch,
-} from "@phosphor-icons/react";
+import { Calendar as CalendarIcon, CircleNotch } from "@phosphor-icons/react";
 
 import { cn } from "@/app/infra/lib/utils";
 import { Button } from "@/app/view/components/ui/button";
@@ -39,7 +36,8 @@ import {
 import { Checkbox } from "@/app/view/components/ui/checkbox";
 import { Category } from "@/app/domain/enums/category/category";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
-import { createInvoice } from "@/app/infra/actions/invoice.actions";
+import { createInvoice, updateInvoice } from "@/app/infra/actions/invoice.actions";
+import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -63,27 +61,41 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function CreateInvoiceForm() {
+interface CreateInvoiceFormProps {
+  initialData?: InvoiceEntity;
+}
+
+export function CreateInvoiceForm({ initialData }: CreateInvoiceFormProps) {
   const [isPending, setIsPending] = useState(false);
+  const isEditing = !!initialData;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      price: 0,
-      description: "",
-      isRecurring: false,
-      status: InvoiceStatus.unpaid,
+      name: initialData?.name || "",
+      price: initialData?.price || 0,
+      dueDate: initialData?.dueDate ? new Date(initialData.dueDate) : undefined,
+      description: initialData?.description || "",
+      category: (initialData?.category as Category) || undefined,
+      isRecurring: initialData?.isRecurring || false,
+      status: initialData?.status ?? InvoiceStatus.unpaid,
     },
   });
 
   async function onSubmit(values: FormValues) {
     setIsPending(true);
     try {
-      await createInvoice({
-        ...values,
-        description: values.description || "",
-      });
+      if (isEditing && initialData) {
+        await updateInvoice(initialData.uuid, {
+          ...values,
+          description: values.description || "",
+        });
+      } else {
+        await createInvoice({
+          ...values,
+          description: values.description || "",
+        });
+      }
     } catch (error) {
       console.error(error);
       setIsPending(false);
@@ -281,7 +293,9 @@ export function CreateInvoiceForm() {
           {isPending ? (
             <CircleNotch className="h-4 w-4 animate-spin mr-2" />
           ) : null}
-          {isPending ? "Criando..." : "Criar Fatura"}
+          {isPending 
+            ? (isEditing ? "Salvando..." : "Criando...") 
+            : (isEditing ? "Salvar Alterações" : "Criar Fatura")}
         </Button>
       </form>
     </Form>

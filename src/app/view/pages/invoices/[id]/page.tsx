@@ -1,20 +1,10 @@
-import Header from "@/app/view/components/header/header";
+import InvoiceDetailView from "@/app/view/pages/invoices/[id]/invoice-detail.view";
 
-export default function EditInvoicePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function InvoicePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
     <main className="bg-black min-h-screen">
-      <div className="container mx-auto py-12 px-4">
-        <h1 className="text-3xl font-bold tracking-tighter mb-6 text-center">
-          Editar Fatura: {params.id}
-        </h1>
-        <p className="text-muted-foreground text-center">
-          Formulário de edição virá aqui.
-        </p>
-      </div>
+      <InvoiceDetailView uuid={id} />
     </main>
   );
 }

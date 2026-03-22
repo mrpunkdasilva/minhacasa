@@ -75,16 +75,19 @@ export default async function DashboardView() {
             ) : (
               <div className="divide-y divide-zinc-800">
                 {pendingInvoices.map((invoice) => (
-                  <div
+                  <Link
                     key={invoice.uuid}
-                    className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc-800/30 transition-colors"
+                    href={`/view/pages/invoices/${invoice.uuid}`}
+                    className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc-800/30 transition-colors group"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-amber-500/10 rounded-full flex-shrink-0 flex items-center justify-center text-amber-500">
+                      <div className="w-10 h-10 bg-amber-500/10 rounded-full flex-shrink-0 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-colors">
                         <Clock size={20} />
                       </div>
                       <div>
-                        <p className="font-medium">{invoice.name}</p>
+                        <p className="font-medium group-hover:text-emerald-500 transition-colors">
+                          {invoice.name}
+                        </p>
                         <p className="text-xs text-zinc-500">
                           Vence em{" "}
                           {new Date(invoice.dueDate).toLocaleDateString(
@@ -104,7 +107,7 @@ export default async function DashboardView() {
                         Pendente
                       </span>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}

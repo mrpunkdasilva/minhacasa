@@ -10,4 +10,5 @@ export interface InvoiceEntity {
   category: Category;
   status: InvoiceStatus;
   isRecurring: boolean;
+  isArchived?: boolean;
 }
