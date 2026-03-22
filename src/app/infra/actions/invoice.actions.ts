@@ -27,7 +27,6 @@ export async function createInvoice(data: Omit<InvoiceEntity, "uuid">) {
     throw new Error("Erro interno ao processar sua solicitação.");
   }
 
-  // Redirect after success outside try-catch to avoid catching redirect error
   redirect("/view/pages/invoices");
 }
 

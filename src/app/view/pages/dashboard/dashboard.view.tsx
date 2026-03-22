@@ -1,20 +1,31 @@
-import { invoicesMock } from "@/app/infra/mocks/invoice/invoice.mock";
+import { getInvoices } from "@/app/infra/actions/invoice.actions";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
+import Link from "next/link";
+import { ArrowRight, Clock } from "lucide-react";
 
-export default function DashboardView() {
-  const totalInvoices = invoicesMock.reduce((acc, inv) => acc + inv.price, 0);
-  const totalPaid = invoicesMock
+export default async function DashboardView() {
+  const invoices = await getInvoices();
+
+  const totalInvoices = invoices.reduce((acc, inv) => acc + inv.price, 0);
+  const totalPaid = invoices
     .filter((inv) => inv.status === InvoiceStatus.paid)
     .reduce((acc, inv) => acc + inv.price, 0);
-  const totalPending = invoicesMock
+  const totalPending = invoices
     .filter((inv) => inv.status === InvoiceStatus.unpaid)
     .reduce((acc, inv) => acc + inv.price, 0);
-  const totalOverdue = invoicesMock
+  const totalOverdue = invoices
     .filter((inv) => inv.status === InvoiceStatus.overdue)
     .reduce((acc, inv) => acc + inv.price, 0);
 
+  const pendingInvoices = invoices
+    .filter((inv) => inv.status === InvoiceStatus.unpaid)
+    .sort(
+      (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime(),
+    )
+    .slice(0, 5);
+
   return (
-    <div className="container mx-auto py-12 px-4 max-w-5xl">
+    <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
       <h1 className="text-3xl font-bold tracking-tighter mb-8">Visão Geral</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -44,8 +55,72 @@ export default function DashboardView() {
         />
       </div>
 
-      <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8 text-center">
-        <p className="text-zinc-400">Gráficos e tendências em breve...</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold">Próximos Vencimentos</h2>
+            <Link
+              href="/view/pages/invoices"
+              className="text-zinc-400 hover:text-emerald-500 text-sm flex items-center gap-1 transition-colors"
+            >
+              Ver todas <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+            {pendingInvoices.length === 0 ? (
+              <div className="p-8 text-center text-zinc-500">
+                Nenhuma fatura pendente encontrada.
+              </div>
+            ) : (
+              <div className="divide-y divide-zinc-800">
+                {pendingInvoices.map((invoice) => (
+                  <div
+                    key={invoice.uuid}
+                    className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc-800/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-amber-500/10 rounded-full flex-shrink-0 flex items-center justify-center text-amber-500">
+                        <Clock size={20} />
+                      </div>
+                      <div>
+                        <p className="font-medium">{invoice.name}</p>
+                        <p className="text-xs text-zinc-500">
+                          Vence em{" "}
+                          {new Date(invoice.dueDate).toLocaleDateString(
+                            "pt-BR",
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between gap-2 border-t border-zinc-800/50 pt-3 sm:border-0 sm:pt-0">
+                      <p className="font-mono font-bold text-lg sm:text-base">
+                        {invoice.price.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </p>
+                      <span className="text-[10px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded uppercase font-bold">
+                        Pendente
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 flex flex-col items-center justify-center text-center">
+          <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4 text-zinc-500">
+            <ArrowRight size={32} className="rotate-[-45deg]" />
+          </div>
+          <h3 className="text-lg font-bold mb-2">Análise de Gastos</h3>
+          <p className="text-zinc-400 text-sm">
+            Em breve você poderá visualizar gráficos e insights sobre seus
+            gastos mensais.
+          </p>
+        </div>
       </div>
     </div>
   );
