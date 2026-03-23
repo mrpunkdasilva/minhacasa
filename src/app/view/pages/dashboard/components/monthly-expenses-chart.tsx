@@ -59,8 +59,8 @@ export function MonthlyExpensesChart({ invoices }: MonthlyExpensesChartProps) {
               fontSize: '12px'
             }}
             itemStyle={{ color: '#10b981' }}
-            formatter={(value: number) => [
-              value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+            formatter={(value: any) => [
+              Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
               'Total'
             ]}
           />

@@ -56,7 +56,7 @@ const formSchema = z.object({
   status: z.nativeEnum(InvoiceStatus, {
     message: "Selecione um status.",
   }),
-  isRecurring: z.boolean().default(false),
+  isRecurring: z.boolean(),
 });
 
 type FormValues = z.infer<typeof formSchema>;

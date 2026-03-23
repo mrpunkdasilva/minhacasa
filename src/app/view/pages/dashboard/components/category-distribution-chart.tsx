@@ -48,8 +48,8 @@ export function CategoryDistributionChart({ invoices }: CategoryDistributionChar
               fontSize: '12px'
             }}
             itemStyle={{ color: '#fff' }}
-            formatter={(value: number) => [
-              value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+            formatter={(value: any) => [
+              Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
               'Gasto'
             ]}
           />
