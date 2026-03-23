@@ -1,7 +1,9 @@
 import { getInvoices } from "@/app/infra/actions/invoice.actions";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import Link from "next/link";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight, Clock, BarChart3, PieChart as PieChartIcon } from "lucide-react";
+import { MonthlyExpensesChart } from "./components/monthly-expenses-chart";
+import { CategoryDistributionChart } from "./components/category-distribution-chart";
 
 export default async function DashboardView() {
   const invoices = await getInvoices();
@@ -55,8 +57,26 @@ export default async function DashboardView() {
         />
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-6 text-zinc-400">
+            <BarChart3 size={18} />
+            <h3 className="text-sm font-bold uppercase tracking-wider">Gastos Mensais</h3>
+          </div>
+          <MonthlyExpensesChart invoices={invoices} />
+        </div>
+
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-6 text-zinc-400">
+            <PieChartIcon size={18} />
+            <h3 className="text-sm font-bold uppercase tracking-wider">Por Categoria</h3>
+          </div>
+          <CategoryDistributionChart invoices={invoices} />
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-3">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold">Próximos Vencimentos</h2>
             <Link
@@ -73,7 +93,7 @@ export default async function DashboardView() {
                 Nenhuma fatura pendente encontrada.
               </div>
             ) : (
-              <div className="divide-y divide-zinc-800">
+              <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-zinc-800">
                 {pendingInvoices.map((invoice) => (
                   <Link
                     key={invoice.uuid}
@@ -112,17 +132,6 @@ export default async function DashboardView() {
               </div>
             )}
           </div>
-        </div>
-
-        <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 flex flex-col items-center justify-center text-center">
-          <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4 text-zinc-500">
-            <ArrowRight size={32} className="rotate-[-45deg]" />
-          </div>
-          <h3 className="text-lg font-bold mb-2">Análise de Gastos</h3>
-          <p className="text-zinc-400 text-sm">
-            Em breve você poderá visualizar gráficos e insights sobre seus
-            gastos mensais.
-          </p>
         </div>
       </div>
     </div>

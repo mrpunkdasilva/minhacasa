@@ -2,6 +2,7 @@
 
 import clientPromise from "@/app/infra/lib/mongodb";
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
+import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
