@@ -36,7 +36,10 @@ import {
 import { Checkbox } from "@/app/view/components/ui/checkbox";
 import { Category } from "@/app/domain/enums/category/category";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
-import { createInvoice, updateInvoice } from "@/app/infra/actions/invoice.actions";
+import {
+  createInvoice,
+  updateInvoice,
+} from "@/app/infra/actions/invoice.actions";
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
 
 const formSchema = z.object({
@@ -293,9 +296,13 @@ export function CreateInvoiceForm({ initialData }: CreateInvoiceFormProps) {
           {isPending ? (
             <CircleNotch className="h-4 w-4 animate-spin mr-2" />
           ) : null}
-          {isPending 
-            ? (isEditing ? "Salvando..." : "Criando...") 
-            : (isEditing ? "Salvar Alterações" : "Criar Fatura")}
+          {isPending
+            ? isEditing
+              ? "Salvando..."
+              : "Criando..."
+            : isEditing
+              ? "Salvar Alterações"
+              : "Criar Fatura"}
         </Button>
       </form>
     </Form>

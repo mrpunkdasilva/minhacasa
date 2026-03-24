@@ -60,7 +60,7 @@ export default function CleaningHistory() {
               </div>
               {log.notes && (
                 <p className="text-sm text-zinc-400 italic bg-zinc-900/40 p-3 rounded mt-2 border border-zinc-800/50">
-                  "{log.notes}"
+                  &quot;{log.notes}&quot;
                 </p>
               )}
             </div>

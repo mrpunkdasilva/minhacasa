@@ -46,7 +46,9 @@ export default async function InvoicesListView() {
             <thead className="bg-zinc-800/50 text-zinc-400 text-sm uppercase">
               <tr>
                 <th className="px-6 py-4 font-medium text-nowrap">Nome</th>
-                <th className="px-6 py-4 font-medium text-nowrap">Vencimento</th>
+                <th className="px-6 py-4 font-medium text-nowrap">
+                  Vencimento
+                </th>
                 <th className="px-6 py-4 font-medium text-nowrap">Categoria</th>
                 <th className="px-6 py-4 font-medium text-right text-nowrap">
                   Valor

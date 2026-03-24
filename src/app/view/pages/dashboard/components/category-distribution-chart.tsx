@@ -24,12 +24,17 @@ const COLORS = [
   "#06b6d4", // cyan-500
 ];
 
-export function CategoryDistributionChart({ invoices }: CategoryDistributionChartProps) {
+export function CategoryDistributionChart({
+  invoices,
+}: CategoryDistributionChartProps) {
   // Process invoices to get category totals
-  const categoryDataMap = invoices.reduce((acc, inv) => {
-    acc[inv.category] = (acc[inv.category] || 0) + inv.price;
-    return acc;
-  }, {} as Record<string, number>);
+  const categoryDataMap = invoices.reduce(
+    (acc, inv) => {
+      acc[inv.category] = (acc[inv.category] || 0) + inv.price;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   const data = Object.entries(categoryDataMap).map(([name, value]) => ({
     name,
@@ -40,21 +45,24 @@ export function CategoryDistributionChart({ invoices }: CategoryDistributionChar
     <div className="h-[300px] w-full mt-4">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#18181b', 
-              border: '1px solid #27272a',
-              borderRadius: '8px',
-              fontSize: '12px'
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#18181b",
+              border: "1px solid #27272a",
+              borderRadius: "8px",
+              fontSize: "12px",
             }}
-            itemStyle={{ color: '#fff' }}
-            formatter={(value: any) => [
-              Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-              'Gasto'
+            itemStyle={{ color: "#fff" }}
+            formatter={(value: number | string | readonly (string | number)[] | undefined) => [
+              Number(value || 0).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }),
+              "Gasto",
             ]}
           />
-          <Legend 
-            wrapperStyle={{ fontSize: '10px', color: '#71717a' }}
+          <Legend
+            wrapperStyle={{ fontSize: "10px", color: "#71717a" }}
             verticalAlign="bottom"
             align="center"
           />
@@ -68,7 +76,11 @@ export function CategoryDistributionChart({ invoices }: CategoryDistributionChar
             dataKey="value"
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="transparent" />
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+                stroke="transparent"
+              />
             ))}
           </Pie>
         </PieChart>

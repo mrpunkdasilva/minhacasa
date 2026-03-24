@@ -1,4 +1,3 @@
-import Header from "@/app/view/components/header/header";
 import InfrastructureView from "@/app/view/pages/infrastructure/infrastructure.view";
 
 export default function InfrastructurePage() {

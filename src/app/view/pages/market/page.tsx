@@ -1,4 +1,3 @@
-import Header from "@/app/view/components/header/header";
 import MarketView from "@/app/view/pages/market/market.view";
 
 export default function MarketPage() {

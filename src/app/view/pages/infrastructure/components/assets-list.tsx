@@ -48,7 +48,7 @@ export default function AssetsList() {
               </p>
               {asset.description && (
                 <p className="text-xs text-zinc-400 italic mb-4">
-                  "{asset.description}"
+                  &quot;{asset.description}&quot;
                 </p>
               )}
             </div>

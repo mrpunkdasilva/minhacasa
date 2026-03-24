@@ -18,7 +18,9 @@ export default function MarketViewClient({ invoices }: MarketViewClientProps) {
   return (
     <div className="flex flex-col space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tighter text-white">Mercado</h1>
+        <h1 className="text-3xl font-bold tracking-tighter text-white">
+          Mercado
+        </h1>
         <p className="text-zinc-500 mt-2">
           Sua lista de compras, despensa e análise de gastos em um só lugar.
         </p>

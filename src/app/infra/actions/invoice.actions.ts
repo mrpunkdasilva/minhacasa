@@ -109,14 +109,19 @@ export async function updateInvoiceStatus(uuid: string, status: InvoiceStatus) {
   }
 }
 
-export async function updateInvoice(uuid: string, data: Omit<InvoiceEntity, "uuid">) {
+export async function updateInvoice(
+  uuid: string,
+  data: Omit<InvoiceEntity, "uuid">,
+) {
   try {
     const client = await clientPromise;
     const db = client.db("minhacasa");
 
     const result = await db.collection("invoices").updateOne(
       { uuid },
-      { $set: { ...data, dueDate: new Date(data.dueDate), isArchived: false } }
+      {
+        $set: { ...data, dueDate: new Date(data.dueDate), isArchived: false },
+      },
     );
 
     if (!result.acknowledged) {
@@ -139,10 +144,9 @@ export async function archiveInvoice(uuid: string) {
     const client = await clientPromise;
     const db = client.db("minhacasa");
 
-    const result = await db.collection("invoices").updateOne(
-      { uuid },
-      { $set: { isArchived: true } }
-    );
+    const result = await db
+      .collection("invoices")
+      .updateOne({ uuid }, { $set: { isArchived: true } });
 
     if (!result.acknowledged) {
       throw new Error("Falha ao arquivar a fatura.");

@@ -13,8 +13,13 @@ export default async function EditInvoiceView({ uuid }: EditInvoiceViewProps) {
   if (!invoice) {
     return (
       <div className="container mx-auto py-12 px-4 text-center">
-        <h2 className="text-2xl font-bold text-white mb-4">Fatura não encontrada</h2>
-        <Link href="/view/pages/invoices" className="text-emerald-500 hover:underline">
+        <h2 className="text-2xl font-bold text-white mb-4">
+          Fatura não encontrada
+        </h2>
+        <Link
+          href="/view/pages/invoices"
+          className="text-emerald-500 hover:underline"
+        >
           Voltar para a lista
         </Link>
       </div>

@@ -11,7 +11,7 @@ export default function MarketAnalysis({ invoices }: MarketAnalysisProps) {
   const marketExpenses = invoices.filter(
     (inv) => inv.category === Category.FOOD || inv.category === Category.MARKET,
   );
-  
+
   const totalMarketSpent = marketExpenses.reduce(
     (acc, inv) => acc + inv.price,
     0,
@@ -19,9 +19,9 @@ export default function MarketAnalysis({ invoices }: MarketAnalysisProps) {
 
   const currentMonth = new Date().getMonth();
   const currentMonthExpenses = marketExpenses.filter(
-    (inv) => new Date(inv.dueDate).getMonth() === currentMonth
+    (inv) => new Date(inv.dueDate).getMonth() === currentMonth,
   );
-  
+
   const totalCurrentMonth = currentMonthExpenses.reduce(
     (acc, inv) => acc + inv.price,
     0,
@@ -105,9 +105,12 @@ export default function MarketAnalysis({ invoices }: MarketAnalysisProps) {
             <tbody className="divide-y divide-zinc-800">
               {marketExpenses.length === 0 ? (
                 <tr>
-                   <td colSpan={4} className="px-6 py-12 text-center text-zinc-500 italic">
-                      Nenhuma compra de mercado registrada ainda.
-                   </td>
+                  <td
+                    colSpan={4}
+                    className="px-6 py-12 text-center text-zinc-500 italic"
+                  >
+                    Nenhuma compra de mercado registrada ainda.
+                  </td>
                 </tr>
               ) : (
                 marketExpenses.map((expense) => (
@@ -128,12 +131,16 @@ export default function MarketAnalysis({ invoices }: MarketAnalysisProps) {
                       })}
                     </td>
                     <td className="px-6 py-4 text-center text-nowrap">
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
-                        expense.status === InvoiceStatus.paid 
-                          ? "bg-emerald-500/10 text-emerald-500" 
-                          : "bg-amber-500/10 text-amber-500"
-                      }`}>
-                        {expense.status === InvoiceStatus.paid ? "PAGO" : "PENDENTE"}
+                      <span
+                        className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                          expense.status === InvoiceStatus.paid
+                            ? "bg-emerald-500/10 text-emerald-500"
+                            : "bg-amber-500/10 text-amber-500"
+                        }`}
+                      >
+                        {expense.status === InvoiceStatus.paid
+                          ? "PAGO"
+                          : "PENDENTE"}
                       </span>
                     </td>
                   </tr>
