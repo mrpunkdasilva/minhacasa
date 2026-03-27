@@ -53,7 +53,9 @@ export function CategoryDistributionChart({
               fontSize: "12px",
             }}
             itemStyle={{ color: "#fff" }}
-            formatter={(value: number | string | readonly (string | number)[] | undefined) => [
+            formatter={(
+              value: number | string | readonly (string | number)[] | undefined,
+            ) => [
               Number(value || 0).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",

@@ -9,6 +9,7 @@ import {
 import { AppSidebar } from "@/app/view/components/header/app-sidebar";
 import Header from "@/app/view/components/header/header";
 import { TooltipProvider } from "@/app/view/components/ui/tooltip";
+import { auth } from "@/auth";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -37,7 +38,9 @@ export const metadata: Metadata = {
     "planejamento",
   ],
   authors: [{ name: "MinhaCasa Team" }],
-  viewport: "width=device-width, initial-scale=1",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  ),
   robots: "index, follow",
   openGraph: {
     title: "MinhaCasa | Organização e Finanças",
@@ -69,11 +72,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html
       lang="pt-BR"
@@ -83,13 +93,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black h-full`}
       >
         <TooltipProvider delayDuration={0}>
-          <SidebarProvider defaultOpen={true}>
-            <AppSidebar />
-            <SidebarInset className="flex flex-col bg-black">
-              <Header />
-              <main className="flex-1 overflow-y-auto">{children}</main>
-            </SidebarInset>
-          </SidebarProvider>
+          {session ? (
+            <SidebarProvider defaultOpen={true}>
+              <AppSidebar session={session} />
+              <SidebarInset className="flex flex-col bg-black">
+                <Header />
+                <main className="flex-1 overflow-y-auto">{children}</main>
+              </SidebarInset>
+            </SidebarProvider>
+          ) : (
+            <main className="h-full">{children}</main>
+          )}
         </TooltipProvider>
       </body>
     </html>

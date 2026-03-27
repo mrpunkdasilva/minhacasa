@@ -66,7 +66,9 @@ export function MonthlyExpensesChart({ invoices }: MonthlyExpensesChartProps) {
               fontSize: "12px",
             }}
             itemStyle={{ color: "#10b981" }}
-            formatter={(value: number | string | readonly (string | number)[] | undefined) => [
+            formatter={(
+              value: number | string | readonly (string | number)[] | undefined,
+            ) => [
               Number(value || 0).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",

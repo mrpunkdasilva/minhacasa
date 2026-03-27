@@ -28,6 +28,8 @@ import {
   SidebarGroupContent,
 } from "@/app/view/components/ui/sidebar";
 import LogoComponent from "@/app/view/components/ui/logo/logo";
+import { NavUser } from "@/app/view/components/header/nav-user";
+import { Session } from "next-auth";
 
 const navItems = [
   {
@@ -67,7 +69,11 @@ const navItems = [
   },
 ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  session: Session | null;
+}
+
+export function AppSidebar({ session, ...props }: AppSidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -117,7 +123,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="border-t border-zinc-800 p-4">
-        <div className="flex items-center gap-2 px-2 text-xs text-zinc-500 font-mono">
+        <NavUser session={session} />
+        <div className="flex items-center gap-2 px-2 pt-2 text-xs text-zinc-500 font-mono">
           <span>v0.1.0</span>
         </div>
       </SidebarFooter>
