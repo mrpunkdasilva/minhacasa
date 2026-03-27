@@ -5,4 +5,5 @@ export interface InvoicePaidEntity extends InvoiceEntity {
   paidAmount: number;
   paidAt: Date;
   paymentMethod: PaymentMethod;
+  notes?: string;
 }

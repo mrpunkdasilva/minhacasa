@@ -1,20 +1,22 @@
-import {
-  CleaningFrequency,
-  CleaningRoom,
-} from "../../enums/cleaning/cleaning.enums";
+import { CleaningFrequency } from "../../enums/cleaning/cleaning.enums";
+import { HouseRoom } from "../../enums/house/house-room";
+import { BaseEntity } from "../base.entity";
 
-export interface CleaningTask {
-  id: string;
+export interface EstimatedTime {
+  value: number;
+  unit: "min" | "h";
+}
+
+export interface CleaningTask extends BaseEntity {
   title: string;
   description: string;
-  room: CleaningRoom;
+  room: HouseRoom;
   frequency: CleaningFrequency;
-  estimatedTime?: number;
+  estimatedTime?: EstimatedTime;
   isHeavyCleaning: boolean;
 }
 
-export interface CleaningLog {
-  id: string;
+export interface CleaningLog extends BaseEntity {
   taskId: string;
   completedAt: Date;
   completedBy?: string;

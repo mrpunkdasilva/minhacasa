@@ -3,27 +3,29 @@ import {
   SystemType,
   UtilityType,
   MaintenanceFrequency,
+  MaintenanceStatus,
+  UtilityUnit,
 } from "../../enums/infrastructure/infrastructure.enums";
+import { HouseRoom } from "../../enums/house/house-room";
+import { BaseEntity } from "../base.entity";
 
-export interface HomeAsset {
-  id: string;
+export interface HomeAsset extends BaseEntity {
   name: string;
   category: AssetCategory;
   purchaseDate?: Date;
   warrantyUntil?: Date;
   manualUrl?: string;
   description?: string;
-  location: string;
+  location: HouseRoom;
 }
 
-export interface MaintenanceTask {
-  id: string;
+export interface MaintenanceTask extends BaseEntity {
   title: string;
   description: string;
   lastPerformedDate: Date;
   nextDueDate: Date;
   frequency: MaintenanceFrequency;
-  status: "ok" | "warning" | "overdue";
+  status: MaintenanceStatus;
 }
 
 export interface SystemComponent {
@@ -39,5 +41,5 @@ export interface UtilityReading {
   utilityType: UtilityType;
   readingDate: Date;
   value: number;
-  unit: string;
+  unit: UtilityUnit;
 }

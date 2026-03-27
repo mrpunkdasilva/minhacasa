@@ -1,14 +1,26 @@
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import { Category } from "@/app/domain/enums/category/category";
+import { BaseEntity } from "../base.entity";
 
-export interface InvoiceEntity {
-  uuid: string;
+export interface Money {
+  amount: number;
+  currency: "BRL" | "USD" | "EUR";
+}
+
+export interface RecurrenceInfo {
+  isRecurring: boolean;
+  frequency?: "weekly" | "monthly" | "yearly";
+  interval?: number;
+  endDate?: Date;
+}
+
+export interface InvoiceEntity extends BaseEntity {
   name: string;
   dueDate: Date;
-  price: number;
+  price: Money;
   description: string;
   category: Category;
   status: InvoiceStatus;
-  isRecurring: boolean;
+  recurrence: RecurrenceInfo;
   isArchived?: boolean;
 }

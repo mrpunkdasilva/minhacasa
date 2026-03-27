@@ -1,13 +1,18 @@
-import { MarketCategory } from "../../enums/market-category/market-category";
+import {
+  MarketCategory,
+  MarketUnit,
+} from "../../enums/market-category/market-category";
+import { BaseEntity } from "../base.entity";
+import { Money } from "../invoice/invoice.entity";
 
-export interface MarketItem {
-  id: string;
+export interface MarketItem extends BaseEntity {
   name: string;
   category: MarketCategory;
   quantity: number;
-  unit: "un" | "kg" | "g" | "l" | "ml" | "pct";
+  minimumQuantity?: number;
+  unit: MarketUnit;
   isBought?: boolean;
   isInStock?: boolean;
   expirationDate?: Date;
-  lastPrice?: number;
+  lastPrice?: Money;
 }

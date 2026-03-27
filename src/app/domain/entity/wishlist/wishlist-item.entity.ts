@@ -1,12 +1,14 @@
 import { WishlistPriority } from "../../enums/wishlist/wishlist-priority";
+import { WishlistCategory } from "../../enums/wishlist/wishlist-category";
+import { BaseEntity } from "../base.entity";
+import { Money } from "../invoice/invoice.entity";
 
-export interface WishlistItem {
-  id: string;
+export interface WishlistItem extends BaseEntity {
   name: string;
-  price: number;
+  price: Money;
   priority: WishlistPriority;
   url?: string;
-  savedAmount: number;
+  savedAmount: Money;
   isPurchased: boolean;
-  category: string;
+  category: WishlistCategory;
 }

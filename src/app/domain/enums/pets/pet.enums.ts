@@ -6,6 +6,11 @@ export enum PetType {
   OTHER = "Outro",
 }
 
+export enum PetGender {
+  MALE = "Macho",
+  FEMALE = "Fêmea",
+}
+
 export enum HealthRecordType {
   VACCINE = "Vacina",
   DEWORMING = "Vermífugo",

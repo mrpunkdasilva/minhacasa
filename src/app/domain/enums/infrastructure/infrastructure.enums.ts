@@ -30,3 +30,15 @@ export enum MaintenanceFrequency {
   BI_ANNUAL = "Bienal",
   ONCE = "Uma vez",
 }
+
+export enum MaintenanceStatus {
+  OK = "ok",
+  WARNING = "warning",
+  OVERDUE = "overdue",
+}
+
+export enum UtilityUnit {
+  KWH = "kWh",
+  M3 = "m³",
+  UNIT = "un",
+}

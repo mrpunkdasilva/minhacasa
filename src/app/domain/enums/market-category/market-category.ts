@@ -9,3 +9,12 @@ export enum MarketCategory {
   BEVERAGES = "Bebidas",
   FROZEN = "Congelados",
 }
+
+export enum MarketUnit {
+  UN = "un",
+  KG = "kg",
+  G = "g",
+  L = "l",
+  ML = "ml",
+  PCT = "pct",
+}
