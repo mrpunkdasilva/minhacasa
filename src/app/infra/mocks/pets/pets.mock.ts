@@ -3,7 +3,7 @@ import {
   HealthRecord,
   PetService,
   PetNutrition,
-} from "@/app/domain/entity/pets/pet.entities";
+} from "@/app/domain/entity/pet/pet.entities";
 import {
   PetType,
   HealthRecordType,

@@ -57,7 +57,7 @@ const navItems = [
   },
   {
     title: "Pets",
-    href: "/view/pages/pets",
+    href: "/view/pages/pet",
     icon: PawPrint,
   },
   {
