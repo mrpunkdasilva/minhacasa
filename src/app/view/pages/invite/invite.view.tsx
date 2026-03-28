@@ -18,6 +18,7 @@ import {
   HouseMember,
 } from "@/app/infra/actions/house.actions";
 import { HouseEntity } from "@/app/domain/entity/house/house.entity";
+import { QRCode } from "@/app/view/components/ui/qrcode";
 
 export default function InviteView() {
   const [house, setHouse] = useState<HouseEntity | null>(null);
@@ -46,15 +47,20 @@ export default function InviteView() {
         setHouse(houseData);
 
         if (houseData) {
+          console.log("INVITE_VIEW: House found, fetching link and members");
           // Load non-critical data in parallel
           const [linkData, membersData] = await Promise.allSettled([
             getInviteLink(),
             getHouseMembers(),
           ]);
 
-          if (linkData.status === "fulfilled") {
+          if (linkData.status === "fulfilled" && linkData.value) {
             console.log("INVITE_VIEW: inviteLink received:", linkData.value);
             setInviteLink(linkData.value);
+          } else {
+            console.warn("INVITE_VIEW: Link fetch failed or empty, trying manual fetch");
+            const manualLink = await getInviteLink();
+            if (manualLink) setInviteLink(manualLink);
           }
           if (membersData.status === "fulfilled") {
             console.log("INVITE_VIEW: membersData received:", membersData.value.length);
@@ -126,26 +132,39 @@ export default function InviteView() {
               <Home size={20} /> Seu Link Único
             </CardTitle>
             <CardDescription className="text-zinc-400">
-              Compartilhe este link com quem você quer que more com você.
+              Compartilhe este link ou deixe que escaneiem seu QR Code.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="p-4 bg-black border border-zinc-800 rounded-lg flex items-center justify-between gap-4 overflow-hidden">
-              <code className="text-xs text-zinc-400 truncate flex-1">
-                {inviteLink || "Carregando seu link..."}
-              </code>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={copyToClipboard}
-                className="shrink-0 text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10"
-              >
-                {copied ? <Check size={18} /> : <Copy size={18} />}
-              </Button>
+          <CardContent className="space-y-6 flex flex-col items-center">
+            {inviteLink && (
+              <div className="relative group transition-all duration-300 hover:scale-105">
+                <div className="absolute -inset-0.5 bg-emerald-500/20 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                <QRCode
+                  value={inviteLink}
+                  size={160}
+                  className="relative bg-black p-4 rounded-xl shadow-2xl"
+                />
+              </div>
+            )}
+            
+            <div className="w-full space-y-4">
+              <div className="p-4 bg-black border border-zinc-800 rounded-lg flex items-center justify-between gap-4 overflow-hidden">
+                <code className="text-xs text-zinc-400 truncate flex-1">
+                  {inviteLink || "Carregando seu link..."}
+                </code>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={copyToClipboard}
+                  className="shrink-0 text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10"
+                >
+                  {copied ? <Check size={18} /> : <Copy size={18} />}
+                </Button>
+              </div>
+              <p className="text-[10px] text-zinc-500 text-center uppercase tracking-widest font-mono">
+                Código da Casa: {house.inviteCode}
+              </p>
             </div>
-            <p className="text-[10px] text-zinc-500 text-center uppercase tracking-widest font-mono">
-              Código da Casa: {house.inviteCode}
-            </p>
           </CardContent>
           <CardFooter>
             <Button
