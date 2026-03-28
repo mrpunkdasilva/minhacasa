@@ -3,8 +3,10 @@
 import { signIn, signOut as authSignOut } from "@/auth";
 import { AuthError } from "next-auth";
 import { userRepository } from "@/app/infra/lib/user.repository";
+import { houseRepository } from "@/app/infra/lib/house.repository";
 import { hashPassword } from "@/app/infra/lib/password";
 import { UserEntity } from "@/app/domain/entity/user/user.entity";
+import { HouseEntity } from "@/app/domain/entity/house/house.entity";
 
 /**
  * Handles user authentication (login).
@@ -38,6 +40,7 @@ export async function registerUser(
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  const inviteCode = formData.get("inviteCode") as string;
 
   if (!name || !email || !password) {
     return "Por favor, preencha todos os campos para entrar na sua casa.";
@@ -50,11 +53,36 @@ export async function registerUser(
     }
 
     const hashedPassword = await hashPassword(password);
+    const userUuid = crypto.randomUUID();
+    let houseUuid = "";
+
+    // Join an existing house via invite code
+    if (inviteCode) {
+      const house = await houseRepository.findByInviteCode(inviteCode);
+      if (!house) {
+        return "Ops! Esse código de convite parece não existir mais.";
+      }
+      houseUuid = house.uuid;
+    } else {
+      // Create a new house for the first resident
+      houseUuid = crypto.randomUUID();
+      const newHouse: HouseEntity = {
+        uuid: houseUuid,
+        name: `Casa de ${name.split(" ")[0]}`,
+        inviteCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
+        createdByUuid: userUuid,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      await houseRepository.create(newHouse);
+    }
+
     const newUser: UserEntity = {
-      uuid: crypto.randomUUID(),
+      uuid: userUuid,
       name,
       email,
       password: hashedPassword,
+      houseUuid,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

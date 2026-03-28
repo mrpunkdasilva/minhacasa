@@ -23,7 +23,7 @@ export function MonthlyExpensesChart({ invoices }: MonthlyExpensesChartProps) {
   const monthlyDataMap = invoices.reduce(
     (acc, inv) => {
       const month = format(new Date(inv.dueDate), "MMM", { locale: ptBR });
-      acc[month] = (acc[month] || 0) + inv.price;
+      acc[month] = (acc[month] || 0) + inv.price.amount;
       return acc;
     },
     {} as Record<string, number>,

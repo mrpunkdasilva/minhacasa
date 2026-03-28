@@ -29,6 +29,7 @@ import {
 } from "@/app/view/components/ui/sidebar";
 import LogoComponent from "@/app/view/components/ui/logo/logo";
 import { NavUser } from "@/app/view/components/header/nav-user";
+import { NavHouse } from "@/app/view/components/header/nav-house";
 import { Session } from "next-auth";
 
 const navItems = [
@@ -84,6 +85,7 @@ export function AppSidebar({ session, ...props }: AppSidebarProps) {
         </Link>
       </SidebarHeader>
       <SidebarContent>
+        <NavHouse />
         <SidebarGroup>
           <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>

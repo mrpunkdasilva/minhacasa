@@ -13,16 +13,16 @@ import { CategoryDistributionChart } from "./components/category-distribution-ch
 export default async function DashboardView() {
   const invoices = await getInvoices();
 
-  const totalInvoices = invoices.reduce((acc, inv) => acc + inv.price, 0);
+  const totalInvoices = invoices.reduce((acc, inv) => acc + inv.price.amount, 0);
   const totalPaid = invoices
     .filter((inv) => inv.status === InvoiceStatus.paid)
-    .reduce((acc, inv) => acc + inv.price, 0);
+    .reduce((acc, inv) => acc + inv.price.amount, 0);
   const totalPending = invoices
     .filter((inv) => inv.status === InvoiceStatus.unpaid)
-    .reduce((acc, inv) => acc + inv.price, 0);
+    .reduce((acc, inv) => acc + inv.price.amount, 0);
   const totalOverdue = invoices
     .filter((inv) => inv.status === InvoiceStatus.overdue)
-    .reduce((acc, inv) => acc + inv.price, 0);
+    .reduce((acc, inv) => acc + inv.price.amount, 0);
 
   const pendingInvoices = invoices
     .filter((inv) => inv.status === InvoiceStatus.unpaid)

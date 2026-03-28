@@ -23,4 +23,6 @@ export interface InvoiceEntity extends BaseEntity {
   status: InvoiceStatus;
   recurrence: RecurrenceInfo;
   isArchived?: boolean;
+  houseUuid: string; // The house this invoice belongs to
+  ownerUuid?: string; // If set, it's a private invoice for this user
 }

@@ -8,6 +8,7 @@ import {
   DollarSign,
   FileText,
   Repeat,
+  ShieldCheck,
 } from "lucide-react";
 import InvoiceActions from "@/app/view/pages/invoices/[id]/invoice-actions";
 
@@ -50,18 +51,25 @@ export default async function InvoiceDetailView({
         <div className="bg-zinc-800/50 p-5 sm:p-8 border-b border-zinc-800">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <span
-                className={`px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase ${
-                  invoice.status === InvoiceStatus.paid
-                    ? "bg-emerald-500/20 text-emerald-500"
-                    : invoice.status === InvoiceStatus.overdue
-                      ? "bg-rose-500/20 text-rose-500"
-                      : "bg-amber-500/20 text-amber-500"
-                }`}
-              >
-                {getStatusLabel(invoice.status)}
-              </span>
-              <h1 className="text-xl sm:text-3xl font-bold mt-2 sm:mt-3 tracking-tighter">
+              <div className="flex items-center gap-2 mb-2">
+                <span
+                  className={`px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase ${
+                    invoice.status === InvoiceStatus.paid
+                      ? "bg-emerald-500/20 text-emerald-500"
+                      : invoice.status === InvoiceStatus.overdue
+                        ? "bg-rose-500/20 text-rose-500"
+                        : "bg-amber-500/20 text-amber-500"
+                  }`}
+                >
+                  {getStatusLabel(invoice.status)}
+                </span>
+                {invoice.ownerUuid && (
+                  <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-500 flex items-center gap-1">
+                    <ShieldCheck size={10} /> Privada
+                  </span>
+                )}
+              </div>
+              <h1 className="text-xl sm:text-3xl font-bold tracking-tighter">
                 {invoice.name}
               </h1>
             </div>
@@ -70,7 +78,7 @@ export default async function InvoiceDetailView({
                 Valor
               </p>
               <p className="text-2xl sm:text-3xl font-mono font-bold text-emerald-500">
-                {invoice.price.toLocaleString("pt-BR", {
+                {invoice.price.amount.toLocaleString("pt-BR", {
                   style: "currency",
                   currency: "BRL",
                 })}
@@ -94,7 +102,7 @@ export default async function InvoiceDetailView({
             <InfoItem
               icon={<Repeat size={18} />}
               label="Recorrente"
-              value={invoice.isRecurring ? "Sim" : "Não"}
+              value={invoice.recurrence?.isRecurring ? "Sim" : "Não"}
             />
             <InfoItem
               icon={<DollarSign size={18} />}

@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useActionState } from "react";
+import { useState, useActionState, useEffect, Suspense } from "react";
 import { authenticate, registerUser } from "@/app/infra/actions/auth.actions";
 import { Button } from "@/app/view/components/ui/button";
 import {
@@ -21,9 +19,21 @@ import {
 } from "@/app/view/components/ui/tabs";
 import LogoComponent from "@/app/view/components/ui/logo/logo";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
-export default function WelcomeView() {
+function WelcomeContent() {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("login");
+  const [inviteCode, setInviteCode] = useState("");
+
+  useEffect(() => {
+    const invite = searchParams.get("invite");
+    if (invite) {
+      setInviteCode(invite);
+      setActiveTab("register");
+    }
+  }, [searchParams]);
+
   const [loginErrorMessage, loginAction, isLoginPending] = useActionState(
     authenticate,
     undefined,
@@ -124,6 +134,7 @@ export default function WelcomeView() {
 
             <TabsContent value="register">
               <form action={registerAction} className="space-y-4 pt-4">
+                <input type="hidden" name="inviteCode" value={inviteCode} />
                 <div className="space-y-2">
                   <Label htmlFor="reg-name">Como devemos te chamar?</Label>
                   <Input
@@ -158,6 +169,11 @@ export default function WelcomeView() {
                     className="bg-black border-zinc-800 focus:border-emerald-500 text-white"
                   />
                 </div>
+                {inviteCode && (
+                  <p className="text-xs text-emerald-500 font-medium">
+                    Você está entrando em uma casa via convite!
+                  </p>
+                )}
                 {registerErrorMessage && (
                   <p className="text-sm font-medium text-rose-500">
                     {registerErrorMessage}
@@ -189,5 +205,13 @@ export default function WelcomeView() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function WelcomeView() {
+  return (
+    <Suspense fallback={<div className="bg-black min-h-screen" />}>
+      <WelcomeContent />
+    </Suspense>
   );
 }

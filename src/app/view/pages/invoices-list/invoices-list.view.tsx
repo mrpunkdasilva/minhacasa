@@ -1,6 +1,6 @@
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, ShieldCheck } from "lucide-react";
 import { getInvoices } from "@/app/infra/actions/invoice.actions";
 
 export default async function InvoicesListView() {
@@ -8,10 +8,11 @@ export default async function InvoicesListView() {
 
   const totals = invoices.reduce(
     (acc, inv) => {
-      acc.total += inv.price;
-      if (inv.status === InvoiceStatus.paid) acc.paid += inv.price;
-      if (inv.status === InvoiceStatus.unpaid) acc.unpaid += inv.price;
-      if (inv.status === InvoiceStatus.overdue) acc.overdue += inv.price;
+      const amount = inv.price.amount;
+      acc.total += amount;
+      if (inv.status === InvoiceStatus.paid) acc.paid += amount;
+      if (inv.status === InvoiceStatus.unpaid) acc.unpaid += amount;
+      if (inv.status === InvoiceStatus.overdue) acc.overdue += amount;
       return acc;
     },
     { total: 0, paid: 0, unpaid: 0, overdue: 0 },
@@ -75,12 +76,17 @@ export default async function InvoicesListView() {
                     className="hover:bg-zinc-800/30 transition-colors group"
                   >
                     <td className="px-6 py-4 font-medium text-white text-nowrap">
-                      <Link
-                        href={`/view/pages/invoices/${invoice.uuid}`}
-                        className="hover:text-emerald-500 transition-colors"
-                      >
-                        {invoice.name}
-                      </Link>
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={`/view/pages/invoices/${invoice.uuid}`}
+                          className="hover:text-emerald-500 transition-colors"
+                        >
+                          {invoice.name}
+                        </Link>
+                        {invoice.ownerUuid && (
+                          <ShieldCheck size={14} className="text-emerald-500 opacity-60" title="Fatura Privada" />
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-zinc-400 text-nowrap">
                       {new Date(invoice.dueDate).toLocaleDateString("pt-BR")}
@@ -91,7 +97,7 @@ export default async function InvoicesListView() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right text-white font-mono text-nowrap">
-                      {invoice.price.toLocaleString("pt-BR", {
+                      {invoice.price.amount.toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",
                       })}

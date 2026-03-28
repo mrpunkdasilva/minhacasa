@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, CircleNotch } from "@phosphor-icons/react";
+import { Calendar as CalendarIcon, CircleNotch, ShieldCheck } from "@phosphor-icons/react";
 
 import { cn } from "@/app/infra/lib/utils";
 import { Button } from "@/app/view/components/ui/button";
@@ -60,6 +60,7 @@ const formSchema = z.object({
     message: "Selecione um status.",
   }),
   isRecurring: z.boolean(),
+  isPrivate: z.boolean().default(false),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -76,28 +77,34 @@ export function CreateInvoiceForm({ initialData }: CreateInvoiceFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || "",
-      price: initialData?.price || 0,
+      price: initialData?.price?.amount || 0,
       dueDate: initialData?.dueDate ? new Date(initialData.dueDate) : undefined,
       description: initialData?.description || "",
       category: (initialData?.category as Category) || undefined,
-      isRecurring: initialData?.isRecurring || false,
+      isRecurring: initialData?.recurrence?.isRecurring || false,
       status: initialData?.status ?? InvoiceStatus.unpaid,
+      isPrivate: !!initialData?.ownerUuid,
     },
   });
 
   async function onSubmit(values: FormValues) {
     setIsPending(true);
     try {
+      const payload = {
+        name: values.name,
+        price: { amount: values.price, currency: "BRL" as const },
+        dueDate: values.dueDate,
+        description: values.description || "",
+        category: values.category,
+        status: values.status,
+        recurrence: { isRecurring: values.isRecurring },
+        isPrivate: values.isPrivate,
+      };
+
       if (isEditing && initialData) {
-        await updateInvoice(initialData.uuid, {
-          ...values,
-          description: values.description || "",
-        });
+        await updateInvoice(initialData.uuid, payload);
       } else {
-        await createInvoice({
-          ...values,
-          description: values.description || "",
-        });
+        await createInvoice(payload);
       }
     } catch (error) {
       console.error(error);
@@ -252,26 +259,51 @@ export function CreateInvoiceForm({ initialData }: CreateInvoiceFormProps) {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="isRecurring"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-none border border-border p-4">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel>Fatura Recorrente</FormLabel>
-                  <FormDescription>
-                    Marque se esta fatura se repete mensalmente.
-                  </FormDescription>
-                </div>
-              </FormItem>
-            )}
-          />
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="isRecurring"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-none border border-border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Fatura Recorrente</FormLabel>
+                    <FormDescription>
+                      Marque se esta fatura se repete mensalmente.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="isPrivate"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-none border border-emerald-500/20 bg-emerald-500/5 p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-emerald-500 flex items-center gap-1">
+                      <ShieldCheck size={14} /> Fatura Privada
+                    </FormLabel>
+                    <FormDescription className="text-zinc-500">
+                      Apenas você poderá ver este lançamento.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
 
         <FormField
