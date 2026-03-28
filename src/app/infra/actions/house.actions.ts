@@ -27,3 +27,30 @@ export async function getInviteLink() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   return `${baseUrl}/welcome?invite=${house.inviteCode}`;
 }
+
+export interface HouseMember {
+  uuid: string;
+  name: string;
+  email: string;
+  avatarUrl?: string;
+}
+
+/**
+ * Gets all members belonging to the current user's house.
+ */
+export async function getHouseMembers(): Promise<HouseMember[]> {
+  const session = await auth();
+  if (!session?.user?.email) return [];
+
+  const user = await userRepository.findByEmail(session.user.email);
+  if (!user || !user.houseUuid) return [];
+
+  const members = await userRepository.findByHouseUuid(user.houseUuid);
+
+  return members.map(({ uuid, name, email, avatarUrl }) => ({
+    uuid,
+    name,
+    email,
+    avatarUrl,
+  }));
+}

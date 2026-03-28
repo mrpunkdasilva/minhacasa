@@ -21,6 +21,11 @@ export class UserRepository {
     return collection.findOne({ uuid });
   }
 
+  async findByHouseUuid(houseUuid: string): Promise<UserEntity[]> {
+    const collection = await this.getCollection();
+    return collection.find({ houseUuid }).toArray();
+  }
+
   async create(user: UserEntity): Promise<void> {
     const collection = await this.getCollection();
     await collection.insertOne(user);

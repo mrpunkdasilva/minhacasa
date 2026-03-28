@@ -18,7 +18,11 @@ async function getUserContext() {
   return user;
 }
 
-export async function createInvoice(data: Omit<InvoiceEntity, "uuid" | "houseUuid" | "ownerUuid"> & { isPrivate?: boolean }) {
+export async function createInvoice(
+  data: Omit<InvoiceEntity, "uuid" | "houseUuid" | "ownerUuid"> & {
+    isPrivate?: boolean;
+  },
+) {
   const user = await getUserContext();
   if (!user) throw new Error("Usuário não autenticado.");
 
@@ -61,14 +65,14 @@ export async function getInvoices(): Promise<InvoiceEntity[]> {
     // Filter by house, but only show private ones if they belong to the current user
     const invoices = await db
       .collection("invoices")
-      .find({ 
+      .find({
         houseUuid: user.houseUuid,
         isArchived: { $ne: true },
         $or: [
           { ownerUuid: { $exists: false } },
           { ownerUuid: null },
-          { ownerUuid: user.uuid }
-        ]
+          { ownerUuid: user.uuid },
+        ],
       })
       .sort({ dueDate: 1 })
       .toArray();
@@ -102,14 +106,14 @@ export async function getInvoiceByUuid(
     const client = await clientPromise;
     const db = client.db("minhacasa");
 
-    const doc = await db.collection("invoices").findOne({ 
+    const doc = await db.collection("invoices").findOne({
       uuid,
       houseUuid: user.houseUuid,
       $or: [
         { ownerUuid: { $exists: false } },
         { ownerUuid: null },
-        { ownerUuid: user.uuid }
-      ]
+        { ownerUuid: user.uuid },
+      ],
     });
 
     if (!doc) return null;
@@ -160,7 +164,9 @@ export async function updateInvoiceStatus(uuid: string, status: InvoiceStatus) {
 
 export async function updateInvoice(
   uuid: string,
-  data: Omit<InvoiceEntity, "uuid" | "houseUuid" | "ownerUuid"> & { isPrivate?: boolean }
+  data: Omit<InvoiceEntity, "uuid" | "houseUuid" | "ownerUuid"> & {
+    isPrivate?: boolean;
+  },
 ) {
   const user = await getUserContext();
   if (!user) throw new Error("Usuário não autenticado.");
@@ -174,11 +180,11 @@ export async function updateInvoice(
     const result = await db.collection("invoices").updateOne(
       { uuid, houseUuid: user.houseUuid },
       {
-        $set: { 
-          ...invoiceData, 
-          dueDate: new Date(invoiceData.dueDate), 
+        $set: {
+          ...invoiceData,
+          dueDate: new Date(invoiceData.dueDate),
           isArchived: false,
-          ownerUuid: isPrivate ? user.uuid : null
+          ownerUuid: isPrivate ? user.uuid : null,
         },
       },
     );
@@ -208,7 +214,10 @@ export async function archiveInvoice(uuid: string) {
 
     const result = await db
       .collection("invoices")
-      .updateOne({ uuid, houseUuid: user.houseUuid }, { $set: { isArchived: true } });
+      .updateOne(
+        { uuid, houseUuid: user.houseUuid },
+        { $set: { isArchived: true } },
+      );
 
     if (!result.acknowledged) {
       throw new Error("Falha ao arquivar a fatura.");

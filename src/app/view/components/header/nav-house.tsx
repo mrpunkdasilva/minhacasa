@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Home, Check } from "lucide-react";
+import { Copy, Home, Check, Users, User } from "lucide-react";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -9,18 +9,26 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarMenuBadge,
 } from "@/app/view/components/ui/sidebar";
-import { getCurrentHouse, getInviteLink } from "@/app/infra/actions/house.actions";
+import {
+  getCurrentHouse,
+  getInviteLink,
+  getHouseMembers,
+  HouseMember,
+} from "@/app/infra/actions/house.actions";
 import { HouseEntity } from "@/app/domain/entity/house/house.entity";
 
 export function NavHouse() {
   const [house, setHouse] = useState<HouseEntity | null>(null);
   const [inviteLink, setInviteLink] = useState<string | null>(null);
+  const [members, setMembers] = useState<HouseMember[]>([]);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     getCurrentHouse().then(setHouse);
     getInviteLink().then(setInviteLink);
+    getHouseMembers().then(setMembers);
   }, []);
 
   const copyToClipboard = () => {
@@ -44,6 +52,7 @@ export function NavHouse() {
               <span className="font-bold truncate">{house.name}</span>
             </div>
           </SidebarMenuItem>
+
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={copyToClipboard}
@@ -58,6 +67,33 @@ export function NavHouse() {
               <span>{copied ? "Link Copiado!" : "Convidar Morador"}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+
+      <SidebarGroupLabel className="mt-4 flex items-center gap-2">
+        <Users size={14} /> Moradores
+      </SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {members.map((member) => (
+            <SidebarMenuItem key={member.uuid}>
+              <SidebarMenuButton className="h-8 py-0">
+                <div className="flex items-center gap-2 overflow-hidden">
+                  <div className="size-5 rounded-full bg-zinc-800 flex items-center justify-center shrink-0">
+                    <User size={12} className="text-zinc-400" />
+                  </div>
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="text-sm font-medium truncate leading-tight">
+                      {member.name}
+                    </span>
+                    <span className="text-[10px] text-zinc-500 truncate leading-tight">
+                      {member.email}
+                    </span>
+                  </div>
+                </div>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

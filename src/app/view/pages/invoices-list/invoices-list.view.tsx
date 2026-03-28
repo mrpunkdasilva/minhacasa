@@ -84,7 +84,11 @@ export default async function InvoicesListView() {
                           {invoice.name}
                         </Link>
                         {invoice.ownerUuid && (
-                          <ShieldCheck size={14} className="text-emerald-500 opacity-60" title="Fatura Privada" />
+                          <ShieldCheck
+                            size={14}
+                            className="text-emerald-500 opacity-60"
+                            title="Fatura Privada"
+                          />
                         )}
                       </div>
                     </td>
