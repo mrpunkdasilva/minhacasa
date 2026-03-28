@@ -23,7 +23,7 @@ import { cn } from "@/app/infra/lib/utils";
 export function NavHouse() {
   const [house, setHouse] = useState<HouseEntity | null>(null);
   const [members, setMembers] = useState<HouseMember[]>([]);
-  const [isMembersOpen, setIsMembersOpen] = useState(true);
+  const [isMembersOpen, setIsMembersOpen] = useState(false);
 
   useEffect(() => {
     getCurrentHouse().then(setHouse);
