@@ -30,7 +30,8 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
               name: user.name,
               email: user.email,
               image: user.avatarUrl,
-            };
+              houseUuid: user.houseUuid,
+            } as any;
           }
         }
 

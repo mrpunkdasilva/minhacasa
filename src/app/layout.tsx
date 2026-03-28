@@ -88,6 +88,7 @@ export default async function RootLayout({
     <html
       lang="pt-BR"
       className={cn("font-mono h-full", jetbrainsMono.variable)}
+      suppressHydrationWarning
     >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black h-full`}

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useActionState, useEffect, Suspense } from "react";
 import { authenticate, registerUser } from "@/app/infra/actions/auth.actions";
 import { Button } from "@/app/view/components/ui/button";

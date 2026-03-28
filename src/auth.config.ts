@@ -29,12 +29,14 @@ export const authConfig = {
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.houseUuid = (user as any).houseUuid;
       }
       return token;
     },
     session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
+        (session.user as any).houseUuid = token.houseUuid as string;
       }
       return session;
     },

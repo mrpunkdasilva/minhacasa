@@ -49,7 +49,7 @@ export function NavHouse() {
           <SidebarMenuItem>
             <div className="flex items-center gap-3 px-3 py-2 text-emerald-500 bg-emerald-500/5 rounded-md mb-1 border border-emerald-500/10">
               <Home size={18} />
-              <span className="font-bold truncate">{house.name}</span>
+              <span className="font-bold truncate">Nossa Casa</span>
             </div>
           </SidebarMenuItem>
 

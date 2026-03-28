@@ -26,20 +26,45 @@ export default function InviteView() {
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const copyToClipboard = async () => {
+    if (!inviteLink) return;
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+    }
+  };
+
   useEffect(() => {
     async function loadData() {
+      console.log("INVITE_VIEW: Starting to load data");
       try {
-        const [houseData, linkData, membersData] = await Promise.all([
-          getCurrentHouse(),
-          getInviteLink(),
-          getHouseMembers(),
-        ]);
-
+        const houseData = await getCurrentHouse();
+        console.log("INVITE_VIEW: houseData received:", houseData?.name || "null");
         setHouse(houseData);
-        setInviteLink(linkData);
-        setMembers(membersData);
+
+        if (houseData) {
+          // Load non-critical data in parallel
+          const [linkData, membersData] = await Promise.allSettled([
+            getInviteLink(),
+            getHouseMembers(),
+          ]);
+
+          if (linkData.status === "fulfilled") {
+            console.log("INVITE_VIEW: inviteLink received:", linkData.value);
+            setInviteLink(linkData.value);
+          }
+          if (membersData.status === "fulfilled") {
+            console.log("INVITE_VIEW: membersData received:", membersData.value.length);
+            setMembers(membersData.value);
+          }
+        } else {
+          console.warn("INVITE_VIEW: houseData is null, showing error state");
+        }
       } catch (error) {
-        console.error("Erro ao carregar dados do convite:", error);
+        console.error("INVITE_VIEW: Error loading data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -52,7 +77,9 @@ export default function InviteView() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
-        <p className="text-zinc-500 animate-pulse text-sm">Organizando as chaves da casa...</p>
+        <p className="text-zinc-500 animate-pulse text-sm">
+          Organizando as chaves da casa...
+        </p>
       </div>
     );
   }
@@ -63,11 +90,14 @@ export default function InviteView() {
         <div className="size-16 rounded-full bg-rose-500/10 flex items-center justify-center">
           <Home size={32} className="text-rose-500" />
         </div>
-        <h2 className="text-xl font-bold text-white">Ops! Casa não encontrada</h2>
+        <h2 className="text-xl font-bold text-white">
+          Ops! Casa não encontrada
+        </h2>
         <p className="text-zinc-500 max-w-md">
-          Não conseguimos encontrar as informações da sua casa. Verifique se você está logado corretamente, meu bem.
+          Não conseguimos encontrar as informações da sua casa. Verifique se
+          você está logado corretamente, meu bem.
         </p>
-        <Button 
+        <Button
           className="mt-4 bg-emerald-500 hover:bg-emerald-600 text-black font-bold"
           onClick={() => window.location.reload()}
         >

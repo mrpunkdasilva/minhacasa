@@ -30,6 +30,11 @@ export class UserRepository {
     const collection = await this.getCollection();
     await collection.insertOne(user);
   }
+
+  async update(uuid: string, data: Partial<UserEntity>): Promise<void> {
+    const collection = await this.getCollection();
+    await collection.updateOne({ uuid }, { $set: data });
+  }
 }
 
 export const userRepository = new UserRepository();
