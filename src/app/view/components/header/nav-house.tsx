@@ -22,24 +22,13 @@ import { cn } from "@/app/infra/lib/utils";
 
 export function NavHouse() {
   const [house, setHouse] = useState<HouseEntity | null>(null);
-  const [inviteLink, setInviteLink] = useState<string | null>(null);
   const [members, setMembers] = useState<HouseMember[]>([]);
-  const [copied, setCopied] = useState(false);
-  const [isMembersOpen, setIsMembersOpen] = useState(false);
+  const [isMembersOpen, setIsMembersOpen] = useState(true);
 
   useEffect(() => {
     getCurrentHouse().then(setHouse);
-    getInviteLink().then(setInviteLink);
     getHouseMembers().then(setMembers);
   }, []);
-
-  const copyToClipboard = () => {
-    if (inviteLink) {
-      navigator.clipboard.writeText(inviteLink);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   if (!house) return null;
 
@@ -53,21 +42,6 @@ export function NavHouse() {
               <Home size={18} />
               <span className="font-bold truncate">Casa</span>
             </div>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={copyToClipboard}
-              tooltip="Copiar Link de Convite"
-              className="text-zinc-400 hover:text-emerald-500 transition-colors"
-            >
-              {copied ? (
-                <Check className="size-4 text-emerald-500" />
-              ) : (
-                <Copy className="size-4" />
-              )}
-              <span>{copied ? "Link Copiado!" : "Convidar Morador"}</span>
-            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroupContent>

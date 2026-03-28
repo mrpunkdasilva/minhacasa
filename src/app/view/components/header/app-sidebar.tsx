@@ -12,6 +12,8 @@ import {
   PawPrint,
   Sparkles,
   PlusCircle,
+  Copy,
+  Check,
 } from "lucide-react";
 
 import {
@@ -31,6 +33,7 @@ import LogoComponent from "@/app/view/components/ui/logo/logo";
 import { NavUser } from "@/app/view/components/header/nav-user";
 import { NavHouse } from "@/app/view/components/header/nav-house";
 import { Session } from "next-auth";
+import { getInviteLink } from "@/app/infra/actions/house.actions";
 
 const navItems = [
   {
@@ -76,6 +79,20 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ session, ...props }: AppSidebarProps) {
   const pathname = usePathname();
+  const [inviteLink, setInviteLink] = React.useState<string | null>(null);
+  const [copied, setCopied] = React.useState(false);
+
+  React.useEffect(() => {
+    getInviteLink().then(setInviteLink);
+  }, []);
+
+  const copyToClipboard = () => {
+    if (inviteLink) {
+      navigator.clipboard.writeText(inviteLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <Sidebar collapsible="icon" className="border-r border-zinc-800" {...props}>
@@ -118,6 +135,21 @@ export function AppSidebar({ session, ...props }: AppSidebarProps) {
                     <PlusCircle className="size-4" />
                     <span>Nova Fatura</span>
                   </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={copyToClipboard}
+                  tooltip="Copiar Link de Convite"
+                  className="text-zinc-400 hover:text-emerald-500 transition-colors"
+                >
+                  {copied ? (
+                    <Check className="size-4 text-emerald-500" />
+                  ) : (
+                    <Copy className="size-4" />
+                  )}
+                  <span>{copied ? "Link Copiado!" : "Convidar Morador"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
