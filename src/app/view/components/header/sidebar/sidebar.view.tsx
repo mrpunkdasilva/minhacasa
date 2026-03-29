@@ -15,11 +15,11 @@ import {
   SidebarGroupContent,
 } from "@/app/view/components/ui/sidebar";
 import LogoComponent from "@/app/view/components/ui/logo/logo";
-import { NavUser } from "@/app/view/components/header/nav-user";
-import { NavHouse } from "@/app/view/components/header/nav-house";
+import { NavUser } from "./components/nav-user";
+import { NavHouse } from "./components/nav-house";
 import { Session } from "next-auth";
 import { getInviteLink } from "@/app/infra/actions/house.actions";
-import { NavItemBuilder } from "./navigation/nav-item-builder";
+import { NavItemBuilder } from "./logic/nav-item-builder";
 import { staticNavItems } from "./constants/nav-items";
 import { Check, Copy, PlusCircle } from "lucide-react";
 

@@ -43,7 +43,10 @@ export default function InviteView() {
       console.log("INVITE_VIEW: Starting to load data");
       try {
         const houseData = await getCurrentHouse();
-        console.log("INVITE_VIEW: houseData received:", houseData?.name || "null");
+        console.log(
+          "INVITE_VIEW: houseData received:",
+          houseData?.name || "null",
+        );
         setHouse(houseData);
 
         if (houseData) {
@@ -58,12 +61,17 @@ export default function InviteView() {
             console.log("INVITE_VIEW: inviteLink received:", linkData.value);
             setInviteLink(linkData.value);
           } else {
-            console.warn("INVITE_VIEW: Link fetch failed or empty, trying manual fetch");
+            console.warn(
+              "INVITE_VIEW: Link fetch failed or empty, trying manual fetch",
+            );
             const manualLink = await getInviteLink();
             if (manualLink) setInviteLink(manualLink);
           }
           if (membersData.status === "fulfilled") {
-            console.log("INVITE_VIEW: membersData received:", membersData.value.length);
+            console.log(
+              "INVITE_VIEW: membersData received:",
+              membersData.value.length,
+            );
             setMembers(membersData.value);
           }
         } else {
@@ -120,7 +128,7 @@ export default function InviteView() {
           <UserPlus className="text-emerald-500" /> Convidar Moradores
         </h1>
         <p className="text-zinc-500">
-          Traga mais pessoas para ajudar a organizar a {house.name}.
+          Traga mais pessoas para ajudar a organizar a nossa Casa.
         </p>
       </div>
 
@@ -146,7 +154,7 @@ export default function InviteView() {
                 />
               </div>
             )}
-            
+
             <div className="w-full space-y-4">
               <div className="p-4 bg-black border border-zinc-800 rounded-lg flex items-center justify-between gap-4 overflow-hidden">
                 <code className="text-xs text-zinc-400 truncate flex-1">

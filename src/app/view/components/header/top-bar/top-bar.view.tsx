@@ -6,7 +6,7 @@ import { UserPlus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/app/view/components/ui/button";
 
-export default function Header() {
+export function TopBar() {
   return (
     <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-zinc-800 bg-black px-4">
       <SidebarTrigger className="-ml-1 text-zinc-400 hover:text-white" />

@@ -6,8 +6,8 @@ import {
   SidebarProvider,
   SidebarInset,
 } from "@/app/view/components/ui/sidebar";
-import { AppSidebar } from "@/app/view/components/header/app-sidebar";
-import Header from "@/app/view/components/header/header";
+import { AppSidebar } from "@/app/view/components/header/sidebar/sidebar.view";
+import { TopBar } from "@/app/view/components/header/top-bar/top-bar.view";
 import { TooltipProvider } from "@/app/view/components/ui/tooltip";
 import { auth } from "@/auth";
 
@@ -98,7 +98,7 @@ export default async function RootLayout({
             <SidebarProvider defaultOpen={true}>
               <AppSidebar session={session} />
               <SidebarInset className="flex flex-col bg-black">
-                <Header />
+                <TopBar />
                 <main className="flex-1 overflow-y-auto">{children}</main>
               </SidebarInset>
             </SidebarProvider>

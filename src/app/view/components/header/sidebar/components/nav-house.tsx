@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Copy, Home, Check, Users, User, ChevronDown } from "lucide-react";
+import { Home, Users, User, ChevronDown } from "lucide-react";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import {
   SidebarMenu,
@@ -13,7 +13,6 @@ import {
 } from "@/app/view/components/ui/sidebar";
 import {
   getCurrentHouse,
-  getInviteLink,
   getHouseMembers,
   HouseMember,
 } from "@/app/infra/actions/house.actions";
