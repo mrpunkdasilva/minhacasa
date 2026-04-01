@@ -53,8 +53,8 @@ export async function registerUser(
     }
 
     const hashedPassword = await hashPassword(password);
-    const userUuid = crypto.randomUUID();
-    let houseUuid = "";
+    const userId = crypto.randomUUID();
+    let houseId = "";
 
     // Join an existing house via invite code
     if (inviteCode) {
@@ -62,15 +62,15 @@ export async function registerUser(
       if (!house) {
         return "Ops! Esse código de convite parece não existir mais.";
       }
-      houseUuid = house.uuid;
+      houseId = house.id;
     } else {
       // Create a new house for the first resident
-      houseUuid = crypto.randomUUID();
+      houseId = crypto.randomUUID();
       const newHouse: HouseEntity = {
-        uuid: houseUuid,
+        id: houseId,
         name: `Casa de ${name.split(" ")[0]}`,
         inviteCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
-        createdByUuid: userUuid,
+        createdById: userId,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -78,11 +78,11 @@ export async function registerUser(
     }
 
     const newUser: UserEntity = {
-      uuid: userUuid,
+      id: userId,
       name,
       email,
       password: hashedPassword,
-      houseUuid,
+      houseId,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

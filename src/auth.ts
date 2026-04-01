@@ -26,11 +26,11 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
           if (passwordsMatch) {
             return {
-              id: user.uuid,
+              id: user.id,
               name: user.name,
               email: user.email,
               image: user.avatarUrl,
-              houseUuid: user.houseUuid,
+              houseId: user.houseId,
             } as any;
           }
         }

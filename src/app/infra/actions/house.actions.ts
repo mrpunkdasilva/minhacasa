@@ -11,13 +11,10 @@ interface ExtendedSession {
     email?: string | null;
     name?: string | null;
     image?: string | null;
-    houseUuid?: string;
+    houseId?: string;
   };
 }
 
-/**
- * Gets the current user's house information.
- */
 export async function getCurrentHouse(): Promise<HouseEntity | null> {
   const session = (await auth()) as ExtendedSession;
 
@@ -25,58 +22,52 @@ export async function getCurrentHouse(): Promise<HouseEntity | null> {
     return null;
   }
 
-  // 1. Try houseUuid directly from session
-  const sessionHouseUuid = session.user.houseUuid;
-  if (sessionHouseUuid) {
-    const house = await houseRepository.findByUuid(sessionHouseUuid);
+  const sessionHouseId = session.user.houseId;
+  if (sessionHouseId) {
+    const house = await houseRepository.findById(sessionHouseId);
     if (house) {
       const { _id, ...cleanHouse } = house as HouseEntity & { _id?: unknown };
       return cleanHouse;
     }
   }
 
-  // 2. Fallback to existing database lookup
   const email = session.user.email;
   const userId = session.user.id;
 
   let user = null;
   if (email) user = await userRepository.findByEmail(email);
-  if (!user && userId) user = await userRepository.findByUuid(userId);
+  if (!user && userId) user = await userRepository.findById(userId);
 
-  // If user not found in DB even with session, we can't do much (shouldn't happen)
   if (!user) {
     return null;
   }
 
-  // 3. AUTO-REPAIR: If user has no house, create one!
-  if (!user.houseUuid) {
-    const houseUuid = crypto.randomUUID();
+  if (!user.houseId) {
+    const houseId = crypto.randomUUID();
     const newHouse: HouseEntity = {
-      uuid: houseUuid,
+      id: houseId,
       name: `Casa de ${user.name.split(" ")[0]}`,
       inviteCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
-      createdByUuid: user.uuid,
+      createdById: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
 
     await houseRepository.create(newHouse);
-    await userRepository.update(user.uuid, { houseUuid });
+    await userRepository.update(user.id, { houseId });
 
     const { _id, ...cleanHouse } = newHouse as HouseEntity & { _id?: unknown };
     return cleanHouse;
   }
 
-  // 4. Try finding the house from user's houseUuid
-  const house = await houseRepository.findByUuid(user.houseUuid);
+  const house = await houseRepository.findById(user.houseId);
 
-  // 5. AUTO-REPAIR: If house record is missing but UUID exists, create it!
   if (!house) {
     const newHouse: HouseEntity = {
-      uuid: user.houseUuid,
+      id: user.houseId,
       name: `Casa de ${user.name.split(" ")[0]}`,
       inviteCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
-      createdByUuid: user.uuid,
+      createdById: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -102,7 +93,7 @@ export async function getInviteLink(): Promise<string | null> {
 }
 
 export interface HouseMember {
-  uuid: string;
+  id: string;
   name: string;
   email: string;
   avatarUrl?: string;
@@ -116,12 +107,12 @@ export async function getHouseMembers(): Promise<HouseMember[]> {
   if (!session?.user?.email) return [];
 
   const user = await userRepository.findByEmail(session.user.email);
-  if (!user || !user.houseUuid) return [];
+  if (!user || !user.houseId) return [];
 
-  const members = await userRepository.findByHouseUuid(user.houseUuid);
+  const members = await userRepository.findByHouseId(user.houseId);
 
-  return members.map(({ uuid, name, email, avatarUrl }) => ({
-    uuid,
+  return members.map(({ id, name, email, avatarUrl }) => ({
+    id,
     name,
     email,
     avatarUrl,

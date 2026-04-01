@@ -13,13 +13,13 @@ async function getUserContext() {
   if (!session?.user?.email) return null;
 
   const user = await userRepository.findByEmail(session.user.email);
-  if (!user || !user.houseUuid) return null;
+  if (!user || !user.houseId) return null;
 
   return user;
 }
 
 export async function createInvoice(
-  data: Omit<InvoiceEntity, "uuid" | "houseUuid" | "ownerUuid"> & {
+  data: Omit<InvoiceEntity, "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"> & {
     isPrivate?: boolean;
   },
 ) {
@@ -32,11 +32,14 @@ export async function createInvoice(
     const client = await clientPromise;
     const db = client.db("minhacasa");
 
+    const now = new Date();
     const invoice: InvoiceEntity = {
       ...invoiceData,
-      uuid: crypto.randomUUID(),
-      houseUuid: user.houseUuid,
-      ownerUuid: isPrivate ? user.uuid : undefined,
+      id: crypto.randomUUID(),
+      houseId: user.houseId,
+      ownerId: isPrivate ? user.id : undefined,
+      createdAt: now,
+      updatedAt: now,
     };
 
     const result = await db.collection("invoices").insertOne(invoice);
@@ -66,19 +69,19 @@ export async function getInvoices(): Promise<InvoiceEntity[]> {
     const invoices = await db
       .collection("invoices")
       .find({
-        houseUuid: user.houseUuid,
+        houseId: user.houseId,
         isArchived: { $ne: true },
         $or: [
-          { ownerUuid: { $exists: false } },
-          { ownerUuid: null },
-          { ownerUuid: user.uuid },
+          { ownerId: { $exists: false } },
+          { ownerId: null },
+          { ownerId: user.id },
         ],
       })
       .sort({ dueDate: 1 })
       .toArray();
 
     return invoices.map((doc) => ({
-      uuid: doc.uuid,
+      id: doc.id,
       name: doc.name,
       dueDate: new Date(doc.dueDate),
       price: doc.price,
@@ -87,8 +90,10 @@ export async function getInvoices(): Promise<InvoiceEntity[]> {
       status: doc.status,
       recurrence: doc.recurrence,
       isArchived: doc.isArchived || false,
-      houseUuid: doc.houseUuid,
-      ownerUuid: doc.ownerUuid,
+      houseId: doc.houseId,
+      ownerId: doc.ownerId,
+      createdAt: doc.createdAt || new Date(),
+      updatedAt: doc.updatedAt || new Date(),
     })) as InvoiceEntity[];
   } catch (error) {
     console.error("Erro ao buscar faturas:", error);
@@ -96,8 +101,8 @@ export async function getInvoices(): Promise<InvoiceEntity[]> {
   }
 }
 
-export async function getInvoiceByUuid(
-  uuid: string,
+export async function getInvoiceById(
+  id: string,
 ): Promise<InvoiceEntity | null> {
   const user = await getUserContext();
   if (!user) return null;
@@ -107,19 +112,19 @@ export async function getInvoiceByUuid(
     const db = client.db("minhacasa");
 
     const doc = await db.collection("invoices").findOne({
-      uuid,
-      houseUuid: user.houseUuid,
+      id,
+      houseId: user.houseId,
       $or: [
-        { ownerUuid: { $exists: false } },
-        { ownerUuid: null },
-        { ownerUuid: user.uuid },
+        { ownerId: { $exists: false } },
+        { ownerId: null },
+        { ownerId: user.id },
       ],
     });
 
     if (!doc) return null;
 
     return {
-      uuid: doc.uuid,
+      id: doc.id,
       name: doc.name,
       dueDate: new Date(doc.dueDate),
       price: doc.price,
@@ -128,16 +133,18 @@ export async function getInvoiceByUuid(
       status: doc.status,
       recurrence: doc.recurrence,
       isArchived: doc.isArchived || false,
-      houseUuid: doc.houseUuid,
-      ownerUuid: doc.ownerUuid,
+      houseId: doc.houseId,
+      ownerId: doc.ownerId,
+      createdAt: doc.createdAt || new Date(),
+      updatedAt: doc.updatedAt || new Date(),
     } as InvoiceEntity;
   } catch (error) {
-    console.error(`Erro ao buscar fatura ${uuid}:`, error);
+    console.error(`Erro ao buscar fatura ${id}:`, error);
     return null;
   }
 }
 
-export async function updateInvoiceStatus(uuid: string, status: InvoiceStatus) {
+export async function updateInvoiceStatus(id: string, status: InvoiceStatus) {
   const user = await getUserContext();
   if (!user) throw new Error("Usuário não autenticado.");
 
@@ -147,24 +154,24 @@ export async function updateInvoiceStatus(uuid: string, status: InvoiceStatus) {
 
     const result = await db
       .collection("invoices")
-      .updateOne({ uuid, houseUuid: user.houseUuid }, { $set: { status } });
+      .updateOne({ id, houseId: user.houseId }, { $set: { status, updatedAt: new Date() } });
 
     if (!result.acknowledged) {
       throw new Error("Falha ao atualizar o status da fatura.");
     }
 
-    revalidatePath(`/view/pages/invoices/${uuid}`);
+    revalidatePath(`/view/pages/invoices/${id}`);
     revalidatePath("/view/pages/invoices");
     revalidatePath("/");
   } catch (error) {
-    console.error(`Erro ao atualizar fatura ${uuid}:`, error);
+    console.error(`Erro ao atualizar fatura ${id}:`, error);
     throw new Error("Erro ao atualizar o status da fatura.");
   }
 }
 
 export async function updateInvoice(
-  uuid: string,
-  data: Omit<InvoiceEntity, "uuid" | "houseUuid" | "ownerUuid"> & {
+  id: string,
+  data: Omit<InvoiceEntity, "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"> & {
     isPrivate?: boolean;
   },
 ) {
@@ -178,13 +185,14 @@ export async function updateInvoice(
     const db = client.db("minhacasa");
 
     const result = await db.collection("invoices").updateOne(
-      { uuid, houseUuid: user.houseUuid },
+      { id, houseId: user.houseId },
       {
         $set: {
           ...invoiceData,
           dueDate: new Date(invoiceData.dueDate),
           isArchived: false,
-          ownerUuid: isPrivate ? user.uuid : null,
+          ownerId: isPrivate ? user.id : null,
+          updatedAt: new Date(),
         },
       },
     );
@@ -193,18 +201,18 @@ export async function updateInvoice(
       throw new Error("Falha ao atualizar a fatura.");
     }
 
-    revalidatePath(`/view/pages/invoices/${uuid}`);
+    revalidatePath(`/view/pages/invoices/${id}`);
     revalidatePath("/view/pages/invoices");
     revalidatePath("/");
   } catch (error) {
-    console.error(`Erro ao atualizar fatura ${uuid}:`, error);
+    console.error(`Erro ao atualizar fatura ${id}:`, error);
     throw new Error("Erro ao atualizar a fatura.");
   }
 
-  redirect(`/view/pages/invoices/${uuid}`);
+  redirect(`/view/pages/invoices/${id}`);
 }
 
-export async function archiveInvoice(uuid: string) {
+export async function archiveInvoice(id: string) {
   const user = await getUserContext();
   if (!user) throw new Error("Usuário não autenticado.");
 
@@ -215,8 +223,8 @@ export async function archiveInvoice(uuid: string) {
     const result = await db
       .collection("invoices")
       .updateOne(
-        { uuid, houseUuid: user.houseUuid },
-        { $set: { isArchived: true } },
+        { id, houseId: user.houseId },
+        { $set: { isArchived: true, updatedAt: new Date() } },
       );
 
     if (!result.acknowledged) {
@@ -226,7 +234,7 @@ export async function archiveInvoice(uuid: string) {
     revalidatePath("/view/pages/invoices");
     revalidatePath("/");
   } catch (error) {
-    console.error(`Erro ao arquivar fatura ${uuid}:`, error);
+    console.error(`Erro ao arquivar fatura ${id}:`, error);
     throw new Error("Erro ao arquivar a fatura.");
   }
 

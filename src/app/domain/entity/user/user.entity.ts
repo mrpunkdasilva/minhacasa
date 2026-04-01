@@ -5,5 +5,5 @@ export interface UserEntity extends BaseEntity {
   email: string;
   password: string;
   avatarUrl?: string;
-  houseUuid: string; // The house this user belongs to
+  houseId: string; // The house this user belongs to
 }
