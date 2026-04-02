@@ -10,11 +10,11 @@ import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status"
 import { Loader2, CheckCircle, Archive, Edit3 } from "lucide-react";
 
 interface InvoiceActionsProps {
-  uuid: string;
+  id: string;
   status: InvoiceStatus;
 }
 
-export default function InvoiceActions({ uuid, status }: InvoiceActionsProps) {
+export default function InvoiceActions({ id, status }: InvoiceActionsProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const isPaid = status === InvoiceStatus.paid;
@@ -22,7 +22,7 @@ export default function InvoiceActions({ uuid, status }: InvoiceActionsProps) {
   const handleTogglePaid = () => {
     const newStatus = isPaid ? InvoiceStatus.unpaid : InvoiceStatus.paid;
     startTransition(async () => {
-      await updateInvoiceStatus(uuid, newStatus);
+      await updateInvoiceStatus(id, newStatus);
     });
   };
 
@@ -33,7 +33,7 @@ export default function InvoiceActions({ uuid, status }: InvoiceActionsProps) {
       )
     ) {
       startTransition(async () => {
-        await archiveInvoice(uuid);
+        await archiveInvoice(id);
       });
     }
   };
@@ -42,7 +42,7 @@ export default function InvoiceActions({ uuid, status }: InvoiceActionsProps) {
     <div className="flex flex-col gap-3 pt-2">
       <div className="flex flex-col sm:flex-row gap-3">
         <button
-          onClick={() => router.push(`/view/pages/invoices/${uuid}/edit`)}
+          onClick={() => router.push(`/view/pages/invoices/${id}/edit`)}
           className="w-full bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-white font-bold py-2.5 sm:py-3 rounded-lg transition-colors text-sm sm:text-base order-2 sm:order-1 flex items-center justify-center gap-2"
           disabled={isPending}
         >

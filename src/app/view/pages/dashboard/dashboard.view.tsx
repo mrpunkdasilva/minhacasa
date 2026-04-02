@@ -108,8 +108,8 @@ export default async function DashboardView() {
               <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-zinc-800">
                 {pendingInvoices.map((invoice) => (
                   <Link
-                    key={invoice.uuid}
-                    href={`/view/pages/invoices/${invoice.uuid}`}
+                    key={invoice.id}
+                    href={`/view/pages/invoices/${invoice.id}`}
                     className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc-800/30 transition-colors group"
                   >
                     <div className="flex items-center gap-4">
@@ -130,7 +130,7 @@ export default async function DashboardView() {
                     </div>
                     <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between gap-2 border-t border-zinc-800/50 pt-3 sm:border-0 sm:pt-0">
                       <p className="font-mono font-bold text-lg sm:text-base">
-                        {invoice.price.toLocaleString("pt-BR", {
+                        {invoice.price.amount.toLocaleString("pt-BR", {
                           style: "currency",
                           currency: "BRL",
                         })}

@@ -55,7 +55,7 @@ export default function ShoppingList() {
               </span>
               <span className="text-xs text-zinc-500">
                 Est.{" "}
-                {item.lastPrice?.toLocaleString("pt-BR", {
+                {item.lastPrice?.amount.toLocaleString("pt-BR", {
                   style: "currency",
                   currency: "BRL",
                 })}

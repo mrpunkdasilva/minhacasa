@@ -4,8 +4,11 @@ import { wishlistMock } from "@/app/infra/mocks/wishlist/wishlist.mock";
 
 export default function WishlistSummary() {
   const pendingItems = wishlistMock.filter((i) => !i.isPurchased);
-  const totalValue = pendingItems.reduce((acc, i) => acc + i.price, 0);
-  const totalSaved = pendingItems.reduce((acc, i) => acc + i.savedAmount, 0);
+  const totalValue = pendingItems.reduce((acc, i) => acc + i.price.amount, 0);
+  const totalSaved = pendingItems.reduce(
+    (acc, i) => acc + i.savedAmount.amount,
+    0,
+  );
   const overallProgress = (totalSaved / totalValue) * 100;
 
   return (

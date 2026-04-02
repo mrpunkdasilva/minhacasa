@@ -16,14 +16,14 @@ export class UserRepository {
     return collection.findOne({ email });
   }
 
-  async findByUuid(uuid: string): Promise<UserEntity | null> {
+  async findById(id: string): Promise<UserEntity | null> {
     const collection = await this.getCollection();
-    return collection.findOne({ uuid });
+    return collection.findOne({ id });
   }
 
-  async findByHouseUuid(houseUuid: string): Promise<UserEntity[]> {
+  async findByHouseId(houseId: string): Promise<UserEntity[]> {
     const collection = await this.getCollection();
-    return collection.find({ houseUuid }).toArray();
+    return collection.find({ houseId }).toArray();
   }
 
   async create(user: UserEntity): Promise<void> {
@@ -31,9 +31,9 @@ export class UserRepository {
     await collection.insertOne(user);
   }
 
-  async update(uuid: string, data: Partial<UserEntity>): Promise<void> {
+  async update(id: string, data: Partial<UserEntity>): Promise<void> {
     const collection = await this.getCollection();
-    await collection.updateOne({ uuid }, { $set: data });
+    await collection.updateOne({ id }, { $set: data });
   }
 }
 

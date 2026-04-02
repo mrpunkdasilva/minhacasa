@@ -68,7 +68,7 @@ export default function CleaningChecklist() {
             </div>
             <div className="text-right flex items-center gap-2">
               <span className="text-[10px] text-zinc-500 uppercase font-mono italic">
-                {task.estimatedTime} min
+                {task.estimatedTime?.value} {task.estimatedTime?.unit}
               </span>
             </div>
           </div>

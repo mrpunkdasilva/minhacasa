@@ -14,7 +14,10 @@ export default function WishlistGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {wishlistMock.map((item) => {
-        const progress = Math.min((item.savedAmount / item.price) * 100, 100);
+        const progress = Math.min(
+          (item.savedAmount.amount / item.price.amount) * 100,
+          100,
+        );
 
         return (
           <div
@@ -41,7 +44,7 @@ export default function WishlistGrid() {
 
               <div className="flex items-baseline gap-1 mb-6">
                 <span className="text-xl font-bold font-mono text-white">
-                  {item.price.toLocaleString("pt-BR", {
+                  {item.price.amount.toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL",
                   })}
@@ -65,14 +68,16 @@ export default function WishlistGrid() {
                 </div>
                 <div className="flex justify-between text-[10px] font-mono text-zinc-500">
                   <span>
-                    {item.savedAmount.toLocaleString("pt-BR", {
+                    {item.savedAmount.amount.toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     })}
                   </span>
                   <span>
                     Faltam{" "}
-                    {(item.price - item.savedAmount).toLocaleString("pt-BR", {
+                    {(
+                      item.price.amount - item.savedAmount.amount
+                    ).toLocaleString("pt-BR", {
                       style: "currency",
                       currency: "BRL",
                     })}

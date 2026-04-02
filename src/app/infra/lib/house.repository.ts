@@ -11,9 +11,9 @@ export class HouseRepository {
     return db.collection<HouseEntity>(this.collectionName);
   }
 
-  async findByUuid(uuid: string): Promise<HouseEntity | null> {
+  async findById(id: string): Promise<HouseEntity | null> {
     const collection = await this.getCollection();
-    return collection.findOne({ uuid });
+    return collection.findOne({ id });
   }
 
   async findByInviteCode(inviteCode: string): Promise<HouseEntity | null> {
@@ -26,9 +26,9 @@ export class HouseRepository {
     await collection.insertOne(house);
   }
 
-  async findByCreatorUuid(creatorUuid: string): Promise<HouseEntity | null> {
+  async findByCreatorId(creatorId: string): Promise<HouseEntity | null> {
     const collection = await this.getCollection();
-    return collection.findOne({ createdByUuid: creatorUuid });
+    return collection.findOne({ createdById: creatorId });
   }
 }
 

@@ -72,22 +72,21 @@ export default async function InvoicesListView() {
               ) : (
                 invoices.map((invoice) => (
                   <tr
-                    key={invoice.uuid}
+                    key={invoice.id}
                     className="hover:bg-zinc-800/30 transition-colors group"
                   >
                     <td className="px-6 py-4 font-medium text-white text-nowrap">
                       <div className="flex items-center gap-2">
                         <Link
-                          href={`/view/pages/invoices/${invoice.uuid}`}
+                          href={`/view/pages/invoices/${invoice.id}`}
                           className="hover:text-emerald-500 transition-colors"
                         >
                           {invoice.name}
                         </Link>
-                        {invoice.ownerUuid && (
+                        {invoice.ownerId && (
                           <ShieldCheck
                             size={14}
                             className="text-emerald-500 opacity-60"
-                            title="Fatura Privada"
                           />
                         )}
                       </div>

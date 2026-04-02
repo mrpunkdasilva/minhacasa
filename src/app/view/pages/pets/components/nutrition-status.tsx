@@ -18,10 +18,10 @@ export default function NutritionStatus() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {petNutritionMock.map((item) => {
-          const progress = (item.currentStock / item.maxStock) * 100;
+          const progress = (item.stock.current / item.stock.max) * 100;
           const daysLeft = calculateDaysRemaining(
-            item.currentStock,
-            item.dailyAmount,
+            item.stock.current,
+            item.stock.dailyAmount,
           );
 
           return (
@@ -40,10 +40,10 @@ export default function NutritionStatus() {
                 </div>
                 <div className="text-right">
                   <span className="text-2xl font-bold font-mono text-emerald-500">
-                    {item.currentStock}kg
+                    {item.stock.current}kg
                   </span>
                   <p className="text-[10px] text-zinc-500 uppercase tracking-tighter">
-                    Total: {item.maxStock}kg
+                    Total: {item.stock.max}kg
                   </p>
                 </div>
               </div>

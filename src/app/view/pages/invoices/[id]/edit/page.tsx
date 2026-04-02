@@ -9,7 +9,7 @@ export default async function EditPage({
 
   return (
     <main className="bg-black min-h-screen">
-      <EditInvoiceView uuid={id} />
+      <EditInvoiceView id={id} />
     </main>
   );
 }

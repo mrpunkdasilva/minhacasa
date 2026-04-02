@@ -198,7 +198,7 @@ export default function InviteView() {
             <div className="space-y-4">
               {members.map((member) => (
                 <div
-                  key={member.uuid}
+                  key={member.id}
                   className="flex items-center gap-3 p-3 bg-black/40 border border-zinc-800/50 rounded-lg"
                 >
                   <div className="size-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">

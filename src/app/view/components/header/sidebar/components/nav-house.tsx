@@ -67,7 +67,7 @@ export function NavHouse() {
           <SidebarGroupContent>
             <SidebarMenu>
               {members.map((member) => (
-                <SidebarMenuItem key={member.uuid}>
+                <SidebarMenuItem key={member.id}>
                   <SidebarMenuButton className="h-8 py-0">
                     <div className="flex items-center gap-2 overflow-hidden">
                       <div className="size-5 rounded-full bg-zinc-800 flex items-center justify-center shrink-0">

@@ -8,7 +8,7 @@ export default async function InvoicePage({
   const { id } = await params;
   return (
     <main className="bg-black min-h-screen">
-      <InvoiceDetailView uuid={id} />
+      <InvoiceDetailView id={id} />
     </main>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { petsMock } from "@/app/infra/mocks/pets/pets.mock";
+import { PetType } from "@/app/domain/enums/pets/pet.enums";
 
 export default function PetList() {
   const calculateAge = (birthDate: Date) => {
@@ -29,7 +30,7 @@ export default function PetList() {
             className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 flex gap-6 items-center hover:border-zinc-700 transition-all"
           >
             <div className="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center text-3xl shrink-0">
-              {pet.type === "Cachorro" ? "🐶" : "🐱"}
+              {pet.type === PetType.DOG ? "🐶" : "🐱"}
             </div>
 
             <div className="flex-1">
@@ -55,7 +56,7 @@ export default function PetList() {
                     Peso
                   </span>
                   <span className="text-sm text-white font-medium">
-                    {pet.weight} kg
+                    {pet.weight.value} {pet.weight.unit}
                   </span>
                 </div>
               </div>

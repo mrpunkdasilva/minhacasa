@@ -58,7 +58,7 @@ export default function PetAgenda() {
               <div className="flex justify-between items-center text-sm">
                 <span className="text-zinc-500">Valor</span>
                 <span className="text-white font-bold font-mono">
-                  {service.price.toLocaleString("pt-BR", {
+                  {service.price.amount.toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL",
                   })}

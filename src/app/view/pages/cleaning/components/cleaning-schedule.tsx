@@ -46,7 +46,7 @@ export default function CleaningSchedule() {
 
                   <div className="mt-6 flex items-center justify-between">
                     <span className="text-[10px] text-zinc-600 font-mono italic">
-                      ~ {task.estimatedTime} min
+                      ~ {task.estimatedTime?.value} {task.estimatedTime?.unit}
                     </span>
                     <button className="text-[10px] bg-zinc-800 text-zinc-300 px-3 py-1 rounded hover:bg-zinc-700 transition-all uppercase font-bold tracking-widest">
                       Editar

@@ -5,15 +5,3 @@ export enum CleaningFrequency {
   MONTHLY = "Mensal",
   SEASONAL = "Sazonal",
 }
-
-export enum CleaningRoom {
-  KITCHEN = "Cozinha",
-  LIVING_ROOM = "Sala de Estar",
-  DINING_ROOM = "Sala de Jantar",
-  BEDROOM = "Quarto",
-  BATHROOM = "Banheiro",
-  LAUNDRY = "Lavanderia",
-  GARDEN = "Jardim",
-  GARAGE = "Garagem",
-  OFFICE = "Escritório",
-}

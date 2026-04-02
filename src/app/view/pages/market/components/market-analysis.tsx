@@ -13,7 +13,7 @@ export default function MarketAnalysis({ invoices }: MarketAnalysisProps) {
   );
 
   const totalMarketSpent = marketExpenses.reduce(
-    (acc, inv) => acc + inv.price,
+    (acc, inv) => acc + inv.price.amount,
     0,
   );
 
@@ -23,7 +23,7 @@ export default function MarketAnalysis({ invoices }: MarketAnalysisProps) {
   );
 
   const totalCurrentMonth = currentMonthExpenses.reduce(
-    (acc, inv) => acc + inv.price,
+    (acc, inv) => acc + inv.price.amount,
     0,
   );
 
@@ -115,7 +115,7 @@ export default function MarketAnalysis({ invoices }: MarketAnalysisProps) {
               ) : (
                 marketExpenses.map((expense) => (
                   <tr
-                    key={expense.uuid}
+                    key={expense.id}
                     className="hover:bg-zinc-800/20 transition-colors"
                   >
                     <td className="px-6 py-4 text-sm text-zinc-400 text-nowrap">
@@ -125,7 +125,7 @@ export default function MarketAnalysis({ invoices }: MarketAnalysisProps) {
                       {expense.name}
                     </td>
                     <td className="px-6 py-4 text-sm text-right font-mono text-white text-nowrap">
-                      {expense.price.toLocaleString("pt-BR", {
+                      {expense.price.amount.toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",
                       })}

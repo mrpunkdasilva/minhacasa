@@ -1,4 +1,4 @@
-import { getInvoiceByUuid } from "@/app/infra/actions/invoice.actions";
+import { getInvoiceById } from "@/app/infra/actions/invoice.actions";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import Link from "next/link";
 import {
@@ -13,13 +13,13 @@ import {
 import InvoiceActions from "@/app/view/pages/invoices/[id]/invoice-actions";
 
 interface InvoiceDetailViewProps {
-  uuid: string;
+  id: string;
 }
 
 export default async function InvoiceDetailView({
-  uuid,
+  id,
 }: InvoiceDetailViewProps) {
-  const invoice = await getInvoiceByUuid(uuid);
+  const invoice = await getInvoiceById(id);
 
   if (!invoice) {
     return (
@@ -63,7 +63,7 @@ export default async function InvoiceDetailView({
                 >
                   {getStatusLabel(invoice.status)}
                 </span>
-                {invoice.ownerUuid && (
+                {invoice.ownerId && (
                   <span className="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-500 flex items-center gap-1">
                     <ShieldCheck size={10} /> Privada
                   </span>
@@ -125,7 +125,7 @@ export default async function InvoiceDetailView({
             </div>
           )}
 
-          <InvoiceActions uuid={invoice.uuid} status={invoice.status} />
+          <InvoiceActions id={invoice.id} status={invoice.status} />
         </div>
       </div>
     </div>

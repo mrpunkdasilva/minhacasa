@@ -30,7 +30,7 @@ export function CategoryDistributionChart({
   // Process invoices to get category totals
   const categoryDataMap = invoices.reduce(
     (acc, inv) => {
-      acc[inv.category] = (acc[inv.category] || 0) + inv.price;
+      acc[inv.category] = (acc[inv.category] || 0) + inv.price.amount;
       return acc;
     },
     {} as Record<string, number>,

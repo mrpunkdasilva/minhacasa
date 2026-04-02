@@ -64,7 +64,7 @@ const formSchema = z.object({
     message: "Selecione um status.",
   }),
   isRecurring: z.boolean(),
-  isPrivate: z.boolean().default(false),
+  isPrivate: z.boolean(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -87,7 +87,7 @@ export function CreateInvoiceForm({ initialData }: CreateInvoiceFormProps) {
       category: (initialData?.category as Category) || undefined,
       isRecurring: initialData?.recurrence?.isRecurring || false,
       status: initialData?.status ?? InvoiceStatus.unpaid,
-      isPrivate: !!initialData?.ownerUuid,
+      isPrivate: !!initialData?.ownerId,
     },
   });
 
@@ -106,7 +106,7 @@ export function CreateInvoiceForm({ initialData }: CreateInvoiceFormProps) {
       };
 
       if (isEditing && initialData) {
-        await updateInvoice(initialData.uuid, payload);
+        await updateInvoice(initialData.id, payload);
       } else {
         await createInvoice(payload);
       }

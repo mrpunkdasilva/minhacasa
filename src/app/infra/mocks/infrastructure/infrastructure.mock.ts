@@ -9,32 +9,43 @@ import {
   SystemType,
   UtilityType,
   MaintenanceFrequency,
+  MaintenanceStatus,
+  UtilityUnit,
 } from "@/app/domain/enums/infrastructure/infrastructure.enums";
+import { HouseRoom } from "@/app/domain/enums/house/house-room";
+
+const now = new Date();
 
 export const assetsMock: HomeAsset[] = [
   {
     id: "as-1",
+    createdAt: now,
+    updatedAt: now,
     name: "Geladeira Samsung French Door",
     category: AssetCategory.APPLIANCE,
-    location: "Cozinha",
+    location: HouseRoom.KITCHEN,
     purchaseDate: new Date("2023-01-15"),
     warrantyUntil: new Date("2025-01-15"),
     description: "Modelo Inverter, 220V",
   },
   {
     id: "as-2",
+    createdAt: now,
+    updatedAt: now,
     name: "Ar-Condicionado LG Dual Inverter",
     category: AssetCategory.HVAC,
-    location: "Quarto Principal",
+    location: HouseRoom.BEDROOM,
     purchaseDate: new Date("2022-11-10"),
     warrantyUntil: new Date("2023-11-10"), // Warranty expired
     description: "12000 BTUs",
   },
   {
     id: "as-3",
+    createdAt: now,
+    updatedAt: now,
     name: "Smart TV LG 65' OLED",
     category: AssetCategory.ELECTRONICS,
-    location: "Sala de Estar",
+    location: HouseRoom.LIVING_ROOM,
     purchaseDate: new Date("2023-05-20"),
     warrantyUntil: new Date("2024-05-20"),
   },
@@ -43,30 +54,36 @@ export const assetsMock: HomeAsset[] = [
 export const maintenanceTasksMock: MaintenanceTask[] = [
   {
     id: "mt-1",
+    createdAt: now,
+    updatedAt: now,
     title: "Limpeza Filtro Ar-Condicionado",
     description: "Lavar filtros de tela das unidades evaporadoras.",
     lastPerformedDate: new Date("2024-02-01"),
     nextDueDate: new Date("2024-04-01"),
     frequency: MaintenanceFrequency.QUARTERLY,
-    status: "ok",
+    status: MaintenanceStatus.OK,
   },
   {
     id: "mt-2",
+    createdAt: now,
+    updatedAt: now,
     title: "Troca de Filtro de Água (Geladeira)",
     description: "Substituir refil interno de carvão ativado.",
     lastPerformedDate: new Date("2023-09-15"),
     nextDueDate: new Date("2024-03-15"), // Due today
     frequency: MaintenanceFrequency.SEMI_ANNUAL,
-    status: "warning",
+    status: MaintenanceStatus.WARNING,
   },
   {
     id: "mt-3",
+    createdAt: now,
+    updatedAt: now,
     title: "Inspeção de Telhado e Calhas",
     description: "Limpar folhas e verificar telhas quebradas antes da chuva.",
     lastPerformedDate: new Date("2023-06-10"),
     nextDueDate: new Date("2024-01-10"), // Overdue
     frequency: MaintenanceFrequency.ANNUAL,
-    status: "overdue",
+    status: MaintenanceStatus.OVERDUE,
   },
 ];
 
@@ -100,20 +117,20 @@ export const utilityReadingsMock: UtilityReading[] = [
     utilityType: UtilityType.WATER,
     readingDate: new Date("2024-03-01"),
     value: 1254.3,
-    unit: "m³",
+    unit: UtilityUnit.M3,
   },
   {
     id: "ur-2",
     utilityType: UtilityType.ELECTRICITY,
     readingDate: new Date("2024-03-01"),
     value: 8945.7,
-    unit: "kWh",
+    unit: UtilityUnit.KWH,
   },
   {
     id: "ur-3",
     utilityType: UtilityType.GAS,
     readingDate: new Date("2024-03-01"),
     value: 452.1,
-    unit: "m³",
+    unit: UtilityUnit.M3,
   },
 ];

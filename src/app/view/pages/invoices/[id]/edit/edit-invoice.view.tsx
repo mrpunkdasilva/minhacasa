@@ -1,14 +1,14 @@
-import { getInvoiceByUuid } from "@/app/infra/actions/invoice.actions";
+import { getInvoiceById } from "@/app/infra/actions/invoice.actions";
 import { CreateInvoiceForm } from "@/app/view/pages/create-invoice/create-invoice-form";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 interface EditInvoiceViewProps {
-  uuid: string;
+  id: string;
 }
 
-export default async function EditInvoiceView({ uuid }: EditInvoiceViewProps) {
-  const invoice = await getInvoiceByUuid(uuid);
+export default async function EditInvoiceView({ id }: EditInvoiceViewProps) {
+  const invoice = await getInvoiceById(id);
 
   if (!invoice) {
     return (
@@ -29,7 +29,7 @@ export default async function EditInvoiceView({ uuid }: EditInvoiceViewProps) {
   return (
     <div className="container mx-auto py-8 sm:py-12 px-4 max-w-2xl text-white">
       <Link
-        href={`/view/pages/invoices/${uuid}`}
+        href={`/view/pages/invoices/${id}`}
         className="flex items-center gap-2 text-zinc-400 hover:text-white mb-8 transition-colors text-sm"
       >
         <ArrowLeft size={14} />
