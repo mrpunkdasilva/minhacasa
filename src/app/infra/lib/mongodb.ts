@@ -1,6 +1,8 @@
 import { MongoClient } from "mongodb";
+import logger from "./logger";
 
 if (!process.env.MONGODB_URI) {
+  logger.error("MONGODB_URI is not defined");
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
 
@@ -16,11 +18,13 @@ if (process.env.NODE_ENV === "development") {
   };
 
   if (!globalWithMongo._mongoClientPromise) {
+    logger.info("Connecting to MongoDB (development)");
     client = new MongoClient(uri, options);
     globalWithMongo._mongoClientPromise = client.connect();
   }
   clientPromise = globalWithMongo._mongoClientPromise;
 } else {
+  logger.info("Connecting to MongoDB (production)");
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }

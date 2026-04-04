@@ -7,6 +7,7 @@ import { houseRepository } from "@/app/infra/lib/house.repository";
 import { hashPassword } from "@/app/infra/lib/password";
 import { UserEntity } from "@/app/domain/entity/user/user.entity";
 import { HouseEntity } from "@/app/domain/entity/house/house.entity";
+import logger from "@/app/infra/lib/logger";
 
 /**
  * Handles user authentication (login).
@@ -15,10 +16,13 @@ export async function authenticate(
   prevState: string | undefined,
   formData: FormData,
 ) {
+  const email = formData.get("email") as string;
   try {
+    logger.info({ email }, "Attempting user authentication");
     await signIn("credentials", formData);
   } catch (error) {
     if (error instanceof AuthError) {
+      logger.warn({ email, type: error.type }, "Authentication failed");
       switch (error.type) {
         case "CredentialsSignin":
           return "E-mail ou senha incorretos. Tente de novo, meu bem.";
@@ -47,8 +51,10 @@ export async function registerUser(
   }
 
   try {
+    logger.info({ email }, "Registering new user");
     const existingUser = await userRepository.findByEmail(email);
     if (existingUser) {
+      logger.warn({ email }, "User already exists");
       return "Este e-mail já tem uma casa registrada por aqui.";
     }
 
@@ -58,8 +64,10 @@ export async function registerUser(
 
     // Join an existing house via invite code
     if (inviteCode) {
+      logger.info({ email, inviteCode }, "Joining house with invite code");
       const house = await houseRepository.findByInviteCode(inviteCode);
       if (!house) {
+        logger.warn({ inviteCode }, "Invite code not found");
         return "Ops! Esse código de convite parece não existir mais.";
       }
       houseId = house.id;
@@ -74,6 +82,7 @@ export async function registerUser(
         createdAt: new Date(),
         updatedAt: new Date(),
       };
+      logger.info({ email, houseId }, "Creating new house");
       await houseRepository.create(newHouse);
     }
 
@@ -88,6 +97,7 @@ export async function registerUser(
     };
 
     await userRepository.create(newUser);
+    logger.info({ email, userId }, "User registered successfully");
 
     // Auto sign in after registration
     await signIn("credentials", {
@@ -103,7 +113,7 @@ export async function registerUser(
     if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
       throw error;
     }
-    console.error("Registration error:", error);
+    logger.error({ error, email }, "Registration error");
     return "Não conseguimos criar sua casa agora. Tente mais tarde, meu bem.";
   }
 }

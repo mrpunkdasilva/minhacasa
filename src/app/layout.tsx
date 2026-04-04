@@ -5,10 +5,10 @@ import { cn } from "@/app/infra/lib/utils";
 import {
   SidebarProvider,
   SidebarInset,
-} from "@/app/view/components/ui/sidebar";
-import { AppSidebar } from "@/app/view/components/header/sidebar/sidebar.view";
-import { TopBar } from "@/app/view/components/header/top-bar/top-bar.view";
-import { TooltipProvider } from "@/app/view/components/ui/tooltip";
+} from "@/app/(view)/components/ui/sidebar";
+import { AppSidebar } from "@/app/(view)/components/header/sidebar/sidebar.view";
+import { TopBar } from "@/app/(view)/components/header/top-bar/top-bar.view";
+import { TooltipProvider } from "@/app/(view)/components/ui/tooltip";
 import { auth } from "@/auth";
 
 const jetbrainsMono = JetBrains_Mono({

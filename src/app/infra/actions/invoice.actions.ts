@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { userRepository } from "@/app/infra/lib/user.repository";
+import logger from "@/app/infra/lib/logger";
 
 async function getUserContext() {
   const session = await auth();
@@ -29,6 +30,7 @@ export async function createInvoice(
   const { isPrivate, ...invoiceData } = data;
 
   try {
+    logger.info({ userId: user.id, houseId: user.houseId, invoiceName: invoiceData.name }, "Creating new invoice");
     const client = await clientPromise;
     const db = client.db("minhacasa");
 
@@ -48,13 +50,13 @@ export async function createInvoice(
       throw new Error("Falha ao salvar a fatura no banco de dados.");
     }
 
-    revalidatePath("/view/pages/invoices");
+    revalidatePath("/invoices");
   } catch (error) {
-    console.error("Erro ao criar fatura:", error);
+    logger.error({ error, userId: user.id }, "Error creating invoice");
     throw new Error("Erro interno ao processar sua solicitação.");
   }
 
-  redirect("/view/pages/invoices");
+  redirect("/invoices");
 }
 
 export async function getInvoices(): Promise<InvoiceEntity[]> {
@@ -96,7 +98,7 @@ export async function getInvoices(): Promise<InvoiceEntity[]> {
       updatedAt: doc.updatedAt || new Date(),
     })) as InvoiceEntity[];
   } catch (error) {
-    console.error("Erro ao buscar faturas:", error);
+    logger.error({ error, userId: user?.id }, "Error fetching invoices");
     return [];
   }
 }
@@ -139,7 +141,7 @@ export async function getInvoiceById(
       updatedAt: doc.updatedAt || new Date(),
     } as InvoiceEntity;
   } catch (error) {
-    console.error(`Erro ao buscar fatura ${id}:`, error);
+    logger.error({ error, invoiceId: id, userId: user.id }, "Error fetching invoice by id");
     return null;
   }
 }
@@ -149,6 +151,7 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus) {
   if (!user) throw new Error("Usuário não autenticado.");
 
   try {
+    logger.info({ invoiceId: id, status, userId: user.id }, "Updating invoice status");
     const client = await clientPromise;
     const db = client.db("minhacasa");
 
@@ -160,11 +163,11 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus) {
       throw new Error("Falha ao atualizar o status da fatura.");
     }
 
-    revalidatePath(`/view/pages/invoices/${id}`);
-    revalidatePath("/view/pages/invoices");
+    revalidatePath(`/invoices/${id}`);
+    revalidatePath("/invoices");
     revalidatePath("/");
   } catch (error) {
-    console.error(`Erro ao atualizar fatura ${id}:`, error);
+    logger.error({ error, invoiceId: id, status, userId: user.id }, "Error updating invoice status");
     throw new Error("Erro ao atualizar o status da fatura.");
   }
 }
@@ -181,6 +184,7 @@ export async function updateInvoice(
   const { isPrivate, ...invoiceData } = data;
 
   try {
+    logger.info({ invoiceId: id, userId: user.id }, "Updating invoice");
     const client = await clientPromise;
     const db = client.db("minhacasa");
 
@@ -201,15 +205,15 @@ export async function updateInvoice(
       throw new Error("Falha ao atualizar a fatura.");
     }
 
-    revalidatePath(`/view/pages/invoices/${id}`);
-    revalidatePath("/view/pages/invoices");
+    revalidatePath(`/invoices/${id}`);
+    revalidatePath("/invoices");
     revalidatePath("/");
   } catch (error) {
-    console.error(`Erro ao atualizar fatura ${id}:`, error);
+    logger.error({ error, invoiceId: id, userId: user.id }, "Error updating invoice");
     throw new Error("Erro ao atualizar a fatura.");
   }
 
-  redirect(`/view/pages/invoices/${id}`);
+  redirect(`/invoices/${id}`);
 }
 
 export async function archiveInvoice(id: string) {
@@ -217,6 +221,7 @@ export async function archiveInvoice(id: string) {
   if (!user) throw new Error("Usuário não autenticado.");
 
   try {
+    logger.info({ invoiceId: id, userId: user.id }, "Archiving invoice");
     const client = await clientPromise;
     const db = client.db("minhacasa");
 
@@ -231,12 +236,12 @@ export async function archiveInvoice(id: string) {
       throw new Error("Falha ao arquivar a fatura.");
     }
 
-    revalidatePath("/view/pages/invoices");
+    revalidatePath("/invoices");
     revalidatePath("/");
   } catch (error) {
-    console.error(`Erro ao arquivar fatura ${id}:`, error);
+    logger.error({ error, invoiceId: id, userId: user.id }, "Error archiving invoice");
     throw new Error("Erro ao arquivar a fatura.");
   }
 
-  redirect("/view/pages/invoices");
+  redirect("/invoices");
 }
