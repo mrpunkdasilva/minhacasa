@@ -35,10 +35,30 @@ export default async function InvoicesListView() {
 
       {/* Statistics Section */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
-        <StatCard title="Total" value={totals.total} color="zinc" />
-        <StatCard title="Pago" value={totals.paid} color="emerald" />
-        <StatCard title="Pendente" value={totals.unpaid} color="amber" />
-        <StatCard title="Atrasado" value={totals.overdue} color="rose" />
+        <StatCard
+          title="Total"
+          value={totals.total}
+          subtitle="Soma de todas as contas"
+          color="zinc"
+        />
+        <StatCard
+          title="Pago"
+          value={totals.paid}
+          subtitle="Contas liquidadas"
+          color="emerald"
+        />
+        <StatCard
+          title="Pendente"
+          value={totals.unpaid}
+          subtitle="Contas a vencer"
+          color="amber"
+        />
+        <StatCard
+          title="Atrasado"
+          value={totals.overdue}
+          subtitle="Contas vencidas"
+          color="rose"
+        />
       </div>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
@@ -147,10 +167,12 @@ function getStatusLabel(status: InvoiceStatus) {
 function StatCard({
   title,
   value,
+  subtitle,
   color,
 }: {
   title: string;
   value: number;
+  subtitle: string;
   color: "zinc" | "emerald" | "amber" | "rose";
 }) {
   const colorMap = {
@@ -160,16 +182,35 @@ function StatCard({
     rose: "border-rose-500/30 text-rose-500",
   };
 
+  const formattedValue = value.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+
+  // Dynamic font size based on value length
+  const getFontSize = (len: number) => {
+    if (len > 16) return "text-sm";
+    if (len > 13) return "text-base";
+    if (len > 10) return "text-lg";
+    return "text-xl";
+  };
+
   return (
-    <div className={`bg-zinc-900 border ${colorMap[color]} rounded-lg p-5`}>
-      <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-1">
+    <div className={`bg-zinc-900 border ${colorMap[color]} rounded-lg p-5 flex flex-col justify-between min-h-[7rem] h-full transition-all hover:bg-zinc-800/10`}>
+      <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-1">
         {title}
       </p>
-      <p
-        className={`text-xl font-bold font-mono ${colorMap[color].split(" ").pop()}`}
-      >
-        {value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
-      </p>
+      <div className="flex flex-col gap-1">
+        <p
+          className={`${getFontSize(formattedValue.length)} font-bold font-mono ${colorMap[color].split(" ").pop()} leading-none break-all sm:break-normal`}
+          title={formattedValue}
+        >
+          {formattedValue}
+        </p>
+        <p className="text-[10px] text-zinc-500 font-medium leading-tight">
+          {subtitle}
+        </p>
+      </div>
     </div>
   );
 }

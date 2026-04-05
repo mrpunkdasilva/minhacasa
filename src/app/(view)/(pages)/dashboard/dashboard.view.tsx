@@ -175,21 +175,36 @@ function SummaryCard({
     rose: "text-rose-500",
   };
 
+  const formattedValue = value.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+
+  // Dynamic font size based on value length to prevent overflow
+  const getFontSize = (len: number) => {
+    if (len > 16) return "text-base";
+    if (len > 13) return "text-lg";
+    if (len > 10) return "text-xl";
+    return "text-2xl";
+  };
+
   return (
     <div
-      className={`bg-zinc-900 border ${colorMap[color]} rounded-lg p-6 flex flex-col justify-between h-32`}
+      className={`bg-zinc-900 border ${colorMap[color]} rounded-lg p-5 flex flex-col justify-between min-h-[8rem] h-full shadow-lg transition-all hover:scale-[1.02]`}
     >
-      <h3 className="text-zinc-400 text-sm font-medium uppercase tracking-wider">
+      <h3 className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2">
         {title}
       </h3>
-      <div>
-        <span className={`text-2xl font-bold font-mono ${textColorMap[color]}`}>
-          {value.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-          })}
+      <div className="flex flex-col gap-1">
+        <span
+          className={`${getFontSize(formattedValue.length)} font-bold font-mono ${textColorMap[color]} leading-none break-all sm:break-normal`}
+          title={formattedValue}
+        >
+          {formattedValue}
         </span>
-        <p className="text-xs text-zinc-500 mt-1">{subtitle}</p>
+        <p className="text-[10px] text-zinc-500 font-medium leading-tight">
+          {subtitle}
+        </p>
       </div>
     </div>
   );
