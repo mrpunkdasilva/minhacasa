@@ -14,6 +14,22 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Pass build arguments for environment variables needed during build
+ARG MONGODB_URI
+ARG AUTH_SECRET
+ARG AUTH_URL
+ARG NEXT_PUBLIC_APP_URL
+ARG BLOB_READ_WRITE_TOKEN
+ARG VERCEL_OIDC_TOKEN
+
+# Set environment variables for the build process
+ENV MONGODB_URI=$MONGODB_URI
+ENV AUTH_SECRET=$AUTH_SECRET
+ENV AUTH_URL=$AUTH_URL
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+ENV BLOB_READ_WRITE_TOKEN=$BLOB_READ_WRITE_TOKEN
+ENV VERCEL_OIDC_TOKEN=$VERCEL_OIDC_TOKEN
+
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
