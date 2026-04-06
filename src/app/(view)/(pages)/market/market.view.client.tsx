@@ -5,15 +5,24 @@ import ShoppingList from "./components/shopping-list";
 import Inventory from "./components/inventory";
 import MarketAnalysis from "./components/market-analysis";
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
+import { MarketItem } from "@/app/domain/entity/market/market-item.entity";
 
 type MarketTab = "shopping" | "inventory" | "analysis";
 
 interface MarketViewClientProps {
   invoices: InvoiceEntity[];
+  marketItems: MarketItem[];
 }
 
-export default function MarketViewClient({ invoices }: MarketViewClientProps) {
+export default function MarketViewClient({
+  invoices,
+  marketItems = [],
+}: MarketViewClientProps) {
   const [activeTab, setActiveTab] = useState<MarketTab>("shopping");
+
+  const safeMarketItems = Array.isArray(marketItems) ? marketItems : [];
+  const shoppingListItems = safeMarketItems.filter((item) => !item.isInStock);
+  const inventoryItems = safeMarketItems.filter((item) => item.isInStock);
 
   return (
     <div className="flex flex-col space-y-8">
@@ -70,9 +79,15 @@ export default function MarketViewClient({ invoices }: MarketViewClientProps) {
 
       {/* Content */}
       <div className="mt-8">
-        {activeTab === "shopping" && <ShoppingList />}
-        {activeTab === "inventory" && <Inventory />}
-        {activeTab === "analysis" && <MarketAnalysis invoices={invoices} />}
+        {activeTab === "shopping" && (
+          <ShoppingList initialItems={shoppingListItems} />
+        )}
+        {activeTab === "inventory" && (
+          <Inventory initialItems={inventoryItems} />
+        )}
+        {activeTab === "analysis" && (
+          <MarketAnalysis invoices={invoices} marketItems={safeMarketItems} />
+        )}
       </div>
     </div>
   );

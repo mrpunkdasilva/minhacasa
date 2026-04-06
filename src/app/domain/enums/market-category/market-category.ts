@@ -11,10 +11,17 @@ export enum MarketCategory {
 }
 
 export enum MarketUnit {
-  UN = "un",
-  KG = "kg",
-  G = "g",
-  L = "l",
-  ML = "ml",
-  PCT = "pct",
+  UN = "Unidade",
+  KG = "Quilograma (kg)",
+  G = "Grama (g)",
+  L = "Litro (l)",
+  ML = "Mililitro (ml)",
+  PCT = "Pacote",
+}
+
+export enum MarketPriority {
+  LOW = "Baixa",
+  MEDIUM = "Média",
+  HIGH = "Alta",
+  URGENT = "Urgente",
 }
