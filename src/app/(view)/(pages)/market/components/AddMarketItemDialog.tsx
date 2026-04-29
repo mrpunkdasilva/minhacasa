@@ -41,12 +41,12 @@ import { addMarketItem } from "@/app/infra/actions/market.actions";
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   category: z.nativeEnum(MarketCategory),
-  quantity: z.string().transform((val) => parseFloat(val)),
+  quantity: z.number().min(0.01, "Quantidade deve ser maior que zero"),
   unit: z.nativeEnum(MarketUnit),
   priority: z.nativeEnum(MarketPriority),
-  lastPrice: z.string().transform((val) => parseFloat(val || "0")),
-  shouldMoveToInventory: z.boolean().default(true),
-  location: z.enum(["shopping", "inventory"]).default("shopping"),
+  lastPrice: z.number().min(0, "Preço não pode ser negativo"),
+  shouldMoveToInventory: z.boolean(),
+  location: z.enum(["shopping", "inventory"]),
 });
 
 export default function AddMarketItemDialog() {
@@ -58,10 +58,10 @@ export default function AddMarketItemDialog() {
     defaultValues: {
       name: "",
       category: MarketCategory.GROCERY,
-      quantity: "1" as any,
+      quantity: 1,
       unit: MarketUnit.UN,
       priority: MarketPriority.MEDIUM,
-      lastPrice: "0" as any,
+      lastPrice: 0,
       shouldMoveToInventory: true,
       location: "shopping",
     },
@@ -144,6 +144,7 @@ export default function AddMarketItemDialog() {
                         step="0.01"
                         className="bg-black border-zinc-800 text-white h-12"
                         {...field}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -191,6 +192,7 @@ export default function AddMarketItemDialog() {
                         placeholder="0,00"
                         className="bg-black border-zinc-800 text-white h-12 pl-10"
                         {...field}
+                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                       />
                     </div>
                   </FormControl>

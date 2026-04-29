@@ -3,6 +3,9 @@ import Link from "next/link";
 import {
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "@/app/(view)/components/ui/sidebar";
 import { NavActionStrategy, NavItem } from "./nav-item";
 
@@ -22,6 +25,19 @@ export class LinkStrategy implements NavActionStrategy {
             <span>{item.title}</span>
           </Link>
         </SidebarMenuButton>
+        {item.subItems && (
+          <SidebarMenuSub>
+            {item.subItems.map((sub) => (
+              <SidebarMenuSubItem key={sub.title}>
+                <SidebarMenuSubButton asChild isActive={pathname === sub.href}>
+                  <Link href={sub.href}>
+                    <span>{sub.title}</span>
+                  </Link>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            ))}
+          </SidebarMenuSub>
+        )}
       </SidebarMenuItem>
     );
   }

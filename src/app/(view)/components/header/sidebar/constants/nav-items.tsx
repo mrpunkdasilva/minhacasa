@@ -10,7 +10,15 @@ import {
 
 export const staticNavItems = [
   { title: "Dashboard", href: "/", icon: LayoutDashboard },
-  { title: "Faturas", href: "/invoices", icon: Receipt },
+  { 
+    title: "Faturas", 
+    href: "/invoices", 
+    icon: Receipt,
+    subItems: [
+      { title: "Lista", href: "/invoices" },
+      { title: "Análises", href: "/invoices/analytics" },
+    ]
+  },
   { title: "Mercado", href: "/market", icon: ShoppingCart },
   {
     title: "Infraestrutura",

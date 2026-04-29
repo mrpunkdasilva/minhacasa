@@ -99,51 +99,51 @@ export default async function DashboardView() {
             </Link>
           </div>
 
-          <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
-            {pendingInvoices.length === 0 ? (
-              <div className="p-8 text-center text-zinc-500">
-                Nenhuma fatura pendente encontrada.
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-zinc-800">
-                {pendingInvoices.map((invoice) => (
-                  <Link
-                    key={invoice.id}
-                    href={`/invoices/${invoice.id}`}
-                    className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc-800/30 transition-colors group"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-amber-500/10 rounded-full flex-shrink-0 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-colors">
-                        <Clock size={20} />
-                      </div>
-                      <div>
-                        <p className="font-medium group-hover:text-emerald-500 transition-colors">
-                          {invoice.name}
-                        </p>
-                        <p className="text-xs text-zinc-500">
-                          Vence em{" "}
-                          {new Date(invoice.dueDate).toLocaleDateString(
-                            "pt-BR",
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between gap-2 border-t border-zinc-800/50 pt-3 sm:border-0 sm:pt-0">
-                      <p className="font-mono font-bold text-lg sm:text-base">
-                        {invoice.price.amount.toLocaleString("pt-BR", {
-                          style: "currency",
-                          currency: "BRL",
-                        })}
-                      </p>
-                      <span className="text-[10px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded uppercase font-bold">
-                        Pendente
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+           <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
+             {pendingInvoices.length === 0 ? (
+               <div className="p-8 text-center text-zinc-500">
+                 Nenhuma fatura pendente encontrada.
+               </div>
+             ) : (
+               <div className="space-y-1">
+                 {pendingInvoices.map((invoice) => (
+                   <Link
+                     key={invoice.id}
+                     href={`/invoices/${invoice.id}`}
+                     className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-zinc-800/50 transition-colors group border-b border-zinc-800 last:border-b-0"
+                   >
+                     <div className="flex items-center gap-4 min-w-0 flex-1">
+                       <div className="w-10 h-10 bg-amber-500/10 rounded-full flex-shrink-0 flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-black transition-colors">
+                         <Clock size={20} />
+                       </div>
+                       <div className="min-w-0">
+                         <p className="font-medium group-hover:text-emerald-500 transition-colors truncate">
+                           {invoice.name}
+                         </p>
+                         <p className="text-xs text-zinc-500">
+                           Vence em{" "}
+                           {new Date(invoice.dueDate).toLocaleDateString(
+                             "pt-BR",
+                           )}
+                         </p>
+                       </div>
+                     </div>
+                     <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between gap-3 pt-2 sm:pt-0 sm:flex-shrink-0">
+                       <p className="font-mono font-bold text-base sm:text-sm">
+                         {invoice.price.amount.toLocaleString("pt-BR", {
+                           style: "currency",
+                           currency: "BRL",
+                         })}
+                       </p>
+                       <span className="text-[10px] bg-amber-500/10 text-amber-500 px-2 py-1 rounded-full uppercase font-bold">
+                         Pendente
+                       </span>
+                     </div>
+                   </Link>
+                 ))}
+               </div>
+             )}
+           </div>
         </div>
       </div>
     </div>

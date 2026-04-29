@@ -2,6 +2,11 @@ import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status"
 import Link from "next/link";
 import { Plus, ShieldCheck } from "lucide-react";
 import { getInvoices } from "@/app/infra/actions/invoice.actions";
+import { StatusDistributionChart } from "./components/status-distribution-chart";
+import { TemporalTrendChart } from "./components/temporal-trend-chart";
+import { OverdueRiskAnalysis } from "./components/overdue-risk-analysis";
+import { AdvancedInsights } from "./components/advanced-insights";
+import { PaymentForecast } from "./components/payment-forecast";
 
 export default async function InvoicesListView() {
   const invoices = await getInvoices();
@@ -59,6 +64,35 @@ export default async function InvoicesListView() {
           subtitle="Contas vencidas"
           color="rose"
         />
+      </div>
+
+      {/* Analytics Section */}
+      <div className="space-y-8 mb-10">
+        {/* Risk Analysis */}
+        <OverdueRiskAnalysis invoices={invoices} />
+
+        {/* Charts Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-2">
+              Distribuição por Status
+            </h3>
+            <StatusDistributionChart invoices={invoices} />
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-2">
+              Tendência Temporal
+            </h3>
+            <TemporalTrendChart invoices={invoices} />
+          </div>
+        </div>
+
+        {/* Advanced Insights */}
+        <AdvancedInsights invoices={invoices} />
+
+        {/* Payment Forecast */}
+        <PaymentForecast invoices={invoices} />
       </div>
 
       <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden">
@@ -196,7 +230,9 @@ function StatCard({
   };
 
   return (
-    <div className={`bg-zinc-900 border ${colorMap[color]} rounded-lg p-5 flex flex-col justify-between min-h-[7rem] h-full transition-all hover:bg-zinc-800/10`}>
+    <div
+      className={`bg-zinc-900 border ${colorMap[color]} rounded-lg p-5 flex flex-col justify-between min-h-28 h-full transition-all hover:bg-zinc-800/10`}
+    >
       <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-1">
         {title}
       </p>

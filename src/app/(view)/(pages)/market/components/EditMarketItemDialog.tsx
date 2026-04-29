@@ -40,19 +40,24 @@ import { updateMarketItem } from "@/app/infra/actions/market.actions";
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   category: z.nativeEnum(MarketCategory),
-  quantity: z.coerce.number().min(0),
-  minimumQuantity: z.coerce.number().min(0).optional(),
+  quantity: z.number().min(0),
+  minimumQuantity: z.number().min(0),
   unit: z.nativeEnum(MarketUnit),
   priority: z.nativeEnum(MarketPriority),
-  lastPrice: z.coerce.number().min(0),
-  expirationDate: z.string().optional().refine((val) => !val || !isNaN(Date.parse(val)), "Data inválida"),
+  lastPrice: z.number().min(0),
+  expirationDate: z
+    .string()
+    .optional()
+    .refine((val) => !val || !isNaN(Date.parse(val)), "Data inválida"),
 });
 
 interface EditMarketItemDialogProps {
   item: MarketItem;
 }
 
-export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps) {
+export default function EditMarketItemDialog({
+  item,
+}: EditMarketItemDialogProps) {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -66,7 +71,9 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
       unit: item.unit,
       priority: item.priority || MarketPriority.MEDIUM,
       lastPrice: item.lastPrice?.amount || 0,
-      expirationDate: item.expirationDate ? new Date(item.expirationDate).toISOString().split("T")[0] : "",
+      expirationDate: item.expirationDate
+        ? new Date(item.expirationDate).toISOString().split("T")[0]
+        : "",
     },
   });
 
@@ -76,7 +83,9 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
       await updateMarketItem(item.id, {
         ...values,
         lastPrice: { amount: values.lastPrice, currency: "BRL" },
-        expirationDate: values.expirationDate ? new Date(values.expirationDate) : undefined,
+        expirationDate: values.expirationDate
+          ? new Date(values.expirationDate)
+          : undefined,
       });
       setOpen(false);
     } catch (error) {
@@ -100,7 +109,10 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 pt-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -123,7 +135,15 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                   <FormItem>
                     <FormLabel>Qtd. Atual</FormLabel>
                     <FormControl>
-                      <Input type="number" step="0.01" className="bg-black border-zinc-800" {...field} />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        className="bg-black border-zinc-800"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -136,7 +156,15 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                   <FormItem>
                     <FormLabel>Estoque Mín.</FormLabel>
                     <FormControl>
-                      <Input type="number" step="0.01" className="bg-black border-zinc-800" {...field} />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        className="bg-black border-zinc-800"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -152,13 +180,19 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                   <FormLabel>Preço Unitário (BRL)</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+                      <DollarSign
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+                        size={16}
+                      />
                       <Input
                         type="number"
                         step="0.01"
                         placeholder="0,00"
                         className="bg-black border-zinc-800 text-white pl-10"
                         {...field}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </div>
                   </FormControl>
@@ -174,7 +208,10 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Unidade</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="bg-black border-zinc-800">
                           <SelectValue placeholder="Unid." />
@@ -182,7 +219,9 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                       </FormControl>
                       <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
                         {Object.entries(MarketUnit).map(([key, value]) => (
-                          <SelectItem key={key} value={value}>{value}</SelectItem>
+                          <SelectItem key={key} value={value}>
+                            {value}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -196,7 +235,10 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Categoria</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="bg-black border-zinc-800 text-xs">
                           <SelectValue placeholder="Categoria" />
@@ -204,7 +246,9 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                       </FormControl>
                       <SelectContent className="bg-zinc-900 border-zinc-800 text-white max-h-[200px]">
                         {Object.entries(MarketCategory).map(([key, value]) => (
-                          <SelectItem key={key} value={value}>{value}</SelectItem>
+                          <SelectItem key={key} value={value}>
+                            {value}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -220,7 +264,10 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Prioridade</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="bg-black border-zinc-800 font-bold">
                         <SelectValue placeholder="Prioridade" />
@@ -228,7 +275,9 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                     </FormControl>
                     <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
                       {Object.entries(MarketPriority).map(([key, value]) => (
-                        <SelectItem key={key} value={value}>{value}</SelectItem>
+                        <SelectItem key={key} value={value}>
+                          {value}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -244,7 +293,11 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                 <FormItem>
                   <FormLabel>Data de Validade</FormLabel>
                   <FormControl>
-                    <Input type="date" className="bg-black border-zinc-800" {...field} />
+                    <Input
+                      type="date"
+                      className="bg-black border-zinc-800"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -257,7 +310,11 @@ export default function EditMarketItemDialog({ item }: EditMarketItemDialogProps
                 disabled={isLoading}
                 className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold h-12"
               >
-                {isLoading ? <Loader2 className="animate-spin" /> : "Salvar Alterações"}
+                {isLoading ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Salvar Alterações"
+                )}
               </Button>
             </div>
           </form>
