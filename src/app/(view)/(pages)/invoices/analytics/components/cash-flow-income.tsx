@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
+import { IncomeEntity } from "@/app/domain/entity/income/income.entity";
 import { 
   BarChart, 
   Bar, 
@@ -19,29 +20,52 @@ import { Wallet2 } from "lucide-react";
 
 interface CashFlowIncomeProps {
   invoices: InvoiceEntity[];
+  incomes: IncomeEntity[];
 }
 
-export function CashFlowIncome({ invoices }: CashFlowIncomeProps) {
-  const [monthlyIncome, setMonthlyIncome] = useState(5000);
+export function CashFlowIncome({ invoices, incomes }: CashFlowIncomeProps) {
+  // Calculate average real income to use as default simulation value
+  const realMonthlyAverage = incomes.length > 0 
+    ? incomes.reduce((sum, inc) => sum + inc.amount.amount, 0) / 6 // Average over 6 months
+    : 5000;
+
+  const [monthlyIncome, setMonthlyIncome] = useState(realMonthlyAverage);
+
+  // Update simulation value when real data changes (initial load)
+  useEffect(() => {
+    if (incomes.length > 0) {
+        setMonthlyIncome(incomes.reduce((sum, inc) => sum + inc.amount.amount, 0) / 6);
+    }
+  }, [incomes]);
   
-  // Calculate balance for last 6 months
+  // Calculate balance for last 6 months using real income data per month
   const now = startOfMonth(new Date());
   const data = Array.from({ length: 6 }, (_, i) => {
     const date = subMonths(now, 5 - i);
-    const expenses = invoices
+    
+    const expensesInMonth = invoices
         .filter(inv => {
             const due = new Date(inv.dueDate);
             return due.getMonth() === date.getMonth() && due.getFullYear() === date.getFullYear();
         })
         .reduce((sum, inv) => sum + inv.price.amount, 0);
     
-    const balance = monthlyIncome - expenses;
+    const realIncomeInMonth = incomes
+        .filter(inc => {
+            const d = new Date(inc.date);
+            return d.getMonth() === date.getMonth() && d.getFullYear() === date.getFullYear();
+        })
+        .reduce((sum, inc) => sum + inc.amount.amount, 0);
+
+    // Use simulated monthlyIncome if real data is zero (for projection/empty months)
+    const effectiveIncome = realIncomeInMonth || monthlyIncome;
+    const balance = effectiveIncome - expensesInMonth;
 
     return {
         name: format(date, "MMM", { locale: ptBR }).toUpperCase(),
         balance: balance,
-        expenses: expenses,
-        income: monthlyIncome
+        expenses: expensesInMonth,
+        income: effectiveIncome
     };
   });
 

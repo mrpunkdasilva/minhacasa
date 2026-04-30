@@ -44,12 +44,14 @@ import { CategoryCorrelation } from "./components/category-correlation";
 import { MarketComparison } from "./components/market-comparison";
 import { IntelligentAlerts } from "./components/intelligent-alerts";
 import { CashFlowIncome } from "./components/cash-flow-income";
+import { IncomeEntity } from "@/app/domain/entity/income/income.entity";
 
 interface AnalyticsViewProps {
   invoices: InvoiceEntity[];
+  incomes: IncomeEntity[];
 }
 
-export function AnalyticsView({ invoices }: AnalyticsViewProps) {
+export function AnalyticsView({ invoices, incomes }: AnalyticsViewProps) {
   const [range, setRange] = useState("all");
 
   const filteredInvoices = useMemo(() => {
@@ -59,18 +61,25 @@ export function AnalyticsView({ invoices }: AnalyticsViewProps) {
     return invoices.filter(inv => isAfter(new Date(inv.dueDate), cutOffDate));
   }, [invoices, range]);
 
-  if (invoices.length === 0) {
+  const filteredIncomes = useMemo(() => {
+    if (range === "all") return incomes;
+    const months = parseInt(range);
+    const cutOffDate = subMonths(new Date(), months);
+    return incomes.filter(inc => isAfter(new Date(inc.date), cutOffDate));
+  }, [incomes, range]);
+
+  if (invoices.length === 0 && incomes.length === 0) {
     return (
       <div className="container mx-auto py-24 px-4 text-center">
         <h1 className="text-3xl font-bold text-white mb-4">Análise de Faturas</h1>
-        <p className="text-zinc-500">Nenhuma fatura encontrada para análise.</p>
+        <p className="text-zinc-500">Nenhum dado encontrado para análise.</p>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto py-12 px-4 max-w-7xl">
-      {/* Header Section */}
+      {/* Header Section remains identical */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div>
             <h1 className="text-4xl font-bold tracking-tighter text-white mb-2">
@@ -103,7 +112,7 @@ export function AnalyticsView({ invoices }: AnalyticsViewProps) {
       <SectionTitle title="Projeções e Simulações" icon={<BrainCircuit className="text-violet-500" />} />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
         <div className="lg:col-span-8">
-            <CashFlowIncome invoices={filteredInvoices} />
+            <CashFlowIncome invoices={filteredInvoices} incomes={filteredIncomes} />
         </div>
         <div className="lg:col-span-4">
             <FutureProjectionML invoices={filteredInvoices} />

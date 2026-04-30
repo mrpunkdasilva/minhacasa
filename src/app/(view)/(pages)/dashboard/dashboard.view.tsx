@@ -1,4 +1,5 @@
 import { getInvoices } from "@/app/infra/actions/invoice.actions";
+import { getIncomes } from "@/app/infra/actions/income.actions";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import Link from "next/link";
 import {
@@ -6,27 +7,33 @@ import {
   Clock,
   BarChart3,
   PieChart as PieChartIcon,
+  Wallet,
 } from "lucide-react";
 import { MonthlyExpensesChart } from "./components/monthly-expenses-chart";
 import { CategoryDistributionChart } from "./components/category-distribution-chart";
 
 export default async function DashboardView() {
-  const invoices = await getInvoices();
+  const [invoices, incomes] = await Promise.all([
+    getInvoices(),
+    getIncomes()
+  ]);
 
   const totalInvoices = invoices.reduce(
     (acc, inv) => acc + inv.price.amount,
     0,
   );
+  
+  const totalIncome = incomes.reduce(
+    (acc, inc) => acc + inc.amount.amount,
+    0,
+  );
+
+  const balance = totalIncome - totalInvoices;
+
   const totalPaid = invoices
     .filter((inv) => inv.status === InvoiceStatus.paid)
     .reduce((acc, inv) => acc + inv.price.amount, 0);
-  const totalPending = invoices
-    .filter((inv) => inv.status === InvoiceStatus.unpaid)
-    .reduce((acc, inv) => acc + inv.price.amount, 0);
-  const totalOverdue = invoices
-    .filter((inv) => inv.status === InvoiceStatus.overdue)
-    .reduce((acc, inv) => acc + inv.price.amount, 0);
-
+  
   const pendingInvoices = invoices
     .filter((inv) => inv.status === InvoiceStatus.unpaid)
     .sort(
@@ -36,32 +43,39 @@ export default async function DashboardView() {
 
   return (
     <div className="container mx-auto py-12 px-4 max-w-5xl text-white">
-      <h1 className="text-3xl font-bold tracking-tighter mb-8">Visão Geral</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold tracking-tighter">Visão Geral</h1>
+        <div className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 flex items-center gap-3">
+            <div className="p-1.5 rounded-full bg-emerald-500/10 text-emerald-500">
+                <Wallet size={16} />
+            </div>
+            <div className="flex flex-col">
+                <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Saldo Acumulado</span>
+                <span className={`text-sm font-black font-mono ${balance >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                    {balance.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                </span>
+            </div>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         <SummaryCard
-          title="Total Geral"
+          title="Total em Receitas"
+          value={totalIncome}
+          subtitle="Tudo que entrou no período"
+          color="emerald"
+        />
+        <SummaryCard
+          title="Total em Contas"
           value={totalInvoices}
-          subtitle="Soma de todas as contas"
-          color="zinc"
+          subtitle="Soma de todos os gastos"
+          color="rose"
         />
         <SummaryCard
           title="Total Pago"
           value={totalPaid}
-          subtitle="Contas liquidadas"
-          color="emerald"
-        />
-        <SummaryCard
-          title="Pendente"
-          value={totalPending}
-          subtitle="Contas a vencer"
-          color="amber"
-        />
-        <SummaryCard
-          title="Atrasado"
-          value={totalOverdue}
-          subtitle="Contas vencidas"
-          color="rose"
+          subtitle={`${((totalPaid/totalInvoices)*100 || 0).toFixed(1)}% das contas liquidadas`}
+          color="zinc"
         />
       </div>
 

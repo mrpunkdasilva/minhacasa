@@ -15,6 +15,8 @@ export function AdvancedInsights({ invoices }: AdvancedInsightsProps) {
   // Calculate statistics
   const amounts = invoices.map((inv) => inv.price.amount);
   const total = amounts.reduce((a, b) => a + b, 0);
+  const average = total / amounts.length;
+  
   // Standard deviation
   const median =
     amounts.length % 2 === 0

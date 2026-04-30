@@ -6,6 +6,7 @@ import {
   Heart,
   PawPrint,
   Sparkles,
+  Wallet,
 } from "lucide-react";
 
 export const staticNavItems = [
@@ -17,6 +18,15 @@ export const staticNavItems = [
     subItems: [
       { title: "Lista", href: "/invoices" },
       { title: "Análises", href: "/invoices/analytics" },
+    ]
+  },
+  { 
+    title: "Entradas", 
+    href: "/incomes", 
+    icon: Wallet,
+    subItems: [
+      { title: "Lista", href: "/incomes" },
+      { title: "Análises", href: "/incomes/analytics" },
     ]
   },
   { title: "Mercado", href: "/market", icon: ShoppingCart },
