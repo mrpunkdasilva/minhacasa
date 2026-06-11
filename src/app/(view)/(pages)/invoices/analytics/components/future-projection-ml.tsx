@@ -16,7 +16,7 @@ import { ptBR } from "date-fns/locale";
 import { BrainCircuit } from "lucide-react";
 
 interface FutureProjectionMLProps {
-  invoices: invoices[];
+  invoices: InvoiceEntity[];
 }
 
 export function FutureProjectionML({ invoices }: FutureProjectionMLProps) {
@@ -82,8 +82,8 @@ export function FutureProjectionML({ invoices }: FutureProjectionMLProps) {
             <YAxis hide />
             <Tooltip 
               contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-              formatter={(value: number) => [
-                value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+              formatter={(value: any) => [
+                Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
                 "Valor"
               ]}
             />

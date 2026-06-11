@@ -68,9 +68,9 @@ export function CumulativeBalanceChart({ incomes, invoices }: CumulativeBalanceC
             <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
             <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#71717a", fontSize: 10 }} />
             <YAxis axisLine={false} tickLine={false} tick={{ fill: "#71717a", fontSize: 10 }} tickFormatter={v => `R$${v}`} />
-            <Tooltip 
+            <Tooltip
                 contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: number) => [value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Saldo Acumulado"]}
+                formatter={(value: any) => [Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Saldo Acumulado"]}
             />
             <Area type="monotone" dataKey="balance" stroke="#10b981" fillOpacity={1} fill="url(#colorBalance)" strokeWidth={3} />
           </AreaChart>

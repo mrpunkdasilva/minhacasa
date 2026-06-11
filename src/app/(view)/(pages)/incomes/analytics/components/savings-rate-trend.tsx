@@ -69,7 +69,7 @@ export function SavingsRateTrend({ incomes, invoices }: SavingsRateTrendProps) {
             <YAxis axisLine={false} tickLine={false} tick={{ fill: "#71717a", fontSize: 10 }} tickFormatter={v => `${v}%`} />
             <Tooltip 
                 contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: number) => [`${value.toFixed(1)}%`, "Economia"]}
+                formatter={(value: any) => [`${Number(value ?? 0).toFixed(1)}%`, "Economia"]}
             />
             <Area type="monotone" dataKey="rate" stroke="#3b82f6" fillOpacity={1} fill="url(#colorRate)" strokeWidth={3} />
           </AreaChart>

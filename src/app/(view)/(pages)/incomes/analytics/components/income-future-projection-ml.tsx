@@ -87,7 +87,7 @@ export function IncomeFutureProjectionML({ incomes }: IncomeFutureProjectionMLPr
             <YAxis hide />
             <Tooltip 
                 contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: number) => [value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Projeção"]}
+                formatter={(value: any) => [Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Projeção"]}
             />
             <ReferenceLine x={data[5].name} stroke="#3f3f46" strokeDasharray="3 3" />
             <Area type="monotone" dataKey="projection" stroke="#8b5cf6" strokeWidth={2} strokeDasharray="5 5" fill="url(#colorProj)" />

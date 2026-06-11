@@ -85,7 +85,7 @@ export function ScenarioSimulation({ invoices }: ScenarioSimulationProps) {
                     <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
                     <Tooltip 
                         contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                        formatter={(value: number) => value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                        formatter={(value: any) => Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                     />
                     <Area type="monotone" dataKey="base" stroke="#71717a" fill="#71717a" fillOpacity={0.1} strokeDasharray="5 5" />
                     <Area type="monotone" dataKey="simulated" stroke={variation >= 0 ? "#ef4444" : "#10b981"} fill={variation >= 0 ? "#ef4444" : "#10b981"} fillOpacity={0.2} />

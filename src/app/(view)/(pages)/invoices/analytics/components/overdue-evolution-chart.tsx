@@ -71,8 +71,8 @@ export function OverdueEvolutionChart({ invoices }: OverdueEvolutionChartProps) 
               fontSize: "12px"
             }}
             itemStyle={{ color: "#ef4444" }}
-            formatter={(value: number) => [
-              value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+            formatter={(value: any) => [
+              Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
               "Valor em Atraso"
             ]}
           />

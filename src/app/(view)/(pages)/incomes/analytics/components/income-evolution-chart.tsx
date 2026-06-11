@@ -55,7 +55,7 @@ export function IncomeEvolutionChart({ incomes }: IncomeEvolutionChartProps) {
             <YAxis axisLine={false} tickLine={false} tick={{ fill: "#71717a", fontSize: 10 }} tickFormatter={v => `R$${v}`} />
             <Tooltip 
                 contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: number) => [value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Receita"]}
+                formatter={(value: any) => [Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Receita"]}
             />
             <Area type="monotone" dataKey="amount" stroke="#10b981" fillOpacity={1} fill="url(#colorIncome)" strokeWidth={3} />
           </AreaChart>

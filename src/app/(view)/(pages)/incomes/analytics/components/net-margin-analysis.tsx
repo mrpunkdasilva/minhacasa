@@ -49,7 +49,7 @@ export function NetMarginAnalysis({ incomes, invoices }: NetMarginAnalysisProps)
             </Pie>
             <Tooltip 
                 contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", borderRadius: "8px", fontSize: "10px" }}
-                formatter={(value: number) => value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                formatter={(value: any) => Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
             />
           </PieChart>
         </ResponsiveContainer>

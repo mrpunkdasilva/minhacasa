@@ -54,7 +54,7 @@ export function IncomeGrowthChart({ incomes }: IncomeGrowthChartProps) {
             <YAxis axisLine={false} tickLine={false} tick={{ fill: "#71717a", fontSize: 10 }} tickFormatter={v => `${v}%`} />
             <Tooltip 
                 contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: number) => [`${value.toFixed(1)}%`, "Variação"]}
+                formatter={(value: any) => [`${Number(value ?? 0).toFixed(1)}%`, "Variação"]}
             />
             <ReferenceLine y={0} stroke="#3f3f46" />
             <Bar dataKey="growth" radius={[4, 4, 0, 0]}>

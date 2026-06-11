@@ -7,7 +7,7 @@ interface PredictiveReceiveWindowProps {
   incomes: IncomeEntity[];
 }
 
-export function PredictiveReceiveWindow({ incomes }: IncomeEntity[]) {
+export function PredictiveReceiveWindow({ incomes }: PredictiveReceiveWindowProps) {
   // Find which day of the month has most income volume
   const dayCounts = Array(31).fill(0);
   incomes.forEach(inc => {

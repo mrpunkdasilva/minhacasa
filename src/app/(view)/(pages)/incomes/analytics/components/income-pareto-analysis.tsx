@@ -43,8 +43,8 @@ export function IncomeParetoAnalysis({ incomes }: IncomeParetoAnalysisProps) {
             <YAxis hide />
             <Tooltip 
                 contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: number, name: string) => [
-                    name === 'cumulative' ? `${value.toFixed(1)}%` : value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+                formatter={(value: any, name: any) => [
+                    name === 'cumulative' ? `${Number(value ?? 0).toFixed(1)}%` : Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
                     name === 'cumulative' ? 'Acumulado' : 'Valor'
                 ]}
             />

@@ -73,8 +73,8 @@ export function TemporalTrendChart({ invoices }: TemporalTrendChartProps) {
               fontSize: "12px",
             }}
             itemStyle={{ color: "#10b981" }}
-            formatter={(value: number) => [
-              Number(value).toLocaleString("pt-BR", {
+            formatter={(value: any) => [
+              Number(value ?? 0).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               }),

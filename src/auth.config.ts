@@ -19,7 +19,7 @@ export const authConfig = {
 
       if (isOnDashboard) {
         if (isLoggedIn) return true;
-        return false; // Redireciona usuários não autenticados para a página de login
+        return Response.redirect(new URL("/welcome", nextUrl)); // Redireciona limpando o callbackUrl
       } else if (isLoggedIn) {
         // Redireciona usuários logados para o dashboard se tentarem acessar /welcome
         return Response.redirect(new URL("/", nextUrl));

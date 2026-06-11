@@ -43,9 +43,9 @@ export function StatusDistributionChart({
   );
 
   const data = Object.entries(statusDataMap).map(([status, total]) => ({
-    name: STATUS_LABELS[status as InvoiceStatus],
+    name: STATUS_LABELS[status as unknown as InvoiceStatus],
     total,
-    status: status as InvoiceStatus,
+    status: status as unknown as InvoiceStatus,
   }));
 
   return (
@@ -78,8 +78,8 @@ export function StatusDistributionChart({
               fontSize: "12px",
             }}
             itemStyle={{ color: "#fff" }}
-            formatter={(value: number) => [
-              Number(value).toLocaleString("pt-BR", {
+            formatter={(value: any) => [
+              Number(value ?? 0).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               }),

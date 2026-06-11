@@ -3,8 +3,9 @@
 import { useState, useTransition, useMemo } from "react";
 import { MarketItem } from "@/app/domain/entity/market/market-item.entity";
 import { toggleItemBought, deleteMarketItem } from "@/app/infra/actions/market.actions";
-import { Trash2, Search, Filter, ArrowUpDown, AlertCircle, ShoppingCart, Archive } from "lucide-react";
+import { Trash2, Search, Filter, ArrowUpDown, ShoppingCart, Archive } from "lucide-react";
 import AddMarketItemDialog from "./AddMarketItemDialog";
+import EditMarketItemDialog from "./EditMarketItemDialog";
 import { MarketPriority, MarketCategory } from "@/app/domain/enums/market-category/market-category";
 import { Input } from "@/app/(view)/components/ui/input";
 import {
@@ -191,30 +192,32 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-6">
-                <div className="hidden sm:flex flex-col items-end">
-                  <span className="text-sm font-black text-white bg-zinc-800 px-3 py-1 rounded-lg">
-                    {item.quantity} <span className="text-zinc-500 text-[10px] ml-1 uppercase">{item.unit.split(" ")[0]}</span>
-                  </span>
-                  {item.lastPrice && (
-                    <span className="text-[10px] text-zinc-600 font-bold mt-1">
-                      Último: {item.lastPrice.amount.toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      })}
-                    </span>
-                  )}
-                </div>
-                
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  disabled={isPending}
-                  className="p-2 text-zinc-700 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all disabled:opacity-50"
-                  title="Excluir item"
-                >
-                  <Trash2 size={20} />
-                </button>
-              </div>
+               <div className="flex items-center gap-6">
+                 <div className="hidden sm:flex flex-col items-end">
+                   <span className="text-sm font-black text-white bg-zinc-800 px-3 py-1 rounded-lg">
+                     {item.quantity} <span className="text-zinc-500 text-[10px] ml-1 uppercase">{item.unit.split(" ")[0]}</span>
+                   </span>
+                   {item.lastPrice && (
+                     <span className="text-[10px] text-zinc-600 font-bold mt-1">
+                       Último: {item.lastPrice.amount.toLocaleString("pt-BR", {
+                         style: "currency",
+                         currency: "BRL",
+                       })}
+                     </span>
+                   )}
+                 </div>
+
+                 <EditMarketItemDialog item={item} />
+
+                 <button
+                   onClick={() => handleDelete(item.id)}
+                   disabled={isPending}
+                   className="p-2 text-zinc-700 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all disabled:opacity-50"
+                   title="Excluir item"
+                 >
+                   <Trash2 size={20} />
+                 </button>
+               </div>
             </div>
           ))
         )}

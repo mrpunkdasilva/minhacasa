@@ -84,6 +84,10 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
 
+  // Se estiver na página de welcome, não deve renderizar sidebar/topbar independente da sessão
+  // Mas como este é um Server Component, não temos acesso fácil à URL sem hooks que dependem de Client
+  // No entanto, o layout.tsx envolve todas as páginas. O Auth controla a sessão.
+  
   return (
     <html
       lang="pt-BR"
@@ -94,7 +98,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black h-full`}
       >
         <TooltipProvider delayDuration={0}>
-          {session ? (
+          {session?.user ? (
             <SidebarProvider defaultOpen={true}>
               <AppSidebar session={session} />
               <SidebarInset className="flex flex-col bg-black">
@@ -103,7 +107,7 @@ export default async function RootLayout({
               </SidebarInset>
             </SidebarProvider>
           ) : (
-            <main className="h-full">{children}</main>
+            <main className="h-full bg-black">{children}</main>
           )}
         </TooltipProvider>
       </body>

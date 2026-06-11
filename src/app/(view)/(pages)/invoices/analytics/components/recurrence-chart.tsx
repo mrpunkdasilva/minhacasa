@@ -45,8 +45,8 @@ export function RecurrenceChart({ invoices }: RecurrenceChartProps) {
               borderRadius: "8px",
               fontSize: "12px"
             }}
-            formatter={(value: number) => [
-              value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+            formatter={(value: any) => [
+              Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
               "Total"
             ]}
           />

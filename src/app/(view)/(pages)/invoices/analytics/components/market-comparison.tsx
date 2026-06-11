@@ -58,7 +58,7 @@ export function MarketComparison({ invoices }: MarketComparisonProps) {
             <YAxis hide />
             <Tooltip 
                 contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: number) => value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                formatter={(value: any) => Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
             />
             <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} />
             <Bar dataKey="Meus Gastos" fill="#10b981" radius={[4, 4, 0, 0]} />

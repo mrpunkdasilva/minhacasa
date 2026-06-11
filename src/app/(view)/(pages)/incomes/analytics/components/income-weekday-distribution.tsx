@@ -48,7 +48,7 @@ export function IncomeWeekdayDistribution({ incomes }: IncomeWeekdayDistribution
             <YAxis hide />
             <Tooltip 
                 contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: number) => [value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Total"]}
+                formatter={(value: any) => [Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }), "Total"]}
             />
             <Bar dataKey="amount" radius={[4, 4, 0, 0]}>
                 {data.map((entry, index) => (
