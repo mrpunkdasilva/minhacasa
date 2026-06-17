@@ -1,15 +1,19 @@
 "use client";
 
-import { wishlistMock } from "@/app/infra/mocks/wishlist/wishlist.mock";
+import { WishlistItem } from "@/app/domain/entity/wishlist/wishlist-item.entity";
 
-export default function WishlistSummary() {
-  const pendingItems = wishlistMock.filter((i) => !i.isPurchased);
+interface WishlistSummaryProps {
+  items: WishlistItem[];
+}
+
+export default function WishlistSummary({ items }: WishlistSummaryProps) {
+  const pendingItems = items.filter((i) => !i.isPurchased);
   const totalValue = pendingItems.reduce((acc, i) => acc + i.price.amount, 0);
   const totalSaved = pendingItems.reduce(
     (acc, i) => acc + i.savedAmount.amount,
     0,
   );
-  const overallProgress = (totalSaved / totalValue) * 100;
+  const overallProgress = totalValue > 0 ? (totalSaved / totalValue) * 100 : 0;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -7,6 +7,7 @@ const now = new Date();
 export const wishlistMock: WishlistItem[] = [
   {
     id: "wi-1",
+    houseId: "h-1",
     createdAt: now,
     updatedAt: now,
     name: "PlayStation 5 Pro",
@@ -19,6 +20,7 @@ export const wishlistMock: WishlistItem[] = [
   },
   {
     id: "wi-2",
+    houseId: "h-1",
     createdAt: now,
     updatedAt: now,
     name: "Cadeira Ergonômica Herman Miller",
@@ -30,6 +32,7 @@ export const wishlistMock: WishlistItem[] = [
   },
   {
     id: "wi-3",
+    houseId: "h-1",
     createdAt: now,
     updatedAt: now,
     name: "Kit de Ferramentas Bosch",
@@ -41,6 +44,7 @@ export const wishlistMock: WishlistItem[] = [
   },
   {
     id: "wi-4",
+    houseId: "h-1",
     createdAt: now,
     updatedAt: now,
     name: "Lâmpadas Inteligentes Philips Hue",

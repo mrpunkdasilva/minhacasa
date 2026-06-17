@@ -4,6 +4,7 @@ import { BaseEntity } from "../base.entity";
 import { Money } from "../invoice/invoice.entity";
 
 export interface WishlistItem extends BaseEntity {
+  houseId: string;
   name: string;
   price: Money;
   priority: WishlistPriority;
