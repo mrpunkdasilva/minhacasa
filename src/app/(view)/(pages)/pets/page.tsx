@@ -1,9 +1,12 @@
 import PetsView from "@/app/(view)/(pages)/pets/pets.view";
+import { getPets } from "@/app/infra/actions/pet.actions";
 
-export default function PetsPage() {
+export default async function PetsPage() {
+  const initialPets = await getPets();
+
   return (
-    <main className="bg-black min-h-screen">
-      <PetsView />
+    <main>
+      <PetsView initialPets={initialPets} />
     </main>
   );
 }

@@ -13,6 +13,7 @@ export interface WeightInfo {
 }
 
 export interface Pet extends BaseEntity {
+  houseId: string;
   name: string;
   type: PetType;
   breed: string;
