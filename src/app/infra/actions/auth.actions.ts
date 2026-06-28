@@ -8,6 +8,7 @@ import { hashPassword } from "@/app/infra/lib/password";
 import { UserEntity } from "@/app/domain/entity/user/user.entity";
 import { HouseEntity } from "@/app/domain/entity/house/house.entity";
 import logger from "@/app/infra/lib/logger";
+import { RegisterSchema, LoginSchema } from "@/app/infra/schemas/auth.schema";
 
 /**
  * Handles user authentication (login).
@@ -16,7 +17,13 @@ export async function authenticate(
   prevState: string | undefined,
   formData: FormData,
 ) {
-  const email = formData.get("email") as string;
+  const validatedFields = LoginSchema.safeParse(Object.fromEntries(formData));
+
+  if (!validatedFields.success) {
+    return "Dados inválidos. Verifique seu e-mail e senha.";
+  }
+
+  const { email } = validatedFields.data;
   try {
     logger.info({ email }, "Attempting user authentication");
     await signIn("credentials", formData);
@@ -41,14 +48,13 @@ export async function registerUser(
   prevState: string | undefined,
   formData: FormData,
 ) {
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const inviteCode = formData.get("inviteCode") as string;
+  const validatedFields = RegisterSchema.safeParse(Object.fromEntries(formData));
 
-  if (!name || !email || !password) {
-    return "Por favor, preencha todos os campos para entrar na sua casa.";
+  if (!validatedFields.success) {
+    return "Dados de cadastro inválidos. Verifique as informações.";
   }
+
+  const { name, email, password, inviteCode } = validatedFields.data;
 
   try {
     logger.info({ email }, "Registering new user");
@@ -76,7 +82,7 @@ export async function registerUser(
       houseId = crypto.randomUUID();
       const newHouse: HouseEntity = {
         id: houseId,
-        name: `Casa de ${name.split(" ")[0]}`,
+        name: \`Casa de \${name.split(" ")[0]}\`,
         inviteCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
         createdById: userId,
         createdAt: new Date(),
