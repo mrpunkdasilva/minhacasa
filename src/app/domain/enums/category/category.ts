@@ -6,6 +6,7 @@ export enum Category {
   UTILITIES = "Utilidades",
   SERVICES = "Serviços",
   ENTERTAINMENT = "Lazer",
+  EDUCATION = "Educação",
   HEALTH = "Saúde",
   OTHERS = "Outros",
 }
