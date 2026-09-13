@@ -82,7 +82,7 @@ export async function registerUser(
       houseId = crypto.randomUUID();
       const newHouse: HouseEntity = {
         id: houseId,
-        name: \`Casa de \${name.split(" ")[0]}\`,
+        name: `Casa de ${name.split(" ")[0]}`,
         inviteCode: Math.random().toString(36).substring(2, 8).toUpperCase(),
         createdById: userId,
         createdAt: new Date(),
