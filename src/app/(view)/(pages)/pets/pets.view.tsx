@@ -55,8 +55,8 @@ export default function PetsView({ initialPets }: PetsViewProps) {
         <div className="mt-8 animate-in fade-in duration-500">
           {activeTab === "pets" && <PetList initialPets={initialPets} />}
           {activeTab === "health" && <HealthRecords pets={initialPets} />}
-          {activeTab === "nutrition" && <NutritionStatus />}
-          {activeTab === "agenda" && <PetAgenda />}
+          {activeTab === "nutrition" && <NutritionStatus pets={initialPets} />}
+          {activeTab === "agenda" && <PetAgenda pets={initialPets} />}
         </div>
       </div>
     </div>

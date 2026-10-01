@@ -1,4 +1,4 @@
-import { MongoClient, Collection } from "mongodb";
+import { MongoClient, Collection, Document } from "mongodb";
 import clientPromise from "@/app/infra/lib/mongodb";
 import { Pet, HealthRecord, PetService, PetNutrition } from "@/app/domain/entity/pet/pet.entities";
 import logger from "./logger";
@@ -9,7 +9,7 @@ export class PetRepository {
   private servicesCollection = "pet_services";
   private nutritionCollection = "pet_nutrition";
 
-  private async getCollection<T>(name: string): Promise<Collection<T>> {
+  private async getCollection<T extends Document>(name: string): Promise<Collection<T>> {
     const client: MongoClient = await clientPromise;
     const db = client.db();
     return db.collection<T>(name);

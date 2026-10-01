@@ -16,6 +16,7 @@ const now = new Date();
 export const petsMock: Pet[] = [
   {
     id: "p-1",
+    houseId: "house-123",
     createdAt: now,
     updatedAt: now,
     name: "Max",
@@ -27,6 +28,7 @@ export const petsMock: Pet[] = [
   },
   {
     id: "p-2",
+    houseId: "house-123",
     createdAt: now,
     updatedAt: now,
     name: "Luna",
