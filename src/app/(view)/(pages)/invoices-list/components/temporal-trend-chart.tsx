@@ -12,6 +12,7 @@ import {
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import type { TooltipValueType } from "recharts";
 
 interface TemporalTrendChartProps {
   invoices: InvoiceEntity[];
@@ -73,7 +74,7 @@ export function TemporalTrendChart({ invoices }: TemporalTrendChartProps) {
               fontSize: "12px",
             }}
             itemStyle={{ color: "#10b981" }}
-            formatter={(value: any) => [
+            formatter={(value: TooltipValueType | undefined) => [
               Number(value ?? 0).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
@@ -93,4 +94,3 @@ export function TemporalTrendChart({ invoices }: TemporalTrendChartProps) {
     </div>
   );
 }
-

@@ -11,14 +11,23 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
+import {
+  format,
+  subMonths,
+  startOfMonth,
+  endOfMonth,
+  isWithinInterval,
+} from "date-fns";
 import { ptBR } from "date-fns/locale";
+import type { TooltipValueType } from "recharts";
 
 interface OverdueEvolutionChartProps {
   invoices: InvoiceEntity[];
 }
 
-export function OverdueEvolutionChart({ invoices }: OverdueEvolutionChartProps) {
+export function OverdueEvolutionChart({
+  invoices,
+}: OverdueEvolutionChartProps) {
   // Evolution of overdue invoices over the last 6 months
   const last6Months = Array.from({ length: 6 }, (_, i) => {
     const date = subMonths(startOfMonth(new Date()), 5 - i);
@@ -50,36 +59,43 @@ export function OverdueEvolutionChart({ invoices }: OverdueEvolutionChartProps) 
     <div className="h-[300px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={last6Months}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
-          <XAxis 
-            dataKey="name" 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fill: "#71717a", fontSize: 12 }} 
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#27272a"
+            vertical={false}
           />
-          <YAxis 
-            axisLine={false} 
-            tickLine={false} 
+          <XAxis
+            dataKey="name"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: "#71717a", fontSize: 12 }}
+          />
+          <YAxis
+            axisLine={false}
+            tickLine={false}
             tick={{ fill: "#71717a", fontSize: 12 }}
             tickFormatter={(value) => `R$${value}`}
           />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: "#18181b", 
-              border: "1px solid #27272a", 
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#18181b",
+              border: "1px solid #27272a",
               borderRadius: "8px",
-              fontSize: "12px"
+              fontSize: "12px",
             }}
             itemStyle={{ color: "#ef4444" }}
-            formatter={(value: any) => [
-              Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
-              "Valor em Atraso"
+            formatter={(value: TooltipValueType | undefined) => [
+              Number(value ?? 0).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }),
+              "Valor em Atraso",
             ]}
           />
-          <Line 
-            type="monotone" 
-            dataKey="amount" 
-            stroke="#ef4444" 
+          <Line
+            type="monotone"
+            dataKey="amount"
+            stroke="#ef4444"
             strokeWidth={3}
             dot={{ fill: "#ef4444", r: 4 }}
             activeDot={{ r: 6, stroke: "#18181b", strokeWidth: 2 }}

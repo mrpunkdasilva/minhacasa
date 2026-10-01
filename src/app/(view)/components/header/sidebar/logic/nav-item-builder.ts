@@ -43,14 +43,26 @@ export class NavItemBuilder {
     onClick: () => void,
     iconOverride?: React.ReactNode,
     titleOverride?: string,
-    className?: string
+    className?: string,
   ) {
-    this.strategy = new ButtonStrategy(onClick, iconOverride, titleOverride, className);
+    this.strategy = new ButtonStrategy(
+      onClick,
+      iconOverride,
+      titleOverride,
+      className,
+    );
     return this;
   }
 
   build() {
-    if (!this.strategy) throw new Error("NavItem must have a strategy (navigation or action).");
-    return new NavItem(this.title, this.icon, this.strategy, this.tooltip, this.subItems.length > 0 ? this.subItems : undefined);
+    if (!this.strategy)
+      throw new Error("NavItem must have a strategy (navigation or action).");
+    return new NavItem(
+      this.title,
+      this.icon,
+      this.strategy,
+      this.tooltip,
+      this.subItems.length > 0 ? this.subItems : undefined,
+    );
   }
 }

@@ -177,4 +177,3 @@ export function OverdueRiskAnalysis({ invoices }: OverdueRiskAnalysisProps) {
     </div>
   );
 }
-

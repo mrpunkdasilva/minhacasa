@@ -2,7 +2,10 @@
 
 import { WishlistItem } from "@/app/domain/entity/wishlist/wishlist-item.entity";
 import { WishlistPriority } from "@/app/domain/enums/wishlist/wishlist-priority";
-import { toggleWishlistItemPurchased, deleteWishlistItem } from "@/app/infra/actions/wishlist.actions";
+import {
+  toggleWishlistItemPurchased,
+  deleteWishlistItem,
+} from "@/app/infra/actions/wishlist.actions";
 import { useState } from "react";
 import EditSavedAmountModal from "./edit-saved-amount-modal";
 
@@ -59,17 +62,31 @@ export default function WishlistGrid({ items }: WishlistGridProps) {
                   {item.category}
                 </span>
                 <div className="flex gap-2">
-                   <span
+                  <span
                     className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${priorityStyles[item.priority]}`}
                   >
                     {item.priority}
                   </span>
-                  <button 
+                  <button
                     onClick={() => handleDelete(item.id)}
                     className="text-zinc-600 hover:text-rose-500 transition-colors"
                     aria-label="Excluir item"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 6h18" />
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -104,8 +121,10 @@ export default function WishlistGrid({ items }: WishlistGridProps) {
                 </div>
                 <div className="flex flex-col gap-2 text-[10px] font-mono text-zinc-500">
                   <div className="flex justify-between items-center w-full">
-                    <span className="uppercase font-bold tracking-tighter">Guardado:</span>
-                    <button 
+                    <span className="uppercase font-bold tracking-tighter">
+                      Guardado:
+                    </span>
+                    <button
                       onClick={() => setSelectedItem(item)}
                       className="flex items-center gap-1 text-white hover:text-emerald-400 transition-colors bg-zinc-800/50 px-2 py-1 rounded"
                       title="Clique para editar valor guardado"
@@ -114,13 +133,31 @@ export default function WishlistGrid({ items }: WishlistGridProps) {
                         style: "currency",
                         currency: "BRL",
                       })}
-                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="10"
+                        height="10"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                        <path d="m15 5 4 4" />
+                      </svg>
                     </button>
                   </div>
                   <div className="flex justify-between w-full border-t border-zinc-800 pt-1">
-                    <span className="uppercase font-bold tracking-tighter">Falta:</span>
+                    <span className="uppercase font-bold tracking-tighter">
+                      Falta:
+                    </span>
                     <span className="text-zinc-400 font-bold">
-                      {Math.max(0, item.price.amount - item.savedAmount.amount).toLocaleString("pt-BR", {
+                      {Math.max(
+                        0,
+                        item.price.amount - item.savedAmount.amount,
+                      ).toLocaleString("pt-BR", {
                         style: "currency",
                         currency: "BRL",
                       })}
@@ -141,10 +178,12 @@ export default function WishlistGrid({ items }: WishlistGridProps) {
                   </a>
                 )}
                 <button
-                  onClick={() => handleTogglePurchased(item.id, !item.isPurchased)}
+                  onClick={() =>
+                    handleTogglePurchased(item.id, !item.isPurchased)
+                  }
                   className={`flex-1 text-xs py-2 rounded font-bold transition-colors ${
-                    item.isPurchased 
-                      ? "bg-emerald-500/20 text-emerald-500 hover:bg-emerald-500/30" 
+                    item.isPurchased
+                      ? "bg-emerald-500/20 text-emerald-500 hover:bg-emerald-500/30"
                       : "bg-emerald-500 text-black hover:bg-emerald-400"
                   }`}
                 >
@@ -163,9 +202,9 @@ export default function WishlistGrid({ items }: WishlistGridProps) {
       })}
 
       {selectedItem && (
-        <EditSavedAmountModal 
-          item={selectedItem} 
-          onClose={() => setSelectedItem(null)} 
+        <EditSavedAmountModal
+          item={selectedItem}
+          onClose={() => setSelectedItem(null)}
         />
       )}
     </div>

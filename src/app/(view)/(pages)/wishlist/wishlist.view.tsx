@@ -25,7 +25,7 @@ export default function WishlistView({ initialItems }: WishlistViewProps) {
               Planeje suas conquistas e acompanhe seu progresso de economia.
             </p>
           </div>
-          <button 
+          <button
             onClick={() => setIsFormOpen(true)}
             className="bg-white text-black px-6 py-2 rounded-md font-bold text-sm hover:bg-zinc-200 transition-all"
           >

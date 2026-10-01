@@ -1,13 +1,12 @@
-import { MongoClient, Collection } from "mongodb";
-import clientPromise from "@/app/infra/lib/mongodb";
+import { Collection } from "mongodb";
+import { getDb } from "@/app/infra/lib/mongodb";
 import { UserEntity } from "@/app/domain/entity/user/user.entity";
 
 export class UserRepository {
   private collectionName = "users";
 
   private async getCollection(): Promise<Collection<UserEntity>> {
-    const client: MongoClient = await clientPromise;
-    const db = client.db();
+    const db = await getDb();
     return db.collection<UserEntity>(this.collectionName);
   }
 

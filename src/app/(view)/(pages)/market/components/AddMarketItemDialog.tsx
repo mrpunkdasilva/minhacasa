@@ -76,8 +76,14 @@ export default function AddMarketItemDialog() {
     formData.append("unit", values.unit);
     formData.append("priority", values.priority);
     formData.append("lastPrice", values.lastPrice.toString());
-    formData.append("shouldMoveToInventory", values.shouldMoveToInventory.toString());
-    formData.append("isShoppingListItem", (values.location === "shopping").toString());
+    formData.append(
+      "shouldMoveToInventory",
+      values.shouldMoveToInventory.toString(),
+    );
+    formData.append(
+      "isShoppingListItem",
+      (values.location === "shopping").toString(),
+    );
 
     try {
       await addMarketItem(formData);
@@ -112,7 +118,10 @@ export default function AddMarketItemDialog() {
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pt-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 pt-4"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -144,7 +153,9 @@ export default function AddMarketItemDialog() {
                         step="0.01"
                         className="bg-black border-zinc-800 text-white h-12"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -157,7 +168,10 @@ export default function AddMarketItemDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Unidade</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="bg-black border-zinc-800 text-white h-12">
                           <SelectValue placeholder="Unid." />
@@ -185,14 +199,19 @@ export default function AddMarketItemDialog() {
                   <FormLabel>Preço Unitário (Estimado)</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+                      <DollarSign
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
+                        size={16}
+                      />
                       <Input
                         type="number"
                         step="0.01"
                         placeholder="0,00"
                         className="bg-black border-zinc-800 text-white h-12 pl-10"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </div>
                   </FormControl>
@@ -211,7 +230,10 @@ export default function AddMarketItemDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Categoria</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="bg-black border-zinc-800 text-white h-12 text-xs">
                           <SelectValue placeholder="Categoria" />
@@ -235,15 +257,24 @@ export default function AddMarketItemDialog() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Prioridade</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
-                        <SelectTrigger className={`bg-black border-zinc-800 h-12 font-bold ${priorityColors[field.value as MarketPriority]}`}>
+                        <SelectTrigger
+                          className={`bg-black border-zinc-800 h-12 font-bold ${priorityColors[field.value as MarketPriority]}`}
+                        >
                           <SelectValue placeholder="Prioridade" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
                         {Object.entries(MarketPriority).map(([key, value]) => (
-                          <SelectItem key={key} value={value} className="font-bold">
+                          <SelectItem
+                            key={key}
+                            value={value}
+                            className="font-bold"
+                          >
                             {value}
                           </SelectItem>
                         ))}
@@ -273,7 +304,9 @@ export default function AddMarketItemDialog() {
                         }`}
                       >
                         <ShoppingCart size={16} />
-                        <span className="text-xs font-bold uppercase tracking-wider">Lista</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">
+                          Lista
+                        </span>
                       </button>
                       <button
                         type="button"
@@ -285,7 +318,9 @@ export default function AddMarketItemDialog() {
                         }`}
                       >
                         <Archive size={16} />
-                        <span className="text-xs font-bold uppercase tracking-wider">Despensa</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">
+                          Despensa
+                        </span>
                       </button>
                     </div>
                   </FormControl>
@@ -311,7 +346,8 @@ export default function AddMarketItemDialog() {
                         Mover para Despensa ao comprar?
                       </FormLabel>
                       <FormDescription className="text-[10px] text-zinc-500">
-                        Se marcado, o item irá para a sua despensa assim que você der "check" na lista.
+                        Se marcado, o item irá para a sua despensa assim que
+                        você der &quot;check&quot; na lista.
                       </FormDescription>
                     </div>
                   </FormItem>

@@ -35,7 +35,7 @@ export default function PetList({ initialPets }: PetListProps) {
       } else {
         alert(result.error);
       }
-    } catch (error) {
+    } catch {
       alert("Erro ao processar solicitação.");
     } finally {
       setIsLoading(false);
@@ -52,7 +52,7 @@ export default function PetList({ initialPets }: PetListProps) {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-white">Seus Pets</h2>
-        <button 
+        <button
           onClick={() => setIsModalOpen(true)}
           className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-200 transition-all"
         >
@@ -71,16 +71,36 @@ export default function PetList({ initialPets }: PetListProps) {
               key={pet.id}
               className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 flex gap-6 items-center hover:border-zinc-700 transition-all group relative"
             >
-              <button 
+              <button
                 onClick={() => handleDeletePet(pet.id)}
                 className="absolute top-4 right-4 text-zinc-600 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"
                 aria-label="Excluir pet"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                </svg>
               </button>
 
               <div className="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center text-3xl shrink-0">
-                {pet.type === PetType.DOG ? "🐶" : pet.type === PetType.CAT ? "🐱" : pet.type === PetType.BIRD ? "🐦" : "🐾"}
+                {pet.type === PetType.DOG
+                  ? "🐶"
+                  : pet.type === PetType.CAT
+                    ? "🐱"
+                    : pet.type === PetType.BIRD
+                      ? "🐦"
+                      : "🐾"}
               </div>
 
               <div className="flex-1">
@@ -121,54 +141,116 @@ export default function PetList({ initialPets }: PetListProps) {
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg w-full max-w-md p-6 animate-in fade-in zoom-in duration-200">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-white">Novo Pet</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-zinc-500 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-zinc-500 hover:text-white"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
               </button>
             </div>
 
             <form onSubmit={handleAddPet} className="space-y-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Nome</label>
-                <input name="name" required className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500" />
+                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                  Nome
+                </label>
+                <input
+                  name="name"
+                  required
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Tipo</label>
-                  <select name="type" className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500">
+                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                    Tipo
+                  </label>
+                  <select
+                    name="type"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                  >
                     {Object.entries(PetType).map(([key, value]) => (
-                      <option key={key} value={value}>{value}</option>
+                      <option key={key} value={value}>
+                        {value}
+                      </option>
                     ))}
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Gênero</label>
-                  <select name="gender" className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500">
+                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                    Gênero
+                  </label>
+                  <select
+                    name="gender"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                  >
                     {Object.entries(PetGender).map(([key, value]) => (
-                      <option key={key} value={value}>{value}</option>
+                      <option key={key} value={value}>
+                        {value}
+                      </option>
                     ))}
                   </select>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Raça</label>
-                <input name="breed" required className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500" />
+                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                  Raça
+                </label>
+                <input
+                  name="breed"
+                  required
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Data de Nascimento</label>
-                <input name="birthDate" type="date" required className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500" />
+                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                  Data de Nascimento
+                </label>
+                <input
+                  name="birthDate"
+                  type="date"
+                  required
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Peso</label>
-                  <input name="weight" type="number" step="0.1" required className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500" />
+                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                    Peso
+                  </label>
+                  <input
+                    name="weight"
+                    type="number"
+                    step="0.1"
+                    required
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                  />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Unidade</label>
-                  <select name="weightUnit" className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500">
+                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                    Unidade
+                  </label>
+                  <select
+                    name="weightUnit"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                  >
                     <option value="kg">kg</option>
                     <option value="g">g</option>
                   </select>

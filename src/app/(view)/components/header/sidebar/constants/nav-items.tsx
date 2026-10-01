@@ -11,25 +11,35 @@ import {
 
 export const staticNavItems = [
   { title: "Dashboard", href: "/", icon: LayoutDashboard },
-  { 
-    title: "Faturas", 
-    href: "/invoices", 
+  {
+    title: "Faturas",
+    href: "/invoices",
     icon: Receipt,
     subItems: [
       { title: "Lista", href: "/invoices" },
       { title: "Análises", href: "/invoices/analytics" },
-    ]
+    ],
   },
-  { 
-    title: "Entradas", 
-    href: "/incomes", 
+  {
+    title: "Entradas",
+    href: "/incomes",
     icon: Wallet,
     subItems: [
       { title: "Lista", href: "/incomes" },
       { title: "Análises", href: "/incomes/analytics" },
-    ]
+    ],
   },
-  { title: "Mercado", href: "/market", icon: ShoppingCart },
+  {
+    title: "Mercado",
+    href: "/market/analysis",
+    icon: ShoppingCart,
+    subItems: [
+      { title: "Análise de Gastos", href: "/market/analysis" },
+      { title: "Lista de Compras", href: "/market/shopping-list" },
+      { title: "Minha Despensa", href: "/market/inventory" },
+      { title: "Calculadora", href: "/market/calculator" },
+    ],
+  },
   {
     title: "Infraestrutura",
     href: "/infrastructure",

@@ -10,9 +10,16 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { format, addMonths, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
+import {
+  format,
+  addMonths,
+  startOfMonth,
+  endOfMonth,
+  isWithinInterval,
+} from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Wallet } from "lucide-react";
+import type { TooltipValueType } from "recharts";
 
 interface CashProjectionChartProps {
   invoices: InvoiceEntity[];
@@ -36,11 +43,11 @@ export function CashProjectionChart({ invoices }: CashProjectionChartProps) {
 
     invoices.forEach((invoice) => {
       const dueDate = new Date(invoice.dueDate);
-      
+
       // If regular invoice in the month
       if (isWithinInterval(dueDate, { start: monthStart, end: monthEnd })) {
         month.amount += invoice.price.amount;
-      } 
+      }
       // If recurring and applies to this month (simplified logic)
       else if (invoice.recurrence.isRecurring && dueDate < monthStart) {
         // Assume monthly recurrence for now
@@ -49,7 +56,7 @@ export function CashProjectionChart({ invoices }: CashProjectionChartProps) {
     });
   });
 
-  const data = projectionMonths.map(m => ({
+  const data = projectionMonths.map((m) => ({
     name: m.name,
     amount: m.amount,
   }));
@@ -59,7 +66,9 @@ export function CashProjectionChart({ invoices }: CashProjectionChartProps) {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2 text-zinc-400">
           <Wallet size={18} />
-          <h3 className="text-sm font-bold uppercase tracking-wider">Projeção de Caixa (Próximos 6 meses)</h3>
+          <h3 className="text-sm font-bold uppercase tracking-wider">
+            Projeção de Caixa (Próximos 6 meses)
+          </h3>
         </div>
       </div>
 
@@ -68,42 +77,51 @@ export function CashProjectionChart({ invoices }: CashProjectionChartProps) {
           <AreaChart data={data}>
             <defs>
               <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
-            <XAxis 
-              dataKey="name" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: "#71717a", fontSize: 12 }} 
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#27272a"
+              vertical={false}
             />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
               tick={{ fill: "#71717a", fontSize: 12 }}
-              tickFormatter={(value) => `R$${value >= 1000 ? (value/1000).toFixed(1) + 'k' : value}`}
             />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: "#18181b", 
-                border: "1px solid #27272a", 
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#71717a", fontSize: 12 }}
+              tickFormatter={(value) =>
+                `R$${value >= 1000 ? (value / 1000).toFixed(1) + "k" : value}`
+              }
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#18181b",
+                border: "1px solid #27272a",
                 borderRadius: "8px",
-                fontSize: "12px"
+                fontSize: "12px",
               }}
               itemStyle={{ color: "#10b981" }}
-              formatter={(value: any) => [
-                Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
-                "Saída Prevista"
+              formatter={(value: TooltipValueType | undefined) => [
+                Number(value ?? 0).toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                }),
+                "Saída Prevista",
               ]}
             />
-            <Area 
-              type="monotone" 
-              dataKey="amount" 
-              stroke="#10b981" 
-              fillOpacity={1} 
-              fill="url(#colorAmount)" 
+            <Area
+              type="monotone"
+              dataKey="amount"
+              stroke="#10b981"
+              fillOpacity={1}
+              fill="url(#colorAmount)"
               strokeWidth={2}
             />
           </AreaChart>

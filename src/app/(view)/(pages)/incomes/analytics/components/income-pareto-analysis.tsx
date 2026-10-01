@@ -1,55 +1,98 @@
 "use client";
 
 import { IncomeEntity } from "@/app/domain/entity/income/income.entity";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, Line, ComposedChart } from "recharts";
+import {
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Line,
+  ComposedChart,
+} from "recharts";
 import { Target } from "lucide-react";
+import type { TooltipValueType } from "recharts";
 
 interface IncomeParetoAnalysisProps {
   incomes: IncomeEntity[];
 }
 
 export function IncomeParetoAnalysis({ incomes }: IncomeParetoAnalysisProps) {
-  const sourceTotals = incomes.reduce((acc, inc) => {
-    acc[inc.name] = (acc[inc.name] || 0) + inc.amount.amount;
-    return acc;
-  }, {} as Record<string, number>);
+  const sourceTotals = incomes.reduce(
+    (acc, inc) => {
+      acc[inc.name] = (acc[inc.name] || 0) + inc.amount.amount;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   const total = Object.values(sourceTotals).reduce((a, b) => a + b, 0);
-  
+
   const sortedData = Object.entries(sourceTotals)
     .sort((a, b) => b[1] - a[1])
     .map(([name, value]) => ({ name, value }));
 
-  let cumulativeSum = 0;
-  const data = sortedData.map(d => {
-    cumulativeSum += d.value;
-    return {
-      ...d,
-      cumulative: (cumulativeSum / total) * 100
-    };
-  });
+  // Derived with reduce rather than a mutable accumulator: reassigning an
+  // outer variable during render is unsafe under concurrent rendering.
+  const data = sortedData.reduce<
+    { name: string; value: number; cumulative: number }[]
+  >((acc, item) => {
+    const running =
+      (acc.length ? acc[acc.length - 1].cumulative : 0) + item.value;
+    return [...acc, { ...item, cumulative: (running / total) * 100 }];
+  }, []);
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 h-full">
       <div className="flex items-center gap-2 mb-6 text-zinc-400">
         <Target size={18} />
-        <h3 className="text-sm font-bold uppercase tracking-wider">Análise de Pareto (80/20)</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider">
+          Análise de Pareto (80/20)
+        </h3>
       </div>
 
       <div className="h-[250px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={data}>
-            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#71717a", fontSize: 9 }} />
-            <YAxis hide />
-            <Tooltip 
-                contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: any, name: any) => [
-                    name === 'cumulative' ? `${Number(value ?? 0).toFixed(1)}%` : Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
-                    name === 'cumulative' ? 'Acumulado' : 'Valor'
-                ]}
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#71717a", fontSize: 9 }}
             />
-            <Bar dataKey="value" fill="#10b981" radius={[4, 4, 0, 0]} opacity={0.6} />
-            <Line type="monotone" dataKey="cumulative" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3, fill: "#8b5cf6" }} />
+            <YAxis hide />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#18181b",
+                border: "1px solid #27272a",
+                fontSize: "10px",
+              }}
+              formatter={(
+                value: TooltipValueType | undefined,
+                name: number | string | undefined,
+              ) => [
+                name === "cumulative"
+                  ? `${Number(value ?? 0).toFixed(1)}%`
+                  : Number(value ?? 0).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }),
+                name === "cumulative" ? "Acumulado" : "Valor",
+              ]}
+            />
+            <Bar
+              dataKey="value"
+              fill="#10b981"
+              radius={[4, 4, 0, 0]}
+              opacity={0.6}
+            />
+            <Line
+              type="monotone"
+              dataKey="cumulative"
+              stroke="#8b5cf6"
+              strokeWidth={2}
+              dot={{ r: 3, fill: "#8b5cf6" }}
+            />
           </ComposedChart>
         </ResponsiveContainer>
       </div>

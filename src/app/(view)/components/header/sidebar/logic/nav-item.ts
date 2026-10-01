@@ -16,7 +16,7 @@ export class NavItem {
     public icon: LucideIcon,
     public strategy: NavActionStrategy,
     public tooltip?: string,
-    public subItems?: NavSubItem[]
+    public subItems?: NavSubItem[],
   ) {}
 
   render(pathname: string): React.ReactNode {

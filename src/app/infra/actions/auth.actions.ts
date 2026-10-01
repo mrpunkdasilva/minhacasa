@@ -48,7 +48,9 @@ export async function registerUser(
   prevState: string | undefined,
   formData: FormData,
 ) {
-  const validatedFields = RegisterSchema.safeParse(Object.fromEntries(formData));
+  const validatedFields = RegisterSchema.safeParse(
+    Object.fromEntries(formData),
+  );
 
   if (!validatedFields.success) {
     return "Dados de cadastro inválidos. Verifique as informações.";

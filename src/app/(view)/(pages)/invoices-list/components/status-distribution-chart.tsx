@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
+import type { TooltipValueType } from "recharts";
 
 interface StatusDistributionChartProps {
   invoices: InvoiceEntity[];
@@ -78,7 +79,7 @@ export function StatusDistributionChart({
               fontSize: "12px",
             }}
             itemStyle={{ color: "#fff" }}
-            formatter={(value: any) => [
+            formatter={(value: TooltipValueType | undefined) => [
               Number(value ?? 0).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL",
@@ -88,10 +89,7 @@ export function StatusDistributionChart({
           />
           <Bar dataKey="total" radius={[4, 4, 0, 0]}>
             {data.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={STATUS_COLORS[entry.status]}
-              />
+              <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.status]} />
             ))}
           </Bar>
         </BarChart>
@@ -99,4 +97,3 @@ export function StatusDistributionChart({
     </div>
   );
 }
-

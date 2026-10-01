@@ -1,8 +1,7 @@
-import clientPromise from "@/app/infra/lib/mongodb";
+import { getDb } from "@/app/infra/lib/mongodb";
 
 const cleanTestData = async () => {
-  const client = await clientPromise;
-  const db = client.db("minhacasa");
+  const db = await getDb();
 
   try {
     console.log("Limpando dados de teste do banco de dados...\n");
@@ -17,31 +16,31 @@ const cleanTestData = async () => {
     });
 
     if (invoicesResult.deletedCount > 0) {
-      console.log(`✓ ${invoicesResult.deletedCount} faturas de teste removidas`);
+      console.log(
+        `✓ ${invoicesResult.deletedCount} faturas de teste removidas`,
+      );
     }
 
     // Delete test markets
     const marketsResult = await db.collection("markets").deleteMany({
-      $or: [
-        { name: { $regex: "^test", $options: "i" } },
-        { name: "asdasd" },
-      ],
+      $or: [{ name: { $regex: "^test", $options: "i" } }, { name: "asdasd" }],
     });
 
     if (marketsResult.deletedCount > 0) {
-      console.log(`✓ ${marketsResult.deletedCount} itens de mercado de teste removidos`);
+      console.log(
+        `✓ ${marketsResult.deletedCount} itens de mercado de teste removidos`,
+      );
     }
 
     // Delete test wishlist items
     const wishlistResult = await db.collection("wishlist_items").deleteMany({
-      $or: [
-        { name: { $regex: "^test", $options: "i" } },
-        { name: "asdasd" },
-      ],
+      $or: [{ name: { $regex: "^test", $options: "i" } }, { name: "asdasd" }],
     });
 
     if (wishlistResult.deletedCount > 0) {
-      console.log(`✓ ${wishlistResult.deletedCount} itens de wishlist de teste removidos`);
+      console.log(
+        `✓ ${wishlistResult.deletedCount} itens de wishlist de teste removidos`,
+      );
     }
 
     console.log("\n✓ Limpeza concluída!");
@@ -54,4 +53,3 @@ const cleanTestData = async () => {
 };
 
 cleanTestData();
-

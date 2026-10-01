@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useActionState, useEffect, Suspense } from "react";
+import { useState, useActionState, Suspense } from "react";
 import { authenticate, registerUser } from "@/app/infra/actions/auth.actions";
 import { Button } from "@/app/(view)/components/ui/button";
 import {
@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/app/(view)/components/ui/card";
 import { Input } from "@/app/(view)/components/ui/input";
+import { PasswordInput } from "@/app/(view)/components/ui/password-input";
 import { Label } from "@/app/(view)/components/ui/label";
 import {
   Tabs,
@@ -25,16 +26,22 @@ import { useSearchParams } from "next/navigation";
 
 function WelcomeContent() {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState("login");
-  const [inviteCode, setInviteCode] = useState("");
 
-  useEffect(() => {
-    const invite = searchParams.get("invite");
-    if (invite) {
-      setInviteCode(invite);
-      setActiveTab("register");
-    }
-  }, [searchParams]);
+  // The invite code lives in the URL, so it is derived state. Adjusting it
+  // during render is the React-sanctioned alternative to an effect that calls
+  // setState, which would cost an extra render pass on every mount.
+  const inviteFromUrl = searchParams.get("invite");
+  const [lastInvite, setLastInvite] = useState(inviteFromUrl);
+  const [activeTab, setActiveTab] = useState(
+    inviteFromUrl ? "register" : "login",
+  );
+  const [inviteCode, setInviteCode] = useState(inviteFromUrl ?? "");
+
+  if (inviteFromUrl !== lastInvite) {
+    setLastInvite(inviteFromUrl);
+    setInviteCode(inviteFromUrl ?? "");
+    setActiveTab(inviteFromUrl ? "register" : "login");
+  }
 
   const [loginErrorMessage, loginAction, isLoginPending] = useActionState(
     authenticate,
@@ -103,13 +110,12 @@ function WelcomeContent() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Senha</Label>
-                  <Input
+                  <PasswordInput
                     id="login-password"
                     name="password"
-                    type="password"
                     placeholder="••••••••"
                     required
-                    className="bg-black border-zinc-800 focus:border-emerald-500 text-white"
+                    className="h-9 bg-black border-zinc-800 focus:border-emerald-500 text-white"
                   />
                 </div>
                 {loginErrorMessage && (
@@ -161,14 +167,13 @@ function WelcomeContent() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="reg-password">Escolha uma senha segura</Label>
-                  <Input
+                  <PasswordInput
                     id="reg-password"
                     name="password"
-                    type="password"
                     placeholder="No mínimo 6 caracteres"
                     required
                     minLength={6}
-                    className="bg-black border-zinc-800 focus:border-emerald-500 text-white"
+                    className="h-9 bg-black border-zinc-800 focus:border-emerald-500 text-white"
                   />
                 </div>
                 {inviteCode && (

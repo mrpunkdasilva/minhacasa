@@ -49,9 +49,9 @@ export function AppSidebar({ session, ...props }: AppSidebarProps) {
       .withTitle(item.title)
       .withIcon(item.icon)
       .withNavigation(item.href);
-    
+
     if (item.subItems) {
-      item.subItems.forEach(sub => builder.withSubItem(sub.title, sub.href));
+      item.subItems.forEach((sub) => builder.withSubItem(sub.title, sub.href));
     }
 
     return builder.build();

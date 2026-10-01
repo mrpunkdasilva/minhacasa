@@ -29,14 +29,14 @@ export const authConfig = {
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.houseId = (user as any).houseId;
+        token.houseId = user.houseId;
       }
       return token;
     },
     session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
-        (session.user as any).houseId = token.houseId as string;
+        session.user.houseId = token.houseId as string;
       }
       return session;
     },

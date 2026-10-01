@@ -4,8 +4,17 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { userRepository } from "@/app/infra/lib/user.repository";
 import { petRepository } from "@/app/infra/lib/pet.repository";
-import { Pet, HealthRecord, PetService, PetNutrition } from "@/app/domain/entity/pet/pet.entities";
-import { PetType, PetGender, HealthRecordType, ServiceType } from "@/app/domain/enums/pets/pet.enums";
+import {
+  Pet,
+  HealthRecord,
+  PetService,
+  PetNutrition,
+} from "@/app/domain/entity/pet/pet.entities";
+import {
+  PetType,
+  PetGender,
+  HealthRecordType,
+} from "@/app/domain/enums/pets/pet.enums";
 import logger from "@/app/infra/lib/logger";
 
 async function getUserContext() {
@@ -33,7 +42,7 @@ export async function addPet(formData: FormData) {
   const type = formData.get("type") as PetType;
   const breed = formData.get("breed") as string;
   const birthDate = new Date(formData.get("birthDate") as string);
-  const weightValue = parseFloat(formData.get("weight") as string || "0");
+  const weightValue = parseFloat((formData.get("weight") as string) || "0");
   const weightUnit = formData.get("weightUnit") as "kg" | "g";
   const gender = formData.get("gender") as PetGender;
 
@@ -118,16 +127,21 @@ export async function getPetServices(petId: string): Promise<PetService[]> {
 }
 
 // Nutrition Actions
-export async function getPetNutrition(petId: string): Promise<PetNutrition | null> {
+export async function getPetNutrition(
+  petId: string,
+): Promise<PetNutrition | null> {
   return petRepository.findNutritionByPetId(petId);
 }
 
-export async function updatePetNutrition(petId: string, data: Omit<PetNutrition, "id" | "petId">) {
+export async function updatePetNutrition(
+  petId: string,
+  data: Omit<PetNutrition, "id" | "petId">,
+) {
   try {
     const nutrition: PetNutrition = {
       id: crypto.randomUUID(),
       petId,
-      ...data
+      ...data,
     };
     await petRepository.upsertNutrition(nutrition);
     revalidatePath("/pets");

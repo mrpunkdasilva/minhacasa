@@ -31,7 +31,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
               email: user.email,
               image: user.avatarUrl,
               houseId: user.houseId,
-            } as any;
+            };
           }
         }
 

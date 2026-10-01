@@ -48,7 +48,7 @@ export class ButtonStrategy implements NavActionStrategy {
     private onClick: () => void,
     private iconOverride?: React.ReactNode,
     private titleOverride?: string,
-    private className?: string
+    private className?: string,
   ) {}
 
   render(item: NavItem): React.ReactNode {

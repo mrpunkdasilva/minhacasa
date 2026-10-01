@@ -8,8 +8,8 @@ import { cn } from "@/app/infra/lib/utils";
 export function LogoComponent({ isAnimated, className, w, h }: LogoCompProps) {
   const selectCorrectLogo = isAnimated ? ImgLogoAnimated : ImgLogo;
 
-  const width = w ?? (h ?? 200);
-  const height = h ?? (w ?? 200);
+  const width = w ?? h ?? 200;
+  const height = h ?? w ?? 200;
 
   return (
     <Image

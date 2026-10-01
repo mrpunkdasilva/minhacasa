@@ -127,9 +127,7 @@ export function PaymentForecast({ invoices }: PaymentForecastProps) {
                   className="bg-zinc-800/30 border border-zinc-700/30 rounded-lg p-3 flex items-center justify-between hover:bg-zinc-800/50 transition-colors"
                 >
                   <div>
-                    <p className="text-sm font-bold text-white">
-                      {week.week}
-                    </p>
+                    <p className="text-sm font-bold text-white">{week.week}</p>
                     <p className="text-xs text-zinc-500">
                       {week.from} - {week.to} ({week.count} fatura
                       {week.count !== 1 ? "s" : ""})
@@ -178,5 +176,3 @@ export function PaymentForecast({ invoices }: PaymentForecastProps) {
     </div>
   );
 }
-
-

@@ -1,6 +1,6 @@
 "use server";
 
-import clientPromise from "@/app/infra/lib/mongodb";
+import { getDb } from "@/app/infra/lib/mongodb";
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import { revalidatePath } from "next/cache";
@@ -20,7 +20,10 @@ async function getUserContext() {
 }
 
 export async function createInvoice(
-  data: Omit<InvoiceEntity, "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"> & {
+  data: Omit<
+    InvoiceEntity,
+    "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"
+  > & {
     isPrivate?: boolean;
   },
 ) {
@@ -30,9 +33,11 @@ export async function createInvoice(
   const { isPrivate, ...invoiceData } = data;
 
   try {
-    logger.info({ userId: user.id, houseId: user.houseId, invoiceName: invoiceData.name }, "Creating new invoice");
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    logger.info(
+      { userId: user.id, houseId: user.houseId, invoiceName: invoiceData.name },
+      "Creating new invoice",
+    );
+    const db = await getDb();
 
     const now = new Date();
     const invoice: InvoiceEntity = {
@@ -64,8 +69,7 @@ export async function getInvoices(): Promise<InvoiceEntity[]> {
   if (!user) return [];
 
   try {
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    const db = await getDb();
 
     // Filter by house, but only show private ones if they belong to the current user
     const invoices = await db
@@ -110,8 +114,7 @@ export async function getInvoiceById(
   if (!user) return null;
 
   try {
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    const db = await getDb();
 
     const doc = await db.collection("invoices").findOne({
       id,
@@ -141,7 +144,10 @@ export async function getInvoiceById(
       updatedAt: doc.updatedAt || new Date(),
     } as InvoiceEntity;
   } catch (error) {
-    logger.error({ error, invoiceId: id, userId: user.id }, "Error fetching invoice by id");
+    logger.error(
+      { error, invoiceId: id, userId: user.id },
+      "Error fetching invoice by id",
+    );
     return null;
   }
 }
@@ -151,13 +157,18 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus) {
   if (!user) throw new Error("Usuário não autenticado.");
 
   try {
-    logger.info({ invoiceId: id, status, userId: user.id }, "Updating invoice status");
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    logger.info(
+      { invoiceId: id, status, userId: user.id },
+      "Updating invoice status",
+    );
+    const db = await getDb();
 
     const result = await db
       .collection("invoices")
-      .updateOne({ id, houseId: user.houseId }, { $set: { status, updatedAt: new Date() } });
+      .updateOne(
+        { id, houseId: user.houseId },
+        { $set: { status, updatedAt: new Date() } },
+      );
 
     if (!result.acknowledged) {
       throw new Error("Falha ao atualizar o status da fatura.");
@@ -167,14 +178,20 @@ export async function updateInvoiceStatus(id: string, status: InvoiceStatus) {
     revalidatePath("/invoices");
     revalidatePath("/");
   } catch (error) {
-    logger.error({ error, invoiceId: id, status, userId: user.id }, "Error updating invoice status");
+    logger.error(
+      { error, invoiceId: id, status, userId: user.id },
+      "Error updating invoice status",
+    );
     throw new Error("Erro ao atualizar o status da fatura.");
   }
 }
 
 export async function updateInvoice(
   id: string,
-  data: Omit<InvoiceEntity, "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"> & {
+  data: Omit<
+    InvoiceEntity,
+    "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"
+  > & {
     isPrivate?: boolean;
   },
 ) {
@@ -185,8 +202,7 @@ export async function updateInvoice(
 
   try {
     logger.info({ invoiceId: id, userId: user.id }, "Updating invoice");
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    const db = await getDb();
 
     const result = await db.collection("invoices").updateOne(
       { id, houseId: user.houseId },
@@ -209,7 +225,10 @@ export async function updateInvoice(
     revalidatePath("/invoices");
     revalidatePath("/");
   } catch (error) {
-    logger.error({ error, invoiceId: id, userId: user.id }, "Error updating invoice");
+    logger.error(
+      { error, invoiceId: id, userId: user.id },
+      "Error updating invoice",
+    );
     throw new Error("Erro ao atualizar a fatura.");
   }
 
@@ -222,8 +241,7 @@ export async function archiveInvoice(id: string) {
 
   try {
     logger.info({ invoiceId: id, userId: user.id }, "Archiving invoice");
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    const db = await getDb();
 
     const result = await db
       .collection("invoices")
@@ -239,7 +257,10 @@ export async function archiveInvoice(id: string) {
     revalidatePath("/invoices");
     revalidatePath("/");
   } catch (error) {
-    logger.error({ error, invoiceId: id, userId: user.id }, "Error archiving invoice");
+    logger.error(
+      { error, invoiceId: id, userId: user.id },
+      "Error archiving invoice",
+    );
     throw new Error("Erro ao arquivar a fatura.");
   }
 

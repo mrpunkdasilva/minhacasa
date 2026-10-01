@@ -1,9 +1,9 @@
-import MarketView from "@/app/(view)/(pages)/market/market.view";
+import { redirect } from "next/navigation";
 
+/**
+ * The market used to be a single tabbed view. It now has dedicated pages, so
+ * the root redirects to the expense analysis, which is the landing page.
+ */
 export default function MarketPage() {
-  return (
-    <main className="bg-black min-h-screen">
-      <MarketView />
-    </main>
-  );
+  redirect("/market/analysis");
 }

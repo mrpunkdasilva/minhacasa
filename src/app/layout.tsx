@@ -39,8 +39,8 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "MinhaCasa Team" }],
   metadataBase: new URL(
-    (process.env.NEXT_PUBLIC_APP_URL &&
-      process.env.NEXT_PUBLIC_APP_URL.trim() !== "")
+    process.env.NEXT_PUBLIC_APP_URL &&
+      process.env.NEXT_PUBLIC_APP_URL.trim() !== ""
       ? process.env.NEXT_PUBLIC_APP_URL
       : "http://localhost:3000",
   ),
@@ -90,7 +90,7 @@ export default async function RootLayout({
   // Se estiver na página de welcome, não deve renderizar sidebar/topbar independente da sessão
   // Mas como este é um Server Component, não temos acesso fácil à URL sem hooks que dependem de Client
   // No entanto, o layout.tsx envolve todas as páginas. O Auth controla a sessão.
-  
+
   return (
     <html
       lang="pt-BR"

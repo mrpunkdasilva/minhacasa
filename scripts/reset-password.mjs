@@ -13,7 +13,7 @@ for (const file of [".env.local", ".env"]) {
 }
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017";
-const DB_NAME = process.env.MONGODB_DB || "test";
+const DB_NAME = process.env.MONGODB_DB || "minhacasa";
 const [email, newPassword] = process.argv.slice(2);
 
 async function resetPassword() {

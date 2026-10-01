@@ -1,6 +1,6 @@
 "use server";
 
-import clientPromise from "@/app/infra/lib/mongodb";
+import { getDb } from "@/app/infra/lib/mongodb";
 import { IncomeEntity } from "@/app/domain/entity/income/income.entity";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -19,7 +19,10 @@ async function getUserContext() {
 }
 
 export async function createIncome(
-  data: Omit<IncomeEntity, "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"> & {
+  data: Omit<
+    IncomeEntity,
+    "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"
+  > & {
     isPrivate?: boolean;
   },
 ) {
@@ -29,9 +32,11 @@ export async function createIncome(
   const { isPrivate, ...incomeData } = data;
 
   try {
-    logger.info({ userId: user.id, houseId: user.houseId, incomeName: incomeData.name }, "Creating new income");
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    logger.info(
+      { userId: user.id, houseId: user.houseId, incomeName: incomeData.name },
+      "Creating new income",
+    );
+    const db = await getDb();
 
     const now = new Date();
     const income: IncomeEntity = {
@@ -64,8 +69,7 @@ export async function getIncomes(): Promise<IncomeEntity[]> {
   if (!user) return [];
 
   try {
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    const db = await getDb();
 
     const incomes = await db
       .collection("incomes")
@@ -104,8 +108,7 @@ export async function getIncomeById(id: string): Promise<IncomeEntity | null> {
   if (!user) return null;
 
   try {
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    const db = await getDb();
 
     const doc = await db.collection("incomes").findOne({
       id,
@@ -133,14 +136,20 @@ export async function getIncomeById(id: string): Promise<IncomeEntity | null> {
       updatedAt: doc.updatedAt || new Date(),
     } as IncomeEntity;
   } catch (error) {
-    logger.error({ error, incomeId: id, userId: user.id }, "Error fetching income by id");
+    logger.error(
+      { error, incomeId: id, userId: user.id },
+      "Error fetching income by id",
+    );
     return null;
   }
 }
 
 export async function updateIncome(
   id: string,
-  data: Omit<IncomeEntity, "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"> & {
+  data: Omit<
+    IncomeEntity,
+    "id" | "houseId" | "ownerId" | "createdAt" | "updatedAt"
+  > & {
     isPrivate?: boolean;
   },
 ) {
@@ -151,8 +160,7 @@ export async function updateIncome(
 
   try {
     logger.info({ incomeId: id, userId: user.id }, "Updating income");
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    const db = await getDb();
 
     const result = await db.collection("incomes").updateOne(
       { id, houseId: user.houseId },
@@ -173,7 +181,10 @@ export async function updateIncome(
     revalidatePath("/incomes");
     revalidatePath("/invoices/analytics");
   } catch (error) {
-    logger.error({ error, incomeId: id, userId: user.id }, "Error updating income");
+    logger.error(
+      { error, incomeId: id, userId: user.id },
+      "Error updating income",
+    );
     throw new Error("Erro ao atualizar a entrada.");
   }
 
@@ -186,8 +197,7 @@ export async function deleteIncome(id: string) {
 
   try {
     logger.info({ incomeId: id, userId: user.id }, "Deleting income");
-    const client = await clientPromise;
-    const db = client.db("minhacasa");
+    const db = await getDb();
 
     const result = await db
       .collection("incomes")
@@ -200,7 +210,10 @@ export async function deleteIncome(id: string) {
     revalidatePath("/incomes");
     revalidatePath("/invoices/analytics");
   } catch (error) {
-    logger.error({ error, incomeId: id, userId: user.id }, "Error deleting income");
+    logger.error(
+      { error, incomeId: id, userId: user.id },
+      "Error deleting income",
+    );
     throw new Error("Erro ao excluir a entrada.");
   }
 

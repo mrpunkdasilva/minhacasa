@@ -22,6 +22,24 @@ async function getUserContext() {
   return user;
 }
 
+/**
+ * Market is split into dedicated routes instead of client-side tabs, so a
+ * mutation has to invalidate all of them. Centralised here because repeating
+ * the list per action is how routes end up serving stale data.
+ */
+const MARKET_ROUTES = [
+  "/market/analysis",
+  "/market/shopping-list",
+  "/market/inventory",
+  "/market/calculator",
+] as const;
+
+function revalidateMarket() {
+  for (const route of MARKET_ROUTES) {
+    revalidatePath(route);
+  }
+}
+
 export async function getMarketItems(): Promise<MarketItem[]> {
   const user = await getUserContext();
   if (!user) return [];
@@ -38,8 +56,11 @@ export async function addMarketItem(formData: FormData) {
   const quantity = parseFloat(formData.get("quantity") as string);
   const unit = formData.get("unit") as MarketUnit;
   const priority = formData.get("priority") as MarketPriority;
-  const lastPriceAmount = parseFloat(formData.get("lastPrice") as string || "0");
-  const shouldMoveToInventory = formData.get("shouldMoveToInventory") === "true";
+  const lastPriceAmount = parseFloat(
+    (formData.get("lastPrice") as string) || "0",
+  );
+  const shouldMoveToInventory =
+    formData.get("shouldMoveToInventory") === "true";
   const isShoppingListItem = formData.get("isShoppingListItem") === "true";
 
   try {
@@ -60,8 +81,7 @@ export async function addMarketItem(formData: FormData) {
     };
 
     await marketRepository.create(newItem);
-    revalidatePath("/(view)/(pages)/market", "page");
-    revalidatePath("/market");
+    revalidateMarket();
     return { success: true };
   } catch (error) {
     logger.error({ error, user: user.id }, "Error adding market item");
@@ -84,8 +104,7 @@ export async function toggleItemBought(id: string, isBought: boolean) {
       updatedAt: new Date(),
     });
 
-    revalidatePath("/(view)/(pages)/market", "page");
-    revalidatePath("/market");
+    revalidateMarket();
     return { success: true };
   } catch (error) {
     logger.error({ error, itemId: id }, "Error toggling item bought status");
@@ -102,18 +121,39 @@ export async function updateMarketItemQuantity(id: string, quantity: number) {
     if (!item) throw new Error("Item não encontrado.");
 
     const newQuantity = Math.max(0, quantity);
-    
+
     await marketRepository.update(id, {
       quantity: newQuantity,
       updatedAt: new Date(),
     });
 
-    revalidatePath("/(view)/(pages)/market", "page");
-    revalidatePath("/market");
+    revalidateMarket();
     return { success: true };
   } catch (error) {
     logger.error({ error, itemId: id }, "Error updating market item quantity");
     return { success: false, error: "Erro ao atualizar quantidade." };
+  }
+}
+
+export async function setMarketItemPrice(id: string, amount: number) {
+  const user = await getUserContext();
+  if (!user) throw new Error("Usuário não autenticado.");
+
+  try {
+    if (!Number.isFinite(amount) || amount < 0) {
+      throw new Error("Preço inválido.");
+    }
+
+    await marketRepository.update(id, {
+      lastPrice: { amount, currency: "BRL" },
+      updatedAt: new Date(),
+    });
+
+    revalidateMarket();
+    return { success: true };
+  } catch (error) {
+    logger.error({ error, itemId: id }, "Error updating market item price");
+    return { success: false, error: "Erro ao salvar o preço." };
   }
 }
 
@@ -123,8 +163,7 @@ export async function deleteMarketItem(id: string) {
 
   try {
     await marketRepository.delete(id);
-    revalidatePath("/(view)/(pages)/market", "page");
-    revalidatePath("/market");
+    revalidateMarket();
     return { success: true };
   } catch (error) {
     logger.error({ error, itemId: id }, "Error deleting market item");
@@ -138,8 +177,7 @@ export async function updateMarketItem(id: string, data: Partial<MarketItem>) {
 
   try {
     await marketRepository.update(id, data);
-    revalidatePath("/(view)/(pages)/market", "page");
-    revalidatePath("/market");
+    revalidateMarket();
     return { success: true };
   } catch (error) {
     logger.error({ error, itemId: id }, "Error updating market item");

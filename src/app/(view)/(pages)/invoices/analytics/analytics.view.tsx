@@ -2,25 +2,16 @@
 
 import { useState, useMemo } from "react";
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
-import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import { subMonths, isAfter } from "date-fns";
 import {
   TrendingUp,
-  AlertTriangle,
   Calendar,
   PieChart as PieChartIcon,
-  ArrowUpRight,
-  Clock,
   LayoutGrid,
   Zap,
   Filter,
   BrainCircuit,
-  Calculator,
   Search,
-  Network,
-  Scale,
-  BellRing,
-  Wallet2,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/app/(view)/components/ui/tabs";
 import { QuickStats } from "./components/quick-stats";

@@ -31,11 +31,13 @@ export async function addWishlistItem(formData: FormData) {
   if (!user) throw new Error("Usuário não autenticado.");
 
   const name = formData.get("name") as string;
-  const priceAmount = parseFloat(formData.get("price") as string || "0");
+  const priceAmount = parseFloat((formData.get("price") as string) || "0");
   const priority = formData.get("priority") as WishlistPriority;
   const category = formData.get("category") as WishlistCategory;
   const url = formData.get("url") as string;
-  const savedAmount = parseFloat(formData.get("savedAmount") as string || "0");
+  const savedAmount = parseFloat(
+    (formData.get("savedAmount") as string) || "0",
+  );
 
   try {
     const newItem: WishlistItem = {
@@ -61,7 +63,10 @@ export async function addWishlistItem(formData: FormData) {
   }
 }
 
-export async function toggleWishlistItemPurchased(id: string, isPurchased: boolean) {
+export async function toggleWishlistItemPurchased(
+  id: string,
+  isPurchased: boolean,
+) {
   const user = await getUserContext();
   if (!user) throw new Error("Usuário não autenticado.");
 
@@ -74,7 +79,10 @@ export async function toggleWishlistItemPurchased(id: string, isPurchased: boole
     revalidatePath("/wishlist");
     return { success: true };
   } catch (error) {
-    logger.error({ error, itemId: id }, "Error toggling wishlist item purchased status");
+    logger.error(
+      { error, itemId: id },
+      "Error toggling wishlist item purchased status",
+    );
     return { success: false, error: "Erro ao atualizar status do item." };
   }
 }

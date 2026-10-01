@@ -1,5 +1,5 @@
-import { MongoClient, Collection } from "mongodb";
-import clientPromise from "@/app/infra/lib/mongodb";
+import { Collection } from "mongodb";
+import { getDb } from "@/app/infra/lib/mongodb";
 import { MarketItem } from "@/app/domain/entity/market/market-item.entity";
 import logger from "./logger";
 
@@ -7,8 +7,7 @@ export class MarketRepository {
   private collectionName = "market_items";
 
   private async getCollection(): Promise<Collection<MarketItem>> {
-    const client: MongoClient = await clientPromise;
-    const db = client.db();
+    const db = await getDb();
     return db.collection<MarketItem>(this.collectionName);
   }
 
@@ -36,7 +35,10 @@ export class MarketRepository {
     try {
       const collection = await this.getCollection();
       await collection.insertOne(item);
-      logger.info({ itemId: item.id, houseId: item.houseId }, "Market item created");
+      logger.info(
+        { itemId: item.id, houseId: item.houseId },
+        "Market item created",
+      );
     } catch (error) {
       logger.error({ error, item }, "Error creating market item");
       throw new Error("Falha ao criar item de mercado.");
@@ -46,7 +48,10 @@ export class MarketRepository {
   async update(id: string, data: Partial<MarketItem>): Promise<void> {
     try {
       const collection = await this.getCollection();
-      await collection.updateOne({ id }, { $set: { ...data, updatedAt: new Date() } });
+      await collection.updateOne(
+        { id },
+        { $set: { ...data, updatedAt: new Date() } },
+      );
       logger.info({ itemId: id }, "Market item updated");
     } catch (error) {
       logger.error({ error, id, data }, "Error updating market item");

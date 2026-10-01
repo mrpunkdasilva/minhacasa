@@ -38,7 +38,10 @@ import {
   PopoverTrigger,
 } from "@/app/(view)/components/ui/popover";
 import { Checkbox } from "@/app/(view)/components/ui/checkbox";
-import { IncomeCategory, IncomeEntity } from "@/app/domain/entity/income/income.entity";
+import {
+  IncomeCategory,
+  IncomeEntity,
+} from "@/app/domain/entity/income/income.entity";
 import { createIncome, updateIncome } from "@/app/infra/actions/income.actions";
 
 const formSchema = z.object({
@@ -76,7 +79,8 @@ export function CreateIncomeForm({ initialData }: CreateIncomeFormProps) {
       amount: initialData?.amount?.amount || 0,
       date: initialData?.date ? new Date(initialData.date) : new Date(),
       description: initialData?.description || "",
-      category: (initialData?.category as IncomeCategory) || IncomeCategory.SALARY,
+      category:
+        (initialData?.category as IncomeCategory) || IncomeCategory.SALARY,
       isRecurring: initialData?.recurrence?.isRecurring || false,
       isPrivate: !!initialData?.ownerId,
     },
@@ -121,7 +125,10 @@ export function CreateIncomeForm({ initialData }: CreateIncomeFormProps) {
               <FormItem>
                 <FormLabel>Nome da Entrada</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: Salário Mensal, Venda..." {...field} />
+                  <Input
+                    placeholder="Ex: Salário Mensal, Venda..."
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -219,50 +226,50 @@ export function CreateIncomeForm({ initialData }: CreateIncomeFormProps) {
         </div>
 
         <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="isRecurring"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-none border border-border p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Entrada Recorrente</FormLabel>
-                    <FormDescription>
-                      Marque se esta receita se repete mensalmente.
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="isRecurring"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-none border border-border p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Entrada Recorrente</FormLabel>
+                  <FormDescription>
+                    Marque se esta receita se repete mensalmente.
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="isPrivate"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-none border border-emerald-500/20 bg-emerald-500/5 p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel className="text-emerald-500 flex items-center gap-1">
-                      <ShieldCheck size={14} /> Entrada Privada
-                    </FormLabel>
-                    <FormDescription className="text-zinc-500">
-                      Apenas você poderá ver este lançamento.
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="isPrivate"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-none border border-emerald-500/20 bg-emerald-500/5 p-4">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className="text-emerald-500 flex items-center gap-1">
+                    <ShieldCheck size={14} /> Entrada Privada
+                  </FormLabel>
+                  <FormDescription className="text-zinc-500">
+                    Apenas você poderá ver este lançamento.
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -282,13 +289,21 @@ export function CreateIncomeForm({ initialData }: CreateIncomeFormProps) {
           )}
         />
 
-        <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold" disabled={isPending}>
+        <Button
+          type="submit"
+          className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold"
+          disabled={isPending}
+        >
           {isPending ? (
             <CircleNotch className="h-4 w-4 animate-spin mr-2" />
           ) : null}
-          {isPending 
-            ? isEditing ? "Salvando..." : "Criando..." 
-            : isEditing ? "Salvar Alterações" : "Criar Entrada"}
+          {isPending
+            ? isEditing
+              ? "Salvando..."
+              : "Criando..."
+            : isEditing
+              ? "Salvar Alterações"
+              : "Criar Entrada"}
         </Button>
       </form>
     </Form>

@@ -13,10 +13,14 @@ export default function PetAgenda({ pets }: PetAgendaProps) {
 
   useEffect(() => {
     async function loadServices() {
-      const data = await Promise.all(
-        pets.map(pet => getPetServices(pet.id))
+      const data = await Promise.all(pets.map((pet) => getPetServices(pet.id)));
+      setServices(
+        data
+          .flat()
+          .sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+          ),
       );
-      setServices(data.flat().sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
     }
     if (pets.length > 0) loadServices();
   }, [pets]);

@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 import { Pet, HealthRecord } from "@/app/domain/entity/pet/pet.entities";
 import { HealthRecordType } from "@/app/domain/enums/pets/pet.enums";
-import { addHealthRecord, getHealthRecords } from "@/app/infra/actions/pet.actions";
+import {
+  addHealthRecord,
+  getHealthRecords,
+} from "@/app/infra/actions/pet.actions";
 
 interface HealthRecordsProps {
   pets: Pet[];
@@ -18,9 +21,15 @@ export default function HealthRecords({ pets }: HealthRecordsProps) {
   useEffect(() => {
     async function loadRecords() {
       const allRecords = await Promise.all(
-        pets.map(pet => getHealthRecords(pet.id))
+        pets.map((pet) => getHealthRecords(pet.id)),
       );
-      setRecords(allRecords.flat().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+      setRecords(
+        allRecords
+          .flat()
+          .sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          ),
+      );
     }
     if (pets.length > 0) loadRecords();
   }, [pets]);
@@ -37,12 +46,20 @@ export default function HealthRecords({ pets }: HealthRecordsProps) {
       if (result.success) {
         setIsModalOpen(false);
         // Refresh local list
-        const updated = await Promise.all(pets.map(pet => getHealthRecords(pet.id)));
-        setRecords(updated.flat().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+        const updated = await Promise.all(
+          pets.map((pet) => getHealthRecords(pet.id)),
+        );
+        setRecords(
+          updated
+            .flat()
+            .sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+            ),
+        );
       } else {
         alert(result.error);
       }
-    } catch (error) {
+    } catch {
       alert("Erro ao processar solicitação.");
     } finally {
       setIsLoading(false);
@@ -54,7 +71,7 @@ export default function HealthRecords({ pets }: HealthRecordsProps) {
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-white">Histórico de Saúde</h2>
         {pets.length > 0 && (
-          <button 
+          <button
             onClick={() => setIsModalOpen(true)}
             className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-200 transition-all"
           >
@@ -114,7 +131,9 @@ export default function HealthRecords({ pets }: HealthRecordsProps) {
                     <td className="px-6 py-4 text-nowrap">
                       {record.nextDueDate ? (
                         <span className="text-xs font-bold text-amber-500 font-mono">
-                          {new Date(record.nextDueDate).toLocaleDateString("pt-BR")}
+                          {new Date(record.nextDueDate).toLocaleDateString(
+                            "pt-BR",
+                          )}
                         </span>
                       ) : (
                         <span className="text-[10px] text-zinc-600 uppercase font-bold tracking-widest">
@@ -134,55 +153,109 @@ export default function HealthRecords({ pets }: HealthRecordsProps) {
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg w-full max-w-md p-6 animate-in fade-in zoom-in duration-200">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-white">Novo Registro de Saúde</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-zinc-500 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              <h2 className="text-xl font-bold text-white">
+                Novo Registro de Saúde
+              </h2>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-zinc-500 hover:text-white"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
               </button>
             </div>
 
             <form onSubmit={handleAddRecord} className="space-y-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Pet</label>
-                <select 
-                  name="petId" 
+                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                  Pet
+                </label>
+                <select
+                  name="petId"
                   value={selectedPetId}
                   onChange={(e) => setSelectedPetId(e.target.value)}
                   className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
                 >
-                  {pets.map(pet => (
-                    <option key={pet.id} value={pet.id}>{pet.name}</option>
+                  {pets.map((pet) => (
+                    <option key={pet.id} value={pet.id}>
+                      {pet.name}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Tipo</label>
-                  <select name="type" className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500">
+                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                    Tipo
+                  </label>
+                  <select
+                    name="type"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                  >
                     {Object.entries(HealthRecordType).map(([key, value]) => (
-                      <option key={key} value={value}>{value}</option>
+                      <option key={key} value={value}>
+                        {value}
+                      </option>
                     ))}
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Data</label>
-                  <input name="date" type="date" required className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500" />
+                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                    Data
+                  </label>
+                  <input
+                    name="date"
+                    type="date"
+                    required
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                  />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Descrição</label>
-                <input name="description" required placeholder="Ex: Vacina V10" className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500" />
+                <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                  Descrição
+                </label>
+                <input
+                  name="description"
+                  required
+                  placeholder="Ex: Vacina V10"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Vet (Opcional)</label>
-                  <input name="vetName" className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500" />
+                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                    Vet (Opcional)
+                  </label>
+                  <input
+                    name="vetName"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                  />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Próxima Data (Opcional)</label>
-                  <input name="nextDueDate" type="date" className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500" />
+                  <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">
+                    Próxima Data (Opcional)
+                  </label>
+                  <input
+                    name="nextDueDate"
+                    type="date"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-white outline-none focus:border-emerald-500"
+                  />
                 </div>
               </div>
 

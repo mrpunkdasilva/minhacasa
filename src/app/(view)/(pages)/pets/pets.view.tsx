@@ -27,7 +27,9 @@ export default function PetsView({ initialPets }: PetsViewProps) {
     <div className="container mx-auto py-12 px-4 max-w-5xl min-h-screen bg-black">
       <div className="flex flex-col space-y-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tighter text-white">Pet Care</h1>
+          <h1 className="text-3xl font-bold tracking-tighter text-white">
+            Pet Care
+          </h1>
           <p className="text-zinc-500 mt-2">
             Gestão completa da saúde, alimentação e bem-estar dos seus pets.
           </p>

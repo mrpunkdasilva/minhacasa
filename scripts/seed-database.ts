@@ -1,10 +1,9 @@
-import clientPromise from "@/app/infra/lib/mongodb";
+import { getDb } from "@/app/infra/lib/mongodb";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import { Category } from "@/app/domain/enums/category/category";
 
 const seedDatabase = async () => {
-  const client = await clientPromise;
-  const db = client.db("minhacasa");
+  const db = await getDb();
 
   try {
     // Get the first house
@@ -16,10 +15,7 @@ const seedDatabase = async () => {
 
     // Clear existing test invoices (those with strange names)
     const result = await db.collection("invoices").deleteMany({
-      $or: [
-        { name: "asdasd" },
-        { name: { $regex: "^test", $options: "i" } },
-      ],
+      $or: [{ name: "asdasd" }, { name: { $regex: "^test", $options: "i" } }],
     });
 
     console.log(`${result.deletedCount} faturas de teste removidas`);
@@ -89,4 +85,3 @@ const seedDatabase = async () => {
 };
 
 seedDatabase();
-

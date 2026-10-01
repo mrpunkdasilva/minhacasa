@@ -16,10 +16,7 @@ export default async function EditInvoiceView({ id }: EditInvoiceViewProps) {
         <h2 className="text-2xl font-bold text-white mb-4">
           Fatura não encontrada
         </h2>
-        <Link
-          href="/invoices"
-          className="text-emerald-500 hover:underline"
-        >
+        <Link href="/invoices" className="text-emerald-500 hover:underline">
           Voltar para a lista
         </Link>
       </div>

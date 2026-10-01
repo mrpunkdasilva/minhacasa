@@ -37,7 +37,7 @@ export function QRCode({
             light: lightColor,
           },
         });
-        
+
         // Clean up SVG string for dangerouslySetInnerHTML
         svg = svg.replace(/<\?xml.*\?>/g, "");
         setQrSvg(svg);
@@ -66,13 +66,13 @@ export function QRCode({
     <div
       className={cn(
         "relative flex items-center justify-center p-2 bg-black/50 rounded-xl border border-emerald-500/10 backdrop-blur-sm overflow-hidden",
-        className
+        className,
       )}
     >
       <div dangerouslySetInnerHTML={{ __html: qrSvg }} />
       {showLogo && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div 
+          <div
             className="bg-black p-1.5 rounded-lg border border-emerald-500/30 shadow-xl"
             style={{ width: size * 0.25, height: size * 0.25 }}
           >

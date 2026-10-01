@@ -1,8 +1,16 @@
 "use client";
 
 import { IncomeEntity } from "@/app/domain/entity/income/income.entity";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+} from "recharts";
 import { Repeat } from "lucide-react";
+import type { TooltipValueType } from "recharts";
 
 interface IncomeRecurrenceChartProps {
   incomes: IncomeEntity[];
@@ -10,23 +18,25 @@ interface IncomeRecurrenceChartProps {
 
 export function IncomeRecurrenceChart({ incomes }: IncomeRecurrenceChartProps) {
   const recurring = incomes
-    .filter(i => i.recurrence.isRecurring)
+    .filter((i) => i.recurrence.isRecurring)
     .reduce((sum, i) => sum + i.amount.amount, 0);
-  
+
   const variable = incomes
-    .filter(i => !i.recurrence.isRecurring)
+    .filter((i) => !i.recurrence.isRecurring)
     .reduce((sum, i) => sum + i.amount.amount, 0);
 
   const data = [
     { name: "Renda Fixa/Recorrente", value: recurring, color: "#10b981" },
     { name: "Renda Variável/Extra", value: variable, color: "#3b82f6" },
-  ].filter(d => d.value > 0);
+  ].filter((d) => d.value > 0);
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 h-full">
       <div className="flex items-center gap-2 mb-6 text-zinc-400">
         <Repeat size={18} />
-        <h3 className="text-sm font-bold uppercase tracking-wider">Recorrência de Ganhos</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider">
+          Recorrência de Ganhos
+        </h3>
       </div>
 
       <div className="h-[200px] w-full">
@@ -43,11 +53,23 @@ export function IncomeRecurrenceChart({ incomes }: IncomeRecurrenceChartProps) {
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip 
-                contentStyle={{ backgroundColor: "#18181b", border: "1px solid #27272a", fontSize: "10px" }}
-                formatter={(value: any) => Number(value ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#18181b",
+                border: "1px solid #27272a",
+                fontSize: "10px",
+              }}
+              formatter={(value: TooltipValueType | undefined) =>
+                Number(value ?? 0).toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })
+              }
             />
-            <Legend verticalAlign="bottom" wrapperStyle={{ fontSize: '10px', paddingTop: '20px' }} />
+            <Legend
+              verticalAlign="bottom"
+              wrapperStyle={{ fontSize: "10px", paddingTop: "20px" }}
+            />
           </PieChart>
         </ResponsiveContainer>
       </div>

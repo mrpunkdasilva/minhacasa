@@ -5,7 +5,6 @@ import {
   BarChart,
   Bar,
   XAxis,
-  YAxis,
   Tooltip,
   ResponsiveContainer,
   Cell,
@@ -15,7 +14,9 @@ interface ValueDistributionChartProps {
   invoices: InvoiceEntity[];
 }
 
-export function ValueDistributionChart({ invoices }: ValueDistributionChartProps) {
+export function ValueDistributionChart({
+  invoices,
+}: ValueDistributionChartProps) {
   const ranges = [
     { label: "0-100", min: 0, max: 100 },
     { label: "100-500", min: 100, max: 500 },
@@ -24,27 +25,29 @@ export function ValueDistributionChart({ invoices }: ValueDistributionChartProps
     { label: "5k+", min: 5000, max: Infinity },
   ];
 
-  const data = ranges.map(range => ({
+  const data = ranges.map((range) => ({
     name: range.label,
-    count: invoices.filter(inv => inv.price.amount >= range.min && inv.price.amount < range.max).length
+    count: invoices.filter(
+      (inv) => inv.price.amount >= range.min && inv.price.amount < range.max,
+    ).length,
   }));
 
   return (
     <div className="h-[200px] w-full mt-4">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
-          <XAxis 
-            dataKey="name" 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fill: "#71717a", fontSize: 10 }} 
+          <XAxis
+            dataKey="name"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: "#71717a", fontSize: 10 }}
           />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: "#18181b", 
-              border: "1px solid #27272a", 
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#18181b",
+              border: "1px solid #27272a",
               borderRadius: "8px",
-              fontSize: "12px"
+              fontSize: "12px",
             }}
             cursor={{ fill: "#27272a", opacity: 0.4 }}
           />

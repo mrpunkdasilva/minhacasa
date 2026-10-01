@@ -1,6 +1,11 @@
-import { MongoClient, Collection, Document } from "mongodb";
-import clientPromise from "@/app/infra/lib/mongodb";
-import { Pet, HealthRecord, PetService, PetNutrition } from "@/app/domain/entity/pet/pet.entities";
+import { Collection } from "mongodb";
+import { Doc, getDb } from "@/app/infra/lib/mongodb";
+import {
+  Pet,
+  HealthRecord,
+  PetService,
+  PetNutrition,
+} from "@/app/domain/entity/pet/pet.entities";
 import logger from "./logger";
 
 export class PetRepository {
@@ -9,17 +14,16 @@ export class PetRepository {
   private servicesCollection = "pet_services";
   private nutritionCollection = "pet_nutrition";
 
-  private async getCollection<T extends Document>(name: string): Promise<Collection<T>> {
-    const client: MongoClient = await clientPromise;
-    const db = client.db();
-    return db.collection<T>(name);
+  private async getCollection<T>(name: string): Promise<Collection<Doc<T>>> {
+    const db = await getDb();
+    return db.collection<Doc<T>>(name);
   }
 
   // Pet CRUD
   async findAllByHouseId(houseId: string): Promise<Pet[]> {
     try {
       const collection = await this.getCollection<Pet>(this.petsCollection);
-      return collection.find({ houseId } as any).sort({ name: 1 }).toArray();
+      return collection.find({ houseId }).sort({ name: 1 }).toArray();
     } catch (error) {
       logger.error({ error, houseId }, "Error finding pets");
       return [];
@@ -29,7 +33,7 @@ export class PetRepository {
   async findPetById(id: string): Promise<Pet | null> {
     try {
       const collection = await this.getCollection<Pet>(this.petsCollection);
-      return collection.findOne({ id } as any);
+      return collection.findOne({ id });
     } catch (error) {
       logger.error({ error, id }, "Error finding pet by id");
       return null;
@@ -39,7 +43,7 @@ export class PetRepository {
   async createPet(pet: Pet): Promise<void> {
     try {
       const collection = await this.getCollection<Pet>(this.petsCollection);
-      await collection.insertOne(pet as any);
+      await collection.insertOne(pet);
     } catch (error) {
       logger.error({ error, pet }, "Error creating pet");
       throw new Error("Falha ao criar pet.");
@@ -49,7 +53,12 @@ export class PetRepository {
   async updatePet(id: string, data: Partial<Pet>): Promise<void> {
     try {
       const collection = await this.getCollection<Pet>(this.petsCollection);
-      await collection.updateOne({ id } as any, { $set: { ...data, updatedAt: new Date() } });
+      await collection.updateOne(
+        { id },
+        {
+          $set: { ...data, updatedAt: new Date() },
+        },
+      );
     } catch (error) {
       logger.error({ error, id, data }, "Error updating pet");
       throw new Error("Falha ao atualizar pet.");
@@ -58,9 +67,8 @@ export class PetRepository {
 
   async deletePet(id: string): Promise<void> {
     try {
-      const client: MongoClient = await clientPromise;
-      const db = client.db();
-      
+      const db = await getDb();
+
       // Delete pet and all related data
       await db.collection(this.petsCollection).deleteOne({ id });
       await db.collection(this.healthCollection).deleteMany({ petId: id });
@@ -75,8 +83,10 @@ export class PetRepository {
   // Health Records
   async findHealthRecordsByPetId(petId: string): Promise<HealthRecord[]> {
     try {
-      const collection = await this.getCollection<HealthRecord>(this.healthCollection);
-      return collection.find({ petId } as any).sort({ date: -1 }).toArray();
+      const collection = await this.getCollection<HealthRecord>(
+        this.healthCollection,
+      );
+      return collection.find({ petId }).sort({ date: -1 }).toArray();
     } catch (error) {
       logger.error({ error, petId }, "Error finding health records");
       return [];
@@ -85,8 +95,10 @@ export class PetRepository {
 
   async createHealthRecord(record: HealthRecord): Promise<void> {
     try {
-      const collection = await this.getCollection<HealthRecord>(this.healthCollection);
-      await collection.insertOne(record as any);
+      const collection = await this.getCollection<HealthRecord>(
+        this.healthCollection,
+      );
+      await collection.insertOne(record);
     } catch (error) {
       logger.error({ error, record }, "Error creating health record");
       throw new Error("Falha ao criar registro de saúde.");
@@ -96,8 +108,10 @@ export class PetRepository {
   // Services
   async findServicesByPetId(petId: string): Promise<PetService[]> {
     try {
-      const collection = await this.getCollection<PetService>(this.servicesCollection);
-      return collection.find({ petId } as any).sort({ date: -1 }).toArray();
+      const collection = await this.getCollection<PetService>(
+        this.servicesCollection,
+      );
+      return collection.find({ petId }).sort({ date: -1 }).toArray();
     } catch (error) {
       logger.error({ error, petId }, "Error finding pet services");
       return [];
@@ -106,8 +120,10 @@ export class PetRepository {
 
   async createService(service: PetService): Promise<void> {
     try {
-      const collection = await this.getCollection<PetService>(this.servicesCollection);
-      await collection.insertOne(service as any);
+      const collection = await this.getCollection<PetService>(
+        this.servicesCollection,
+      );
+      await collection.insertOne(service);
     } catch (error) {
       logger.error({ error, service }, "Error creating pet service");
       throw new Error("Falha ao criar registro de serviço.");
@@ -117,8 +133,10 @@ export class PetRepository {
   // Nutrition
   async findNutritionByPetId(petId: string): Promise<PetNutrition | null> {
     try {
-      const collection = await this.getCollection<PetNutrition>(this.nutritionCollection);
-      return collection.findOne({ petId } as any);
+      const collection = await this.getCollection<PetNutrition>(
+        this.nutritionCollection,
+      );
+      return collection.findOne({ petId });
     } catch (error) {
       logger.error({ error, petId }, "Error finding pet nutrition");
       return null;
@@ -127,11 +145,13 @@ export class PetRepository {
 
   async upsertNutrition(nutrition: PetNutrition): Promise<void> {
     try {
-      const collection = await this.getCollection<PetNutrition>(this.nutritionCollection);
+      const collection = await this.getCollection<PetNutrition>(
+        this.nutritionCollection,
+      );
       await collection.updateOne(
-        { petId: nutrition.petId } as any,
+        { petId: nutrition.petId },
         { $set: nutrition },
-        { upsert: true }
+        { upsert: true },
       );
     } catch (error) {
       logger.error({ error, nutrition }, "Error upserting pet nutrition");
