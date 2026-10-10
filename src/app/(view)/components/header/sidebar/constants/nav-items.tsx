@@ -4,6 +4,7 @@ import {
   ShoppingCart,
   HardDrive,
   Heart,
+  HeartPulse,
   PawPrint,
   Sparkles,
   Wallet,
@@ -11,6 +12,16 @@ import {
 
 export const staticNavItems = [
   { title: "Dashboard", href: "/", icon: LayoutDashboard },
+  {
+    title: "Saúde",
+    href: "/health/alerts",
+    icon: HeartPulse,
+    subItems: [
+      { title: "Alertas", href: "/health/alerts" },
+      { title: "Medicamentos", href: "/health/medications" },
+      { title: "Agenda", href: "/health/appointments" },
+    ],
+  },
   {
     title: "Faturas",
     href: "/invoices",
