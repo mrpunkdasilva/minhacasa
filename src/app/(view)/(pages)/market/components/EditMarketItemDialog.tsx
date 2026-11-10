@@ -36,6 +36,7 @@ import {
 } from "@/app/domain/enums/market-category/market-category";
 import { MarketItem } from "@/app/domain/entity/market/market-item.entity";
 import { updateMarketItem } from "@/app/infra/actions/market.actions";
+import { numberInputValue } from "@/app/infra/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -141,7 +142,7 @@ export default function EditMarketItemDialog({
                         className="bg-black border-zinc-800"
                         {...field}
                         onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(numberInputValue(e.target.value))
                         }
                       />
                     </FormControl>
@@ -162,7 +163,7 @@ export default function EditMarketItemDialog({
                         className="bg-black border-zinc-800"
                         {...field}
                         onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(numberInputValue(e.target.value))
                         }
                       />
                     </FormControl>
@@ -191,7 +192,7 @@ export default function EditMarketItemDialog({
                         className="bg-black border-zinc-800 text-white pl-10"
                         {...field}
                         onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(numberInputValue(e.target.value))
                         }
                       />
                     </div>

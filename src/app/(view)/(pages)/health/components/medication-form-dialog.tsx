@@ -42,11 +42,13 @@ import {
   addMedication,
   updateMedication,
 } from "@/app/infra/actions/health.actions";
+import { numberInputValue } from "@/app/infra/lib/utils";
 import { toDateKey } from "./health-utils";
 
 interface MedicationFormDialogProps {
   initialMedication?: Medication;
   pets?: { id: string; name: string }[];
+  houseMembers?: { id: string; name: string }[];
   triggerClassName?: string;
 }
 
@@ -102,6 +104,7 @@ const formSchema = z
 export default function MedicationFormDialog({
   initialMedication,
   pets = [],
+  houseMembers = [],
   triggerClassName = "",
 }: MedicationFormDialogProps) {
   const isEdit = Boolean(initialMedication);
@@ -295,14 +298,30 @@ export default function MedicationFormDialog({
                   name="subjectName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nome da Pessoa</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Ex: Maria, João..."
-                          className="bg-black border-zinc-800 text-white h-11"
-                          {...field}
-                        />
-                      </FormControl>
+                      <FormLabel>Pessoa</FormLabel>
+                      <Select
+                        value={field.value ?? ""}
+                        onValueChange={field.onChange}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-black border-zinc-800 text-white h-11 text-xs">
+                            <SelectValue
+                              placeholder={
+                                houseMembers.length
+                                  ? "Escolha a pessoa"
+                                  : "Nenhum membro na casa"
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                          {houseMembers.map((member) => (
+                            <SelectItem key={member.id} value={member.name}>
+                              {member.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -355,7 +374,7 @@ export default function MedicationFormDialog({
                         className="bg-black border-zinc-800 text-white h-11"
                         {...field}
                         onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(numberInputValue(e.target.value))
                         }
                       />
                     </FormControl>

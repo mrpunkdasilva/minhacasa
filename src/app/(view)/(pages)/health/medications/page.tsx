@@ -5,6 +5,7 @@ import {
   getDoseLogs,
 } from "@/app/infra/actions/health.actions";
 import { getPets } from "@/app/infra/actions/pet.actions";
+import { getHouseMembers } from "@/app/infra/actions/house.actions";
 
 export const metadata = {
   title: "Medicamentos",
@@ -17,6 +18,10 @@ export default async function HealthMedicationsPage() {
   const doseLogs = await getDoseLogs(safeMedications.map((med) => med.id));
   const safeLogs = Array.isArray(doseLogs) ? doseLogs : [];
   const pets = (await getPets()).map((pet) => ({ id: pet.id, name: pet.name }));
+  const houseMembers = (await getHouseMembers()).map((member) => ({
+    id: member.id,
+    name: member.name,
+  }));
 
   return (
     <div className="container mx-auto py-12 px-4 max-w-5xl">
@@ -30,6 +35,7 @@ export default async function HealthMedicationsPage() {
           medications={safeMedications}
           doseLogs={safeLogs}
           pets={pets}
+          houseMembers={houseMembers}
         />
       </div>
     </div>

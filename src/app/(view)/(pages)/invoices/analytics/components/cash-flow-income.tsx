@@ -31,8 +31,11 @@ export function CashFlowIncome({ invoices, incomes }: CashFlowIncomeProps) {
       ? incomes.reduce((sum, inc) => sum + inc.amount.amount, 0) / 6 // Average over 6 months
       : 5000;
 
-  const [monthlyIncome, setMonthlyIncome] = useState(realMonthlyAverage);
+  const [monthlyIncomeInput, setMonthlyIncomeInput] = useState(
+    String(realMonthlyAverage),
+  );
   const [lastIncomes, setLastIncomes] = useState(incomes);
+  const monthlyIncome = Number(monthlyIncomeInput) || 0;
 
   // Re-seed the simulation when real data changes. Adjusted during render
   // rather than in an effect, which would render a stale slider value first
@@ -40,8 +43,8 @@ export function CashFlowIncome({ invoices, incomes }: CashFlowIncomeProps) {
   if (incomes !== lastIncomes) {
     setLastIncomes(incomes);
     if (incomes.length > 0) {
-      setMonthlyIncome(
-        incomes.reduce((sum, inc) => sum + inc.amount.amount, 0) / 6,
+      setMonthlyIncomeInput(
+        String(incomes.reduce((sum, inc) => sum + inc.amount.amount, 0) / 6),
       );
     }
   }
@@ -98,8 +101,8 @@ export function CashFlowIncome({ invoices, incomes }: CashFlowIncomeProps) {
           </span>
           <input
             type="number"
-            value={monthlyIncome}
-            onChange={(e) => setMonthlyIncome(Number(e.target.value))}
+            value={monthlyIncomeInput}
+            onChange={(e) => setMonthlyIncomeInput(e.target.value)}
             className="bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-xs text-white font-mono w-24 focus:outline-none focus:border-emerald-500"
           />
         </div>

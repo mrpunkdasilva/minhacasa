@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import AddMarketItemDialog from "./AddMarketItemDialog";
 import EditMarketItemDialog from "./EditMarketItemDialog";
+import { ImportReceiptButton } from "./receipt-scanner-dialog";
 import ShoppingTotal from "./shopping-total";
 import {
   MarketPriority,
@@ -134,7 +135,10 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
           {filteredItems.length}{" "}
           {filteredItems.length === 1 ? "item encontrado" : "itens encontrados"}
         </p>
-        <AddMarketItemDialog />
+        <div className="flex items-center gap-2">
+          <ImportReceiptButton label="Importar cupom" />
+          <AddMarketItemDialog />
+        </div>
       </div>
 
       <ShoppingTotal items={safeItems} prices={prices} />

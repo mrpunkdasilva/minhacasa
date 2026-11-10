@@ -19,4 +19,7 @@ export interface MarketItem extends BaseEntity {
   shouldMoveToInventory?: boolean;
   expirationDate?: Date;
   lastPrice?: Money;
+  normalizedName?: string;
+  sourceReceiptId?: string;
+  lastPurchasedAt?: Date;
 }

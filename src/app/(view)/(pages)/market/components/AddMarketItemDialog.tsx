@@ -37,6 +37,7 @@ import {
   MarketPriority,
 } from "@/app/domain/enums/market-category/market-category";
 import { addMarketItem } from "@/app/infra/actions/market.actions";
+import { numberInputValue } from "@/app/infra/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -61,7 +62,7 @@ export default function AddMarketItemDialog() {
       quantity: 1,
       unit: MarketUnit.UN,
       priority: MarketPriority.MEDIUM,
-      lastPrice: 0,
+      lastPrice: undefined,
       shouldMoveToInventory: true,
       location: "shopping",
     },
@@ -154,7 +155,7 @@ export default function AddMarketItemDialog() {
                         className="bg-black border-zinc-800 text-white h-12"
                         {...field}
                         onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(numberInputValue(e.target.value))
                         }
                       />
                     </FormControl>
@@ -210,7 +211,7 @@ export default function AddMarketItemDialog() {
                         className="bg-black border-zinc-800 text-white h-12 pl-10"
                         {...field}
                         onChange={(e) =>
-                          field.onChange(parseFloat(e.target.value) || 0)
+                          field.onChange(numberInputValue(e.target.value))
                         }
                       />
                     </div>

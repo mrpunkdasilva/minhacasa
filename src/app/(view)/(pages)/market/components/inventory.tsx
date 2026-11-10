@@ -9,6 +9,7 @@ import {
 import { useTransition } from "react";
 import AddMarketItemDialog from "./AddMarketItemDialog";
 import EditMarketItemDialog from "./EditMarketItemDialog";
+import { ImportReceiptButton } from "./receipt-scanner-dialog";
 
 interface InventoryProps {
   initialItems?: MarketItem[];
@@ -49,7 +50,8 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        <ImportReceiptButton label="Importar cupom" />
         <AddMarketItemDialog />
       </div>
 

@@ -37,6 +37,7 @@ import {
   addAppointment,
   updateAppointment,
 } from "@/app/infra/actions/health.actions";
+import { numberInputValue } from "@/app/infra/lib/utils";
 
 interface AppointmentFormDialogProps {
   initialAppointment?: HealthAppointment;
@@ -247,7 +248,7 @@ export default function AppointmentFormDialog({
                         className="bg-black border-zinc-800 text-white h-11"
                         {...field}
                         onChange={(e) =>
-                          field.onChange(parseInt(e.target.value, 10) || 0)
+                          field.onChange(numberInputValue(e.target.value))
                         }
                       />
                     </FormControl>

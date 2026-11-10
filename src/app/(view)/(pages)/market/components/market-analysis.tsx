@@ -4,23 +4,40 @@ import { Category } from "@/app/domain/enums/category/category";
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import { MarketItem } from "@/app/domain/entity/market/market-item.entity";
+import { ReceiptEntity } from "@/app/domain/entity/receipt/receipt.entity";
 import {
   TrendingUp,
   AlertTriangle,
   Calendar,
   ShoppingCart,
   Package,
+  ReceiptText,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
 
 interface MarketAnalysisProps {
   invoices: InvoiceEntity[];
   marketItems: MarketItem[];
+  receipts: ReceiptEntity[];
+}
+
+function formatCurrency(amount: number): string {
+  return amount.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+}
+
+function formatReceiptDate(value: Date | string): string {
+  return new Date(value).toLocaleDateString("pt-BR");
 }
 
 export default function MarketAnalysis({
   invoices,
   marketItems,
+  receipts,
 }: MarketAnalysisProps) {
   // --- INVOICE METRICS ---
   const marketExpenses = useMemo(
@@ -82,6 +99,50 @@ export default function MarketAnalysis({
         ),
     [marketItems],
   );
+
+  // --- RECEIPT METRICS ---
+  const receiptMetrics = useMemo(() => {
+    const safeReceipts = Array.isArray(receipts) ? receipts : [];
+    const totalSpent = safeReceipts.reduce(
+      (acc, receipt) => acc + receipt.totalAmount.amount,
+      0,
+    );
+    const itemCount = safeReceipts.reduce(
+      (acc, receipt) => acc + receipt.itemCount,
+      0,
+    );
+
+    const categoryTotals = new Map<string, number>();
+    for (const receipt of safeReceipts) {
+      for (const item of receipt.items) {
+        categoryTotals.set(
+          item.category,
+          (categoryTotals.get(item.category) ?? 0) + item.totalPrice.amount,
+        );
+      }
+    }
+
+    const topCategories = Array.from(categoryTotals.entries())
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5);
+
+    const recent = [...safeReceipts]
+      .sort(
+        (a, b) =>
+          new Date(b.issuedAt).getTime() - new Date(a.issuedAt).getTime(),
+      )
+      .slice(0, 5);
+
+    return {
+      totalSpent,
+      itemCount,
+      topCategories,
+      recent,
+      count: safeReceipts.length,
+    };
+  }, [receipts]);
+
+  const maxCategoryTotal = receiptMetrics.topCategories[0]?.[1] ?? 0;
 
   return (
     <div className="space-y-10">
@@ -223,6 +284,115 @@ export default function MarketAnalysis({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Receipt Analytics */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-zinc-500">
+            <ReceiptText size={16} className="text-emerald-500" /> Notas Fiscais
+          </h3>
+          <Link
+            href="/market/receipts"
+            className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-emerald-500 hover:underline"
+          >
+            Ver todas <ArrowRight size={12} />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+              Gasto em cupons
+            </span>
+            <span className="mt-2 block text-2xl font-black font-mono text-emerald-500">
+              {formatCurrency(receiptMetrics.totalSpent)}
+            </span>
+          </div>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+              Itens comprados
+            </span>
+            <span className="mt-2 block text-2xl font-black font-mono text-white">
+              {receiptMetrics.itemCount}
+            </span>
+          </div>
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+              Cupons importados
+            </span>
+            <span className="mt-2 block text-2xl font-black font-mono text-white">
+              {receiptMetrics.count}
+            </span>
+          </div>
+        </div>
+
+        {receiptMetrics.recent.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <p className="mb-4 text-xs font-bold uppercase text-zinc-500">
+                Onde você mais gastou
+              </p>
+              <div className="space-y-3">
+                {receiptMetrics.topCategories.map(([category, amount]) => (
+                  <div key={category} className="space-y-1.5">
+                    <div className="flex justify-between text-xs">
+                      <span className="font-medium text-zinc-300">
+                        {category}
+                      </span>
+                      <span className="font-bold text-zinc-500">
+                        {formatCurrency(amount)}
+                      </span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-black">
+                      <div
+                        className="h-full rounded-full bg-emerald-500/60"
+                        style={{
+                          width: `${maxCategoryTotal > 0 ? (amount / maxCategoryTotal) * 100 : 0}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+              <p className="mb-4 text-xs font-bold uppercase text-zinc-500">
+                Últimos cupons
+              </p>
+              <div className="space-y-2">
+                {receiptMetrics.recent.map((receipt) => (
+                  <Link
+                    key={receipt.id}
+                    href={`/market/receipts/${receipt.id}`}
+                    className="flex items-center justify-between rounded-xl border border-zinc-800/60 bg-black/40 p-3 transition-colors hover:border-emerald-500/30"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate text-xs font-bold text-white">
+                        {receipt.storeName}
+                      </p>
+                      <p className="text-[10px] text-zinc-600">
+                        {formatReceiptDate(receipt.issuedAt)} •{" "}
+                        {receipt.itemCount} itens
+                      </p>
+                    </div>
+                    <span className="shrink-0 text-xs font-black text-emerald-500">
+                      {formatCurrency(receipt.totalAmount.amount)}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/20 p-10 text-center">
+            <p className="text-sm text-zinc-500">
+              Importe seu primeiro cupom para ver as estatísticas por nota
+              fiscal.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Historical Purchases Table */}

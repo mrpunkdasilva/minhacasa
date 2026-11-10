@@ -48,6 +48,7 @@ export const staticNavItems = [
       { title: "Análise de Gastos", href: "/market/analysis" },
       { title: "Lista de Compras", href: "/market/shopping-list" },
       { title: "Minha Despensa", href: "/market/inventory" },
+      { title: "Notas Fiscais", href: "/market/receipts" },
       { title: "Calculadora", href: "/market/calculator" },
     ],
   },

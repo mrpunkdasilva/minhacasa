@@ -11,7 +11,7 @@ import {
   ShieldCheck,
 } from "@phosphor-icons/react";
 
-import { cn } from "@/app/infra/lib/utils";
+import { cn, numberInputValue } from "@/app/infra/lib/utils";
 import { Button } from "@/app/(view)/components/ui/button";
 import {
   Form,
@@ -81,7 +81,7 @@ export function CreateInvoiceForm({ initialData }: CreateInvoiceFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || "",
-      price: initialData?.price?.amount || 0,
+      price: initialData?.price?.amount,
       dueDate: initialData?.dueDate ? new Date(initialData.dueDate) : undefined,
       description: initialData?.description || "",
       category: (initialData?.category as Category) || undefined,
@@ -148,7 +148,9 @@ export function CreateInvoiceForm({ initialData }: CreateInvoiceFormProps) {
                     step="0.01"
                     placeholder="0.00"
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    onChange={(e) =>
+                      field.onChange(numberInputValue(e.target.value))
+                    }
                   />
                 </FormControl>
                 <FormMessage />

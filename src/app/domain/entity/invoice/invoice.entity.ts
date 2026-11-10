@@ -25,4 +25,5 @@ export interface InvoiceEntity extends BaseEntity {
   isArchived?: boolean;
   houseId: string; // The house this invoice belongs to
   ownerId?: string; // If set, it's a private invoice for this user
+  sourceReceiptId?: string; // Links the invoice to an imported fiscal receipt
 }

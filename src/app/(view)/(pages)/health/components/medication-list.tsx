@@ -33,12 +33,14 @@ interface MedicationListProps {
   medications: Medication[];
   doseLogs: DoseLog[];
   pets?: { id: string; name: string }[];
+  houseMembers?: { id: string; name: string }[];
 }
 
 export default function MedicationList({
   medications,
   doseLogs,
   pets = [],
+  houseMembers = [],
 }: MedicationListProps) {
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState("");
@@ -81,7 +83,7 @@ export default function MedicationList({
             ? "medicamento cadastrado"
             : "medicamentos cadastrados"}
         </p>
-        <MedicationFormDialog pets={pets} />
+        <MedicationFormDialog pets={pets} houseMembers={houseMembers} />
       </div>
 
       <div className="relative">
@@ -232,7 +234,11 @@ export default function MedicationList({
                         <ShieldCheck size={18} />
                       )}
                     </button>
-                    <MedicationFormDialog initialMedication={med} pets={pets} />
+                    <MedicationFormDialog
+                      initialMedication={med}
+                      pets={pets}
+                      houseMembers={houseMembers}
+                    />
                     <button
                       onClick={() => handleDelete(med.id)}
                       disabled={isPending}
