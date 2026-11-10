@@ -138,7 +138,7 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
           {filteredItems.length === 1 ? "item encontrado" : "itens encontrados"}
         </p>
         <div className="flex items-center gap-2">
-          <ImportReceiptButton label="Importar cupom" />
+          <ImportReceiptButton label="Importar nota fiscal" />
           <AddMarketItemDialog />
         </div>
       </div>

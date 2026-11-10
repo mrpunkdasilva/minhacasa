@@ -55,7 +55,7 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
   return (
     <div className="space-y-6">
       <div className="flex justify-end gap-2">
-        <ImportReceiptButton label="Importar cupom" />
+        <ImportReceiptButton label="Importar nota fiscal" />
         <AddMarketItemDialog />
       </div>
 

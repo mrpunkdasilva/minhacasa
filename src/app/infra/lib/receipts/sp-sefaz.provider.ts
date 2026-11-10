@@ -114,7 +114,7 @@ function normalizeQrUrl(input: string): URL {
   } catch {
     throw new ReceiptProviderError(
       "INVALID_QR",
-      "Não foi possível interpretar o QR Code do cupom.",
+      "Não foi possível interpretar o QR Code da nota fiscal.",
     );
   }
 
@@ -137,7 +137,7 @@ function normalizeQrUrl(input: string): URL {
   if (!isValidAccessKey(accessKey)) {
     throw new ReceiptProviderError(
       "INVALID_QR",
-      "A chave de acesso do cupom é inválida.",
+      "A chave de acesso da nota fiscal é inválida.",
     );
   }
 
@@ -145,7 +145,7 @@ function normalizeQrUrl(input: string): URL {
   if (state !== "SP") {
     throw new ReceiptProviderError(
       "UNSUPPORTED_STATE",
-      `Este cupom é de ${state ?? "outro estado"}; por enquanto importamos apenas notas de São Paulo.`,
+      `Esta nota fiscal é de ${state ?? "outro estado"}; por enquanto importamos apenas notas de São Paulo.`,
     );
   }
 

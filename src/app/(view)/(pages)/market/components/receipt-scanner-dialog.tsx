@@ -79,7 +79,7 @@ function formatDate(value: Date | string): string {
 }
 
 export function ImportReceiptButton({
-  label = "Importar cupom",
+  label = "Importar nota fiscal",
   className,
   variant = "outline",
   size = "sm",
@@ -98,8 +98,8 @@ export function ImportReceiptButton({
             <Receipt size={20} /> Importar nota fiscal
           </DialogTitle>
           <DialogDescription className="text-zinc-500">
-            Escaneie o QR Code do cupom paulista, envie uma foto ou cole o link
-            completo do QR Code.
+            Escaneie o QR Code da nota fiscal paulista, envie uma foto ou cole o
+            link completo do QR Code.
           </DialogDescription>
         </DialogHeader>
         <ReceiptScanner />
@@ -526,7 +526,7 @@ function ReceiptScanner() {
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/70">
                 <QrCode size={40} className="text-zinc-600" />
                 <p className="text-xs text-zinc-500 text-center px-6">
-                  Aponte a câmera para o QR Code do cupom fiscal.
+                  Aponte a câmera para o QR Code da nota fiscal.
                 </p>
               </div>
             )}
@@ -569,7 +569,7 @@ function ReceiptScanner() {
                 Enviar foto do QR Code
               </p>
               <p className="text-[11px] text-zinc-500 mt-1">
-                PNG, JPG ou imagem do cupom
+                PNG, JPG ou imagem da nota fiscal
               </p>
             </div>
             <input
@@ -591,7 +591,7 @@ function ReceiptScanner() {
           <Input
             value={manualUrl}
             onChange={(event) => setManualUrl(event.target.value)}
-            placeholder="Cole a URL completa do QR Code do cupom"
+            placeholder="Cole a URL completa do QR Code da nota fiscal"
             className="bg-black border-zinc-800 h-12 text-xs"
           />
           <Button

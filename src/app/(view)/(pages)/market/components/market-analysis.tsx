@@ -394,8 +394,7 @@ export default function MarketAnalysis({
         ) : (
           <div className="rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/20 p-10 text-center">
             <p className="text-sm text-zinc-500">
-              Importe seu primeiro cupom para ver as estatísticas por nota
-              fiscal.
+              Importe sua primeira nota fiscal para ver as estatísticas.
             </p>
           </div>
         )}

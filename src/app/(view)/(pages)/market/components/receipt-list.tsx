@@ -65,7 +65,7 @@ export default function ReceiptList({ receipts }: ReceiptListProps) {
             Nenhuma nota fiscal importada ainda.
           </p>
           <p className="mt-1 text-xs text-zinc-600">
-            Escaneie o QR Code do cupom paulista para começar.
+            Escaneie o QR Code da nota fiscal paulista para começar.
           </p>
         </div>
         <ImportReceiptButton />
