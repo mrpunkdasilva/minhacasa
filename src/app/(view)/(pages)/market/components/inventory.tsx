@@ -1,6 +1,10 @@
 "use client";
 
 import { MarketItem } from "@/app/domain/entity/market/market-item.entity";
+import {
+  MarketUnit,
+  MarketUnitAbbreviation,
+} from "@/app/domain/enums/market-category/market-category";
 import { Trash2, Plus, Minus, AlertTriangle, Calendar } from "lucide-react";
 import {
   deleteMarketItem,
@@ -140,7 +144,8 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
                         {item.quantity}
                       </span>
                       <span className="text-[9px] text-zinc-500 uppercase font-bold">
-                        {item.unit.split(" ")[0]}
+                        {MarketUnitAbbreviation[item.unit as MarketUnit] ??
+                          item.unit.split(" ")[0]}
                       </span>
                     </div>
 

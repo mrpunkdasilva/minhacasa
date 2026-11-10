@@ -22,6 +22,8 @@ import ShoppingTotal from "./shopping-total";
 import {
   MarketPriority,
   MarketCategory,
+  MarketUnit,
+  MarketUnitAbbreviation,
 } from "@/app/domain/enums/market-category/market-category";
 import { Input } from "@/app/(view)/components/ui/input";
 import {
@@ -217,14 +219,14 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
           filteredItems.map((item) => (
             <div
               key={item.id}
-              className={`group flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl border transition-all duration-300 ${
+              className={`group flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl border transition-all duration-300 ${
                 item.isBought
                   ? "bg-zinc-900/30 border-zinc-900/50 opacity-50 scale-[0.98]"
                   : "bg-zinc-900 border-zinc-800 hover:border-emerald-500/30 hover:shadow-[0_0_20px_rgba(16,185,129,0.05)]"
               }`}
             >
-              <div className="flex items-center gap-4 min-w-0 flex-1">
-                <div className="relative flex items-center justify-center">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                <div className="relative flex items-center justify-center shrink-0">
                   <input
                     type="checkbox"
                     checked={item.isBought}
@@ -238,22 +240,22 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
                     ✓
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 min-w-0">
                     <h3
-                      className={`font-semibold tracking-tight ${item.isBought ? "line-through text-zinc-500" : "text-white text-lg"}`}
+                      className={`truncate font-semibold tracking-tight ${item.isBought ? "line-through text-zinc-500" : "text-white text-base sm:text-lg"}`}
                     >
                       {item.name}
                     </h3>
                     {item.priority && !item.isBought && (
                       <span
-                        className={`text-[9px] px-2 py-0.5 rounded-full border font-black uppercase tracking-tighter ${priorityStyles[item.priority as MarketPriority]}`}
+                        className={`shrink-0 text-[9px] px-2 py-0.5 rounded-full border font-black uppercase tracking-tighter ${priorityStyles[item.priority as MarketPriority]}`}
                       >
                         {item.priority}
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
                     <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest bg-black/40 px-2 py-0.5 rounded">
                       {item.category}
                     </span>
@@ -262,53 +264,50 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
                         <Archive size={10} /> Move p/ Despensa
                       </span>
                     )}
+                    {getUnitPrice(item) !== undefined && (
+                      <span className="text-[10px] text-zinc-500 font-bold">
+                        Total:{" "}
+                        {(getUnitPrice(item)! * item.quantity).toLocaleString(
+                          "pt-BR",
+                          {
+                            style: "currency",
+                            currency: "BRL",
+                          },
+                        )}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 sm:gap-6">
-                <div className="flex flex-col items-end">
-                  <span className="text-sm font-black text-white bg-zinc-800 px-3 py-1 rounded-lg">
-                    {item.quantity}{" "}
-                    <span className="text-zinc-500 text-[10px] ml-1 uppercase">
-                      {item.unit.split(" ")[0]}
-                    </span>
+              <div className="flex items-center justify-end gap-2 sm:gap-3 pl-9 sm:pl-0">
+                <span className="text-xs sm:text-sm font-black text-white bg-zinc-800 px-2 sm:px-3 py-1 rounded-lg">
+                  {item.quantity}{" "}
+                  <span className="text-zinc-500 text-[10px] ml-1 uppercase">
+                    {MarketUnitAbbreviation[item.unit as MarketUnit] ??
+                      item.unit.split(" ")[0]}
                   </span>
-                  <div className="flex items-center gap-1 mt-1">
-                    <span className="text-[9px] text-zinc-600 font-bold uppercase">
-                      R$
-                    </span>
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      placeholder="preço"
-                      value={getUnitPrice(item)?.toString() ?? ""}
-                      onChange={(e) =>
-                        handlePriceChange(item.id, e.target.value)
-                      }
-                      onBlur={() => handlePriceCommit(item.id)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") e.currentTarget.blur();
-                      }}
-                      className={`w-20 text-right text-[11px] font-black bg-transparent border-b outline-none transition-colors focus:border-emerald-500 ${
-                        getUnitPrice(item) === undefined
-                          ? "border-amber-500/50 text-amber-500 placeholder:text-zinc-700"
-                          : "border-zinc-700 text-white"
-                      }`}
-                    />
-                  </div>
-                  {getUnitPrice(item) !== undefined && (
-                    <span className="text-[10px] text-zinc-500 font-bold mt-1">
-                      Total:{" "}
-                      {(getUnitPrice(item)! * item.quantity).toLocaleString(
-                        "pt-BR",
-                        {
-                          style: "currency",
-                          currency: "BRL",
-                        },
-                      )}
-                    </span>
-                  )}
+                </span>
+                <div className="flex items-center gap-1">
+                  <span className="text-[9px] text-zinc-600 font-bold uppercase">
+                    R$
+                  </span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="preço"
+                    value={getUnitPrice(item)?.toString() ?? ""}
+                    onChange={(e) => handlePriceChange(item.id, e.target.value)}
+                    onBlur={() => handlePriceCommit(item.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") e.currentTarget.blur();
+                    }}
+                    className={`w-16 sm:w-20 text-right text-[11px] font-black bg-transparent border-b outline-none transition-colors focus:border-emerald-500 ${
+                      getUnitPrice(item) === undefined
+                        ? "border-amber-500/50 text-amber-500 placeholder:text-zinc-700"
+                        : "border-zinc-700 text-white"
+                    }`}
+                  />
                 </div>
 
                 <EditMarketItemDialog item={item} />
@@ -319,7 +318,8 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
                   className="p-2 text-zinc-700 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all disabled:opacity-50"
                   title="Excluir item"
                 >
-                  <Trash2 size={20} />
+                  <Trash2 size={18} className="sm:hidden" />
+                  <Trash2 size={20} className="hidden sm:block" />
                 </button>
               </div>
             </div>

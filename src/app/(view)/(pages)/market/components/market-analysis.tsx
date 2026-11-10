@@ -4,6 +4,10 @@ import { Category } from "@/app/domain/enums/category/category";
 import { InvoiceEntity } from "@/app/domain/entity/invoice/invoice.entity";
 import { InvoiceStatus } from "@/app/domain/enums/invoice-status/invoice-status";
 import { MarketItem } from "@/app/domain/entity/market/market-item.entity";
+import {
+  MarketUnit,
+  MarketUnitAbbreviation,
+} from "@/app/domain/enums/market-category/market-category";
 import { ReceiptEntity } from "@/app/domain/entity/receipt/receipt.entity";
 import {
   TrendingUp,
@@ -212,7 +216,9 @@ export default function MarketAnalysis({
                             {item.name}
                           </span>
                           <span className="text-xs font-bold text-zinc-500">
-                            {item.quantity} {item.unit.split(" ")[0]}
+                            {item.quantity}{" "}
+                            {MarketUnitAbbreviation[item.unit as MarketUnit] ??
+                              item.unit.split(" ")[0]}
                           </span>
                         </div>
                       ))}

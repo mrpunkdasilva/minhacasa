@@ -19,6 +19,15 @@ export enum MarketUnit {
   PCT = "Pacote",
 }
 
+export const MarketUnitAbbreviation: Record<MarketUnit, string> = {
+  [MarketUnit.UN]: "un",
+  [MarketUnit.KG]: "kg",
+  [MarketUnit.G]: "g",
+  [MarketUnit.L]: "l",
+  [MarketUnit.ML]: "ml",
+  [MarketUnit.PCT]: "pct",
+};
+
 export enum MarketPriority {
   LOW = "Baixa",
   MEDIUM = "Média",
