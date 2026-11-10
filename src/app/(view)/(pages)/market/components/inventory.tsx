@@ -89,7 +89,7 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
             return (
               <div
                 key={item.id}
-                className={`group relative bg-zinc-900 border transition-all duration-300 rounded-2xl p-5 flex flex-col justify-between overflow-hidden ${
+                className={`group relative bg-zinc-900 border transition-all duration-300 rounded-2xl p-4 sm:p-5 flex flex-col justify-between overflow-hidden ${
                   needsAttention
                     ? "border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.05)]"
                     : "border-zinc-800 hover:border-zinc-700"
@@ -109,7 +109,7 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3
-                        className={`font-bold tracking-tight ${needsAttention ? "text-amber-500" : "text-white"} text-lg leading-tight`}
+                        className={`font-bold tracking-tight ${needsAttention ? "text-amber-500" : "text-white"} text-base sm:text-lg leading-tight`}
                       >
                         {item.name}
                       </h3>

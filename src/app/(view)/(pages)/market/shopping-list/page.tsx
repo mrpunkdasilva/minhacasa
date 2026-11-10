@@ -8,8 +8,8 @@ export default async function MarketShoppingListPage() {
   const shoppingListItems = safeItems.filter((item) => !item.isInStock);
 
   return (
-    <div className="container mx-auto py-12 px-4 max-w-5xl">
-      <div className="flex flex-col gap-8">
+    <div className="container mx-auto py-6 sm:py-12 px-4 max-w-5xl">
+      <div className="flex flex-col gap-6 sm:gap-8">
         <MarketPageHeader
           title="Lista de Compras"
           description="O que falta na despensa, com preço e total da conta."

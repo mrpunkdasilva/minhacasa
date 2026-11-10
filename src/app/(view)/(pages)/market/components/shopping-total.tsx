@@ -49,8 +49,8 @@ export default function ShoppingTotal({ items, prices }: ShoppingTotalProps) {
   const isComplete = items.length > 0 && missingPrice === 0;
 
   return (
-    <div className="sticky top-0 z-20 bg-zinc-900/90 backdrop-blur-md border border-zinc-800 rounded-2xl p-4 sm:p-5 shadow-2xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="sticky top-0 z-20 bg-zinc-900/90 backdrop-blur-md border border-zinc-800 rounded-2xl p-3 sm:p-5 shadow-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <div className="flex items-center gap-2">
             <ShoppingCart size={14} className="text-emerald-500" />
@@ -59,7 +59,7 @@ export default function ShoppingTotal({ items, prices }: ShoppingTotalProps) {
             </span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-black font-mono text-white leading-none">
+            <span className="text-2xl sm:text-3xl font-black font-mono text-white leading-none">
               {formatCurrency(total)}
             </span>
             <span className="text-[10px] font-bold text-zinc-500 uppercase">
@@ -75,7 +75,7 @@ export default function ShoppingTotal({ items, prices }: ShoppingTotalProps) {
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {missingPrice > 0 ? (
-            <div className="flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2">
+            <div className="hidden sm:flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2">
               <AlertTriangle size={14} className="text-zinc-400 shrink-0" />
               <span className="text-[10px] font-black uppercase text-zinc-400">
                 {missingPrice} sem preço
@@ -83,7 +83,7 @@ export default function ShoppingTotal({ items, prices }: ShoppingTotalProps) {
             </div>
           ) : (
             isComplete && (
-              <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-2">
+              <div className="hidden sm:flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-2">
                 <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
                 <span className="text-[10px] font-black uppercase text-emerald-500">
                   tudo precificado

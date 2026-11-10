@@ -12,12 +12,14 @@ export default function MarketPageHeader({
   action,
 }: MarketPageHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
       <div>
-        <h1 className="text-3xl font-bold tracking-tighter text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tighter text-white">
           {title}
         </h1>
-        <p className="text-zinc-500 mt-2">{description}</p>
+        <p className="text-zinc-500 text-sm sm:text-base mt-1 sm:mt-2">
+          {description}
+        </p>
       </div>
       {action}
     </div>

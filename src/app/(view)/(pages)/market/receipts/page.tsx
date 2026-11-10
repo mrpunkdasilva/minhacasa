@@ -8,8 +8,8 @@ export default async function MarketReceiptsPage() {
   const safeReceipts = Array.isArray(receipts) ? receipts : [];
 
   return (
-    <div className="container mx-auto py-12 px-4 max-w-5xl">
-      <div className="flex flex-col gap-8">
+    <div className="container mx-auto py-6 sm:py-12 px-4 max-w-5xl">
+      <div className="flex flex-col gap-6 sm:gap-8">
         <MarketPageHeader
           title="Notas Fiscais"
           description="Cupons paulistas importados e o detalhamento de cada compra."

@@ -146,8 +146,8 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
       <ShoppingTotal items={safeItems} prices={prices} />
 
       {/* Filters Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-zinc-900/50 p-3 rounded-xl border border-zinc-800">
-        <div className="relative">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 bg-zinc-900/50 p-2 sm:p-3 rounded-xl border border-zinc-800">
+        <div className="relative col-span-2 sm:col-span-1">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500"
             size={16}

@@ -78,43 +78,46 @@ export default function ReceiptList({ receipts }: ReceiptListProps) {
       {safeReceipts.map((receipt) => (
         <div
           key={receipt.id}
-          className="group flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-5 transition-all hover:border-emerald-500/30 hover:shadow-[0_0_20px_rgba(16,185,129,0.05)]"
+          className="group flex flex-wrap items-center justify-between gap-3 sm:gap-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-4 sm:p-5 transition-all hover:border-emerald-500/30 hover:shadow-[0_0_20px_rgba(16,185,129,0.05)]"
         >
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <Store size={14} className="shrink-0 text-emerald-500" />
-              <h3 className="truncate text-lg font-semibold tracking-tight text-white">
+              <h3 className="truncate text-base sm:text-lg font-semibold tracking-tight text-white">
                 {receipt.storeName}
               </h3>
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-zinc-500">
+            <div className="mt-1 sm:mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-zinc-500">
               <span className="flex items-center gap-1">
                 <Calendar size={11} /> {formatDate(receipt.issuedAt)}
               </span>
               <span>{receipt.itemCount} itens</span>
               {receipt.paymentMethod && (
-                <span className="flex items-center gap-1">
+                <span className="hidden sm:flex items-center gap-1">
                   <CreditCard size={11} /> {receipt.paymentMethod}
                 </span>
               )}
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="text-right">
-              <span className="block text-lg font-black text-emerald-500">
+              <span className="block text-base sm:text-lg font-black text-emerald-500">
                 {formatCurrency(receipt.totalAmount.amount)}
               </span>
-              <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+              <span className="hidden sm:block text-[9px] font-bold uppercase tracking-widest text-zinc-600">
                 total
               </span>
             </div>
 
             <Link
               href={`/market/receipts/${receipt.id}`}
-              className="flex items-center gap-1 rounded-xl bg-zinc-800 px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-emerald-500 hover:text-black"
+              className="flex items-center gap-1 rounded-xl bg-zinc-800 p-2 sm:px-3 sm:py-2 sm:text-xs font-bold text-white transition-colors hover:bg-emerald-500 hover:text-black"
+              aria-label="Ver detalhes da nota"
             >
-              Detalhes <ArrowRight size={13} />
+              <ArrowRight size={13} className="sm:hidden" />
+              <span className="hidden sm:inline">Detalhes</span>
+              <ArrowRight size={13} className="hidden sm:inline" />
             </Link>
 
             <button

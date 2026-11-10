@@ -8,8 +8,8 @@ export default async function MarketInventoryPage() {
   const inventoryItems = safeItems.filter((item) => item.isInStock);
 
   return (
-    <div className="container mx-auto py-12 px-4 max-w-5xl">
-      <div className="flex flex-col gap-8">
+    <div className="container mx-auto py-6 sm:py-12 px-4 max-w-5xl">
+      <div className="flex flex-col gap-6 sm:gap-8">
         <MarketPageHeader
           title="Minha Despensa"
           description="O que já está em casa, com controle de estoque."

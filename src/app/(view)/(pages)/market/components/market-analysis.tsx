@@ -75,7 +75,6 @@ export default function MarketAnalysis({
           item.isInStock &&
           item.minimumQuantity !== undefined &&
           item.quantity !== undefined &&
-          item.minimumQuantity !== undefined &&
           item.quantity <= item.minimumQuantity,
       ),
     [marketItems],
@@ -152,9 +151,9 @@ export default function MarketAnalysis({
   const maxCategoryTotal = receiptMetrics.topCategories[0]?.[1] ?? 0;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6 sm:space-y-10">
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <MetricCard
           title="Gastos (Mês)"
           value={totalCurrentMonth}
@@ -189,7 +188,7 @@ export default function MarketAnalysis({
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Urgent Alerts Section */}
         <div className="space-y-4">
           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
@@ -197,7 +196,7 @@ export default function MarketAnalysis({
             Atenção
           </h3>
 
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 space-y-6">
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 sm:p-6 space-y-6">
             {lowStockItems.length === 0 && expiringSoonItems.length === 0 ? (
               <p className="text-zinc-500 text-center py-10">
                 Tudo sob controle na sua despensa! ✨
@@ -263,7 +262,7 @@ export default function MarketAnalysis({
           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
             <Package size={16} /> Resumo por Categoria
           </h3>
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-6">
             <div className="space-y-4">
               {/* Simplified distribution representation */}
               {Array.from(new Set(marketItems.map((i) => i.category)))
@@ -309,28 +308,28 @@ export default function MarketAnalysis({
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-3 sm:p-5">
             <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
-              Gasto em cupons
+              Gasto em notas
             </span>
-            <span className="mt-2 block text-2xl font-black font-mono text-emerald-500">
+            <span className="mt-2 block text-base sm:text-2xl font-black font-mono text-emerald-500">
               {formatCurrency(receiptMetrics.totalSpent)}
             </span>
           </div>
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-3 sm:p-5">
             <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
-              Itens comprados
+              Itens
             </span>
-            <span className="mt-2 block text-2xl font-black font-mono text-white">
+            <span className="mt-2 block text-base sm:text-2xl font-black font-mono text-white">
               {receiptMetrics.itemCount}
             </span>
           </div>
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-3 sm:p-5">
             <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
-              Cupons importados
+              Notas
             </span>
-            <span className="mt-2 block text-2xl font-black font-mono text-white">
+            <span className="mt-2 block text-base sm:text-2xl font-black font-mono text-white">
               {receiptMetrics.count}
             </span>
           </div>
@@ -338,7 +337,7 @@ export default function MarketAnalysis({
 
         {receiptMetrics.recent.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-4 sm:p-6">
               <p className="mb-4 text-xs font-bold uppercase text-zinc-500">
                 Onde você mais gastou
               </p>
@@ -366,7 +365,7 @@ export default function MarketAnalysis({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-4 sm:p-6">
               <p className="mb-4 text-xs font-bold uppercase text-zinc-500">
                 Últimos cupons
               </p>
@@ -395,7 +394,7 @@ export default function MarketAnalysis({
             </div>
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/20 p-10 text-center">
+          <div className="rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/20 p-6 sm:p-10 text-center">
             <p className="text-sm text-zinc-500">
               Importe sua primeira nota fiscal para ver as estatísticas.
             </p>
@@ -403,9 +402,9 @@ export default function MarketAnalysis({
         )}
       </div>
 
-      {/* Historical Purchases Table */}
+      {/* Historical Purchases */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
-        <div className="p-5 border-b border-zinc-800 flex justify-between items-center bg-zinc-800/20">
+        <div className="p-4 sm:p-5 border-b border-zinc-800 flex justify-between items-center bg-zinc-800/20">
           <h3 className="text-sm font-black uppercase tracking-widest text-white">
             Histórico de Gastos
           </h3>
@@ -417,7 +416,46 @@ export default function MarketAnalysis({
             })}
           </span>
         </div>
-        <div className="overflow-x-auto">
+
+        {/* Mobile: compact cards */}
+        <div className="md:hidden divide-y divide-zinc-800">
+          {marketExpenses.length === 0 ? (
+            <p className="px-4 py-10 text-center text-zinc-500 italic">
+              Nenhuma fatura registrada ainda.
+            </p>
+          ) : (
+            marketExpenses.map((expense) => (
+              <div key={expense.id} className="flex items-center gap-3 p-4">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold text-white">
+                    {expense.name}
+                  </p>
+                  <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
+                    {new Date(expense.dueDate).toLocaleDateString("pt-BR")}
+                  </p>
+                </div>
+                <span
+                  className={`text-[9px] px-2 py-1 rounded-full font-black uppercase tracking-tighter shrink-0 ${
+                    expense.status === InvoiceStatus.paid
+                      ? "bg-emerald-500/10 text-emerald-500"
+                      : "bg-amber-500/10 text-amber-500"
+                  }`}
+                >
+                  {expense.status === InvoiceStatus.paid ? "PAGO" : "PENDENTE"}
+                </span>
+                <span className="text-sm font-black text-white shrink-0">
+                  {expense.price.amount.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop: table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-black/40 text-zinc-500 text-[10px] uppercase font-black tracking-widest border-b border-zinc-800">
               <tr>
@@ -511,7 +549,7 @@ function MetricCard({
 
   return (
     <div
-      className={`bg-zinc-900 border ${metricColors[color]} rounded-2xl p-5 flex flex-col justify-between h-36 transition-all hover:scale-[1.02] shadow-xl`}
+      className={`bg-zinc-900 border ${metricColors[color]} rounded-2xl p-4 sm:p-5 sm:h-36 flex flex-col justify-between gap-3 transition-all hover:scale-[1.02] shadow-xl`}
     >
       <div className="flex justify-between items-start">
         <h3 className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">
@@ -525,7 +563,7 @@ function MetricCard({
       </div>
       <div>
         <span
-          className={`text-2xl font-black font-mono leading-none ${metricColors[color].split(" ")[0]}`}
+          className={`text-lg sm:text-2xl font-black font-mono leading-none ${metricColors[color].split(" ")[0]}`}
         >
           {formattedValue}
         </span>
