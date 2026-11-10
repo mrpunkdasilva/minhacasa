@@ -304,7 +304,7 @@ async function mergeItemsIntoPantry(
     const lastPrice = { amount: unitPrice, currency: "BRL" as const };
 
     if (existing) {
-      const baseQuantity = existing.isInStock ? existing.quantity : 0;
+      const baseQuantity = existing.isInStock ? (existing.quantity ?? 0) : 0;
 
       await marketRepository.update(existing.id, {
         quantity: baseQuantity + group.quantity,

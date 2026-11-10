@@ -68,19 +68,20 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {safeItems.map((item) => {
+            const quantity = item.quantity ?? 1;
             const minimum = item.minimumQuantity ?? 0;
             const hasMinimum = minimum > 0;
-            const isOutOfStock = item.quantity <= 0;
-            const isLowStock = hasMinimum && item.quantity <= minimum;
+            const isOutOfStock = quantity <= 0;
+            const isLowStock = hasMinimum && quantity <= minimum;
             const needsAttention = isLowStock || isOutOfStock;
             const reference = Math.max(
               hasMinimum ? minimum * 2 : 0,
-              item.quantity,
+              quantity,
               1,
             );
             const stockLevel = isOutOfStock
               ? 0
-              : Math.max(3, Math.min(100, (item.quantity / reference) * 100));
+              : Math.max(3, Math.min(100, (quantity / reference) * 100));
             const minimumPosition = hasMinimum
               ? Math.min(100, (minimum / reference) * 100)
               : null;
@@ -131,9 +132,9 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
                   <div className="bg-black/40 rounded-xl p-3 mb-4 flex items-center justify-between border border-zinc-800/50">
                     <button
                       onClick={() =>
-                        handleQuantityChange(item.id, item.quantity, -1)
+                        handleQuantityChange(item.id, quantity, -1)
                       }
-                      disabled={isPending || item.quantity <= 0}
+                      disabled={isPending || quantity <= 0}
                       className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-white hover:bg-zinc-700 transition-colors disabled:opacity-30"
                     >
                       <Minus size={14} />
@@ -141,7 +142,7 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
 
                     <div className="text-center">
                       <span className="block text-lg font-black text-white leading-none">
-                        {item.quantity}
+                        {quantity}
                       </span>
                       <span className="text-[9px] text-zinc-500 uppercase font-bold">
                         {MarketUnitAbbreviation[item.unit as MarketUnit] ??
@@ -150,9 +151,7 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
                     </div>
 
                     <button
-                      onClick={() =>
-                        handleQuantityChange(item.id, item.quantity, 1)
-                      }
+                      onClick={() => handleQuantityChange(item.id, quantity, 1)}
                       disabled={isPending}
                       className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all disabled:opacity-30"
                     >
@@ -174,9 +173,7 @@ export default function Inventory({ initialItems = [] }: InventoryProps) {
                             : "Nível de Estoque"}
                       </span>
                       <span className="text-zinc-400">
-                        {hasMinimum
-                          ? `Min: ${minimum}`
-                          : `Atual: ${item.quantity}`}
+                        {hasMinimum ? `Min: ${minimum}` : `Atual: ${quantity}`}
                       </span>
                     </div>
                     <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden relative">

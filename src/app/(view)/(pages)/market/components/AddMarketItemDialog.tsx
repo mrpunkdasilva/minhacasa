@@ -42,10 +42,13 @@ import { numberInputValue } from "@/app/infra/lib/utils";
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   category: z.nativeEnum(MarketCategory),
-  quantity: z.number().min(0.01, "Quantidade deve ser maior que zero"),
+  quantity: z
+    .number()
+    .min(0.01, "Quantidade deve ser maior que zero")
+    .optional(),
   unit: z.nativeEnum(MarketUnit),
   priority: z.nativeEnum(MarketPriority),
-  lastPrice: z.number().min(0, "Preço não pode ser negativo"),
+  lastPrice: z.number().min(0, "Preço não pode ser negativo").optional(),
   shouldMoveToInventory: z.boolean(),
   location: z.enum(["shopping", "inventory"]),
 });
@@ -59,7 +62,7 @@ export default function AddMarketItemDialog() {
     defaultValues: {
       name: "",
       category: MarketCategory.GROCERY,
-      quantity: 1,
+      quantity: undefined,
       unit: MarketUnit.UN,
       priority: MarketPriority.MEDIUM,
       lastPrice: undefined,
@@ -73,10 +76,10 @@ export default function AddMarketItemDialog() {
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("category", values.category);
-    formData.append("quantity", values.quantity.toString());
+    formData.append("quantity", values.quantity?.toString() ?? "");
     formData.append("unit", values.unit);
     formData.append("priority", values.priority);
-    formData.append("lastPrice", values.lastPrice.toString());
+    formData.append("lastPrice", values.lastPrice?.toString() ?? "");
     formData.append(
       "shouldMoveToInventory",
       values.shouldMoveToInventory.toString(),
@@ -147,11 +150,17 @@ export default function AddMarketItemDialog() {
                 name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quantidade</FormLabel>
+                    <FormLabel>
+                      Quantidade{" "}
+                      <span className="text-zinc-500 normal-case font-normal">
+                        (opcional)
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         step="0.01"
+                        placeholder="Ex: 2"
                         className="bg-black border-zinc-800 text-white h-12"
                         {...field}
                         onChange={(e) =>

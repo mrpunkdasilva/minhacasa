@@ -12,7 +12,7 @@ import {
 
 interface ShoppingTotalProps {
   items: MarketItem[];
-  prices: Record<string, number>;
+  prices: Record<string, number | null>;
 }
 
 const formatCurrency = (value: number) =>
@@ -20,8 +20,11 @@ const formatCurrency = (value: number) =>
 
 export default function ShoppingTotal({ items, prices }: ShoppingTotalProps) {
   const { total, pendingTotal, pricedCount, missingPrice } = useMemo(() => {
-    const resolve = (item: MarketItem) =>
-      prices[item.id] ?? item.lastPrice?.amount;
+    const resolve = (item: MarketItem) => {
+      const override = prices[item.id];
+      if (override === null) return undefined;
+      return override ?? item.lastPrice?.amount;
+    };
 
     let total = 0;
     let pendingTotal = 0;
@@ -35,7 +38,7 @@ export default function ShoppingTotal({ items, prices }: ShoppingTotalProps) {
         continue;
       }
       pricedCount += 1;
-      const lineTotal = unitPrice * item.quantity;
+      const lineTotal = unitPrice * (item.quantity ?? 1);
       total += lineTotal;
       if (!item.isBought) pendingTotal += lineTotal;
     }
@@ -70,11 +73,11 @@ export default function ShoppingTotal({ items, prices }: ShoppingTotalProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {missingPrice > 0 ? (
-            <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
-              <AlertTriangle size={14} className="text-amber-500 shrink-0" />
-              <span className="text-[10px] font-black uppercase text-amber-500">
+            <div className="flex items-center gap-2 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2">
+              <AlertTriangle size={14} className="text-zinc-400 shrink-0" />
+              <span className="text-[10px] font-black uppercase text-zinc-400">
                 {missingPrice} sem preço
               </span>
             </div>

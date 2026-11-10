@@ -10,7 +10,7 @@ export interface MarketItem extends BaseEntity {
   houseId: string;
   name: string;
   category: MarketCategory;
-  quantity: number;
+  quantity?: number;
   minimumQuantity?: number;
   unit: MarketUnit;
   priority?: MarketPriority;

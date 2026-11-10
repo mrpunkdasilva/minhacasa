@@ -53,12 +53,14 @@ export async function addMarketItem(formData: FormData) {
 
   const name = formData.get("name") as string;
   const category = formData.get("category") as MarketCategory;
-  const quantity = parseFloat(formData.get("quantity") as string);
+  const quantityRaw = (formData.get("quantity") as string) || "";
+  const quantity =
+    quantityRaw.trim() === "" ? undefined : parseFloat(quantityRaw);
   const unit = formData.get("unit") as MarketUnit;
   const priority = formData.get("priority") as MarketPriority;
-  const lastPriceAmount = parseFloat(
-    (formData.get("lastPrice") as string) || "0",
-  );
+  const lastPriceRaw = (formData.get("lastPrice") as string) || "";
+  const lastPriceAmount =
+    lastPriceRaw.trim() === "" ? undefined : parseFloat(lastPriceRaw);
   const shouldMoveToInventory =
     formData.get("shouldMoveToInventory") === "true";
   const isShoppingListItem = formData.get("isShoppingListItem") === "true";
@@ -72,7 +74,9 @@ export async function addMarketItem(formData: FormData) {
       quantity,
       unit,
       priority,
-      lastPrice: { amount: lastPriceAmount, currency: "BRL" },
+      lastPrice: lastPriceAmount
+        ? { amount: lastPriceAmount, currency: "BRL" }
+        : undefined,
       isBought: false,
       isInStock: !isShoppingListItem,
       shouldMoveToInventory,
@@ -112,7 +116,7 @@ export async function toggleItemBought(id: string, isBought: boolean) {
   }
 }
 
-export async function updateMarketItemQuantity(id: string, quantity: number) {
+export async function updateMarketItemQuantity(id: string, quantity?: number) {
   const user = await getUserContext();
   if (!user) throw new Error("Usuário não autenticado.");
 
@@ -120,7 +124,10 @@ export async function updateMarketItemQuantity(id: string, quantity: number) {
     const item = await marketRepository.findById(id);
     if (!item) throw new Error("Item não encontrado.");
 
-    const newQuantity = Math.max(0, quantity);
+    const newQuantity =
+      quantity === undefined || !Number.isFinite(quantity)
+        ? undefined
+        : Math.max(0, quantity);
 
     await marketRepository.update(id, {
       quantity: newQuantity,
@@ -135,19 +142,23 @@ export async function updateMarketItemQuantity(id: string, quantity: number) {
   }
 }
 
-export async function setMarketItemPrice(id: string, amount: number) {
+export async function setMarketItemPrice(id: string, amount?: number) {
   const user = await getUserContext();
   if (!user) throw new Error("Usuário não autenticado.");
 
   try {
-    if (!Number.isFinite(amount) || amount < 0) {
-      throw new Error("Preço inválido.");
-    }
+    if (amount === undefined) {
+      await marketRepository.unsetLastPrice(id);
+    } else {
+      if (!Number.isFinite(amount) || amount < 0) {
+        throw new Error("Preço inválido.");
+      }
 
-    await marketRepository.update(id, {
-      lastPrice: { amount, currency: "BRL" },
-      updatedAt: new Date(),
-    });
+      await marketRepository.update(id, {
+        lastPrice: { amount, currency: "BRL" },
+        updatedAt: new Date(),
+      });
+    }
 
     revalidateMarket();
     return { success: true };

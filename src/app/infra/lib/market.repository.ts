@@ -59,6 +59,20 @@ export class MarketRepository {
     }
   }
 
+  async unsetLastPrice(id: string): Promise<void> {
+    try {
+      const collection = await this.getCollection();
+      await collection.updateOne(
+        { id },
+        { $unset: { lastPrice: "" }, $set: { updatedAt: new Date() } },
+      );
+      logger.info({ itemId: id }, "Market item lastPrice unset");
+    } catch (error) {
+      logger.error({ error, id }, "Error unsetting market item price");
+      throw new Error("Falha ao remover o preço do item de mercado.");
+    }
+  }
+
   async delete(id: string): Promise<void> {
     try {
       const collection = await this.getCollection();

@@ -41,11 +41,11 @@ import { numberInputValue } from "@/app/infra/lib/utils";
 const formSchema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   category: z.nativeEnum(MarketCategory),
-  quantity: z.number().min(0),
-  minimumQuantity: z.number().min(0),
+  quantity: z.number().min(0).optional(),
+  minimumQuantity: z.number().min(0).optional(),
   unit: z.nativeEnum(MarketUnit),
   priority: z.nativeEnum(MarketPriority),
-  lastPrice: z.number().min(0),
+  lastPrice: z.number().min(0).optional(),
   expirationDate: z
     .string()
     .optional()
@@ -68,10 +68,10 @@ export default function EditMarketItemDialog({
       name: item.name,
       category: item.category,
       quantity: item.quantity,
-      minimumQuantity: item.minimumQuantity || 0,
+      minimumQuantity: item.minimumQuantity,
       unit: item.unit,
       priority: item.priority || MarketPriority.MEDIUM,
-      lastPrice: item.lastPrice?.amount || 0,
+      lastPrice: item.lastPrice?.amount,
       expirationDate: item.expirationDate
         ? new Date(item.expirationDate).toISOString().split("T")[0]
         : "",
@@ -83,7 +83,9 @@ export default function EditMarketItemDialog({
     try {
       await updateMarketItem(item.id, {
         ...values,
-        lastPrice: { amount: values.lastPrice, currency: "BRL" },
+        lastPrice: values.lastPrice
+          ? { amount: values.lastPrice, currency: "BRL" }
+          : undefined,
         expirationDate: values.expirationDate
           ? new Date(values.expirationDate)
           : undefined,
@@ -134,7 +136,12 @@ export default function EditMarketItemDialog({
                 name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Qtd. Atual</FormLabel>
+                    <FormLabel>
+                      Qtd. Atual{" "}
+                      <span className="text-zinc-500 normal-case font-normal">
+                        (opcional)
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -155,7 +162,12 @@ export default function EditMarketItemDialog({
                 name="minimumQuantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Estoque Mín.</FormLabel>
+                    <FormLabel>
+                      Estoque Mín.{" "}
+                      <span className="text-zinc-500 normal-case font-normal">
+                        (opcional)
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"

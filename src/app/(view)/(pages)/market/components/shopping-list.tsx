@@ -43,7 +43,7 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
-  const [prices, setPrices] = useState<Record<string, number>>({});
+  const [prices, setPrices] = useState<Record<string, number | null>>({});
 
   // Memoised because it feeds a dependency array: a fresh [] on every render
   // would defeat the useMemo below and re-filter on each keystroke.
@@ -52,8 +52,12 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
     [initialItems],
   );
 
-  const getUnitPrice = (item: MarketItem) =>
-    prices[item.id] ?? item.lastPrice?.amount;
+  // null means the user cleared the price: it is optional and stays empty.
+  const getUnitPrice = (item: MarketItem) => {
+    const override = prices[item.id];
+    if (override === null) return undefined;
+    return override ?? item.lastPrice?.amount;
+  };
 
   const handleToggleBought = async (id: string, isBought: boolean) => {
     startTransition(async () => {
@@ -63,22 +67,18 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
 
   const handlePriceChange = (id: string, raw: string) => {
     const parsed = parseFloat(raw.replace(",", "."));
-    setPrices((current) => {
-      const next = { ...current };
-      if (!raw.trim() || !Number.isFinite(parsed) || parsed < 0) {
-        delete next[id];
-        return next;
-      }
-      next[id] = parsed;
-      return next;
-    });
+    setPrices((current) => ({
+      ...current,
+      [id]:
+        !raw.trim() || !Number.isFinite(parsed) || parsed < 0 ? null : parsed,
+    }));
   };
 
   const handlePriceCommit = (id: string) => {
     const amount = prices[id];
     if (amount === undefined) return;
     startTransition(async () => {
-      await setMarketItemPrice(id, amount);
+      await setMarketItemPrice(id, amount ?? undefined);
     });
   };
 
@@ -137,7 +137,7 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
           {filteredItems.length}{" "}
           {filteredItems.length === 1 ? "item encontrado" : "itens encontrados"}
         </p>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <ImportReceiptButton label="Importar nota fiscal" />
           <AddMarketItemDialog />
         </div>
@@ -219,7 +219,7 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
           filteredItems.map((item) => (
             <div
               key={item.id}
-              className={`group flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl border transition-all duration-300 ${
+              className={`group flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl border transition-all duration-300 min-w-0 overflow-hidden ${
                 item.isBought
                   ? "bg-zinc-900/30 border-zinc-900/50 opacity-50 scale-[0.98]"
                   : "bg-zinc-900 border-zinc-800 hover:border-emerald-500/30 hover:shadow-[0_0_20px_rgba(16,185,129,0.05)]"
@@ -267,27 +267,28 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
                     {getUnitPrice(item) !== undefined && (
                       <span className="text-[10px] text-zinc-500 font-bold">
                         Total:{" "}
-                        {(getUnitPrice(item)! * item.quantity).toLocaleString(
-                          "pt-BR",
-                          {
-                            style: "currency",
-                            currency: "BRL",
-                          },
-                        )}
+                        {(
+                          getUnitPrice(item)! * (item.quantity ?? 1)
+                        ).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
                       </span>
                     )}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 sm:gap-3 pl-9 sm:pl-0">
-                <span className="text-xs sm:text-sm font-black text-white bg-zinc-800 px-2 sm:px-3 py-1 rounded-lg">
-                  {item.quantity}{" "}
-                  <span className="text-zinc-500 text-[10px] ml-1 uppercase">
-                    {MarketUnitAbbreviation[item.unit as MarketUnit] ??
-                      item.unit.split(" ")[0]}
+              <div className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-3 pl-9 sm:pl-0 min-w-0">
+                {item.quantity !== undefined && (
+                  <span className="whitespace-nowrap text-xs sm:text-sm font-black text-white bg-zinc-800 px-2 sm:px-3 py-1 rounded-lg">
+                    {item.quantity}{" "}
+                    <span className="text-zinc-500 text-[10px] ml-1 uppercase">
+                      {MarketUnitAbbreviation[item.unit as MarketUnit] ??
+                        item.unit.split(" ")[0]}
+                    </span>
                   </span>
-                </span>
+                )}
                 <div className="flex items-center gap-1">
                   <span className="text-[9px] text-zinc-600 font-bold uppercase">
                     R$
@@ -295,16 +296,16 @@ export default function ShoppingList({ initialItems = [] }: ShoppingListProps) {
                   <input
                     type="text"
                     inputMode="decimal"
-                    placeholder="preço"
+                    placeholder="preço (opcional)"
                     value={getUnitPrice(item)?.toString() ?? ""}
                     onChange={(e) => handlePriceChange(item.id, e.target.value)}
                     onBlur={() => handlePriceCommit(item.id)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") e.currentTarget.blur();
                     }}
-                    className={`w-16 sm:w-20 text-right text-[11px] font-black bg-transparent border-b outline-none transition-colors focus:border-emerald-500 ${
+                    className={`w-16 sm:w-24 text-right text-[11px] font-black bg-transparent border-b outline-none transition-colors focus:border-emerald-500 ${
                       getUnitPrice(item) === undefined
-                        ? "border-amber-500/50 text-amber-500 placeholder:text-zinc-700"
+                        ? "border-zinc-700 text-zinc-400 placeholder:text-zinc-600"
                         : "border-zinc-700 text-white"
                     }`}
                   />

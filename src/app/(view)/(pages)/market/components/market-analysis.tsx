@@ -74,6 +74,8 @@ export default function MarketAnalysis({
         (item) =>
           item.isInStock &&
           item.minimumQuantity !== undefined &&
+          item.quantity !== undefined &&
+          item.minimumQuantity !== undefined &&
           item.quantity <= item.minimumQuantity,
       ),
     [marketItems],
@@ -98,7 +100,8 @@ export default function MarketAnalysis({
       marketItems
         .filter((item) => !item.isInStock && !item.isBought && item.lastPrice)
         .reduce(
-          (acc, item) => acc + (item.lastPrice?.amount || 0) * item.quantity,
+          (acc, item) =>
+            acc + (item.lastPrice?.amount || 0) * (item.quantity ?? 1),
           0,
         ),
     [marketItems],
@@ -216,7 +219,7 @@ export default function MarketAnalysis({
                             {item.name}
                           </span>
                           <span className="text-xs font-bold text-zinc-500">
-                            {item.quantity}{" "}
+                            {item.quantity ?? 1}{" "}
                             {MarketUnitAbbreviation[item.unit as MarketUnit] ??
                               item.unit.split(" ")[0]}
                           </span>
