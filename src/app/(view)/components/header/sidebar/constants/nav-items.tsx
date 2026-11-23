@@ -14,12 +14,13 @@ export const staticNavItems = [
   { title: "Dashboard", href: "/", icon: LayoutDashboard },
   {
     title: "Saúde",
-    href: "/health/alerts",
+    href: "/health/alarms",
     icon: HeartPulse,
     subItems: [
-      { title: "Alertas", href: "/health/alerts" },
+      { title: "Alarmes", href: "/health/alarms" },
       { title: "Medicamentos", href: "/health/medications" },
       { title: "Agenda", href: "/health/appointments" },
+      { title: "Estatísticas", href: "/health/statistics" },
     ],
   },
   {

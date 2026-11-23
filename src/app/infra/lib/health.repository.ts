@@ -2,6 +2,9 @@ import { Collection } from "mongodb";
 import { Doc, getDb } from "@/app/infra/lib/mongodb";
 import {
   Medication,
+  MedicationAlarm,
+  MedicationAlarmOccurrence,
+  AlarmOccurrenceStatus,
   DoseLog,
   HealthAppointment,
 } from "@/app/domain/entity/health/health.entities";
@@ -9,6 +12,8 @@ import logger from "./logger";
 
 export class HealthRepository {
   private medicationsCollection = "medications";
+  private alarmsCollection = "health_medication_alarms";
+  private occurrencesCollection = "health_alarm_occurrences";
   private dosesCollection = "health_dose_logs";
   private appointmentsCollection = "health_appointments";
 
@@ -79,10 +84,208 @@ export class HealthRepository {
       const db = await getDb();
       await db.collection(this.medicationsCollection).deleteOne({ id });
       await db.collection(this.dosesCollection).deleteMany({ medId: id });
+      await db
+        .collection(this.occurrencesCollection)
+        .deleteMany({ medicationId: id });
+      await db
+        .collection(this.alarmsCollection)
+        .deleteMany({ medicationId: id });
       logger.info({ medId: id }, "Medication deleted");
     } catch (error) {
       logger.error({ error, id }, "Error deleting medication");
       throw new Error("Falha ao excluir medicamento.");
+    }
+  }
+
+  // Medication alarms
+  async findAllAlarmsByHouseId(houseId: string): Promise<MedicationAlarm[]> {
+    try {
+      const collection = await this.getCollection<MedicationAlarm>(
+        this.alarmsCollection,
+      );
+      return collection.find({ houseId }).sort({ time: 1 }).toArray();
+    } catch (error) {
+      logger.error({ error, houseId }, "Error finding medication alarms");
+      return [];
+    }
+  }
+
+  async findAlarmById(id: string): Promise<MedicationAlarm | null> {
+    try {
+      const collection = await this.getCollection<MedicationAlarm>(
+        this.alarmsCollection,
+      );
+      return collection.findOne({ id });
+    } catch (error) {
+      logger.error({ error, id }, "Error finding medication alarm by id");
+      return null;
+    }
+  }
+
+  async createAlarm(alarm: MedicationAlarm): Promise<void> {
+    try {
+      const collection = await this.getCollection<MedicationAlarm>(
+        this.alarmsCollection,
+      );
+      await collection.insertOne(alarm);
+      logger.info(
+        { alarmId: alarm.id, houseId: alarm.houseId },
+        "Medication alarm created",
+      );
+    } catch (error) {
+      logger.error({ error, alarm }, "Error creating medication alarm");
+      throw new Error("Falha ao criar alarme.");
+    }
+  }
+
+  async updateAlarm(id: string, data: Partial<MedicationAlarm>): Promise<void> {
+    try {
+      const collection = await this.getCollection<MedicationAlarm>(
+        this.alarmsCollection,
+      );
+      await collection.updateOne(
+        { id },
+        { $set: { ...data, updatedAt: new Date() } },
+      );
+    } catch (error) {
+      logger.error({ error, id, data }, "Error updating medication alarm");
+      throw new Error("Falha ao atualizar alarme.");
+    }
+  }
+
+  async deleteAlarm(id: string): Promise<void> {
+    try {
+      const db = await getDb();
+      await db.collection(this.alarmsCollection).deleteOne({ id });
+      await db
+        .collection(this.occurrencesCollection)
+        .updateMany({ alarmId: id }, { $unset: { alarmId: "" } });
+    } catch (error) {
+      logger.error({ error, id }, "Error deleting medication alarm");
+      throw new Error("Falha ao excluir alarme.");
+    }
+  }
+
+  // Persisted alarm occurrences (one per dose)
+  async findAlarmOccurrencesByHouseAndDate(
+    houseId: string,
+    date: string,
+  ): Promise<MedicationAlarmOccurrence[]> {
+    try {
+      const collection = await this.getCollection<MedicationAlarmOccurrence>(
+        this.occurrencesCollection,
+      );
+      return collection.find({ houseId, date }).sort({ time: 1 }).toArray();
+    } catch (error) {
+      logger.error({ error, houseId, date }, "Error finding alarm occurrences");
+      return [];
+    }
+  }
+
+  async findAlarmOccurrenceById(
+    id: string,
+  ): Promise<MedicationAlarmOccurrence | null> {
+    try {
+      const collection = await this.getCollection<MedicationAlarmOccurrence>(
+        this.occurrencesCollection,
+      );
+      return collection.findOne({ id });
+    } catch (error) {
+      logger.error({ error, id }, "Error finding alarm occurrence by id");
+      return null;
+    }
+  }
+
+  async findAlarmOccurrenceByKey(
+    medicationId: string,
+    date: string,
+    time: string,
+  ): Promise<MedicationAlarmOccurrence | null> {
+    try {
+      const collection = await this.getCollection<MedicationAlarmOccurrence>(
+        this.occurrencesCollection,
+      );
+      return collection.findOne({ medicationId, date, time });
+    } catch (error) {
+      logger.error(
+        { error, medicationId, date, time },
+        "Error finding alarm occurrence",
+      );
+      return null;
+    }
+  }
+
+  async upsertAlarmOccurrence(
+    occurrence: MedicationAlarmOccurrence,
+  ): Promise<void> {
+    try {
+      const collection = await this.getCollection<MedicationAlarmOccurrence>(
+        this.occurrencesCollection,
+      );
+      await collection.updateOne(
+        {
+          houseId: occurrence.houseId,
+          medicationId: occurrence.medicationId,
+          date: occurrence.date,
+          time: occurrence.time,
+        },
+        { $setOnInsert: occurrence },
+        { upsert: true },
+      );
+    } catch (error) {
+      logger.error({ error, occurrence }, "Error creating alarm occurrence");
+      throw new Error("Falha ao criar alarme.");
+    }
+  }
+
+  async updateAlarmOccurrenceStatus(
+    medicationId: string,
+    date: string,
+    time: string,
+    status: AlarmOccurrenceStatus,
+  ): Promise<void> {
+    try {
+      const collection = await this.getCollection<MedicationAlarmOccurrence>(
+        this.occurrencesCollection,
+      );
+      await collection.updateOne(
+        { medicationId, date, time },
+        { $set: { status, updatedAt: new Date() } },
+      );
+    } catch (error) {
+      logger.error(
+        { error, medicationId, date, time },
+        "Error updating alarm occurrence",
+      );
+      throw new Error("Falha ao atualizar alarme.");
+    }
+  }
+
+  async deleteAlarmOccurrence(id: string): Promise<void> {
+    try {
+      const collection = await this.getCollection<MedicationAlarmOccurrence>(
+        this.occurrencesCollection,
+      );
+      await collection.updateOne(
+        { id },
+        { $set: { status: "dismissed", updatedAt: new Date() } },
+      );
+    } catch (error) {
+      logger.error({ error, id }, "Error deleting alarm occurrence");
+      throw new Error("Falha ao excluir alarme.");
+    }
+  }
+
+  async deleteStaleAlarmOccurrences(ids: string[]): Promise<void> {
+    if (ids.length === 0) return;
+    try {
+      const collection = await this.getCollection<MedicationAlarmOccurrence>(
+        this.occurrencesCollection,
+      );
+      await collection.deleteMany({ id: { $in: ids } });
+    } catch (error) {
+      logger.error({ error, ids }, "Error deleting stale alarm occurrences");
+      throw new Error("Falha ao limpar alarmes antigos.");
     }
   }
 

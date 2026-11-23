@@ -1,7 +1,11 @@
 import {
   Medication,
+  MedicationAlarm,
+  MedicationAlarmOccurrence,
   DoseLog,
 } from "@/app/domain/entity/health/health.entities";
+
+export const WEEKDAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export function toDateKey(date: Date): string {
   const d = new Date(date);
@@ -32,27 +36,90 @@ export interface DoseSlot {
   time: string;
   taken: boolean;
   overdue: boolean;
+  alarm?: MedicationAlarm;
+  occurrenceId?: string;
+}
+
+export function alarmRunsOnDate(
+  alarm: MedicationAlarm,
+  date: Date = new Date(),
+): boolean {
+  return alarm.enabled && alarm.daysOfWeek.includes(date.getDay());
+}
+
+export function alarmsForMedicationOnDate(
+  alarms: MedicationAlarm[],
+  medicationId: string,
+  date: Date = new Date(),
+): MedicationAlarm[] {
+  return alarms.filter(
+    (alarm) =>
+      alarm.medicationId === medicationId && alarmRunsOnDate(alarm, date),
+  );
+}
+
+export function formatDaysOfWeek(days: number[]): string {
+  const sorted = [...days].sort((a, b) => a - b);
+  if (sorted.length === 7) return "Todos os dias";
+  if (
+    sorted.length === 5 &&
+    [1, 2, 3, 4, 5].every((day) => sorted.includes(day))
+  )
+    return "Dias úteis";
+  if (sorted.length === 0) return "-";
+  return sorted.map((day) => WEEKDAY_LABELS[day]).join(", ");
 }
 
 /**
- * Doses of today from the schedule computed by the API. The front only maps
- * the pre-calculated times together with the taken logs for display.
+ * Doses of today. When persisted occurrences are provided they are the source
+ * of truth: each one is an alarm that can be removed individually, even when
+ * it is overdue. Otherwise the schedule is computed on the fly as a fallback.
  */
 export function getTodayDoseSlots(
   medications: Medication[],
   doseLogs: DoseLog[],
+  alarms: MedicationAlarm[] = [],
+  occurrences?: MedicationAlarmOccurrence[],
 ): DoseSlot[] {
-  const date = toDateKey(new Date());
+  const now = new Date();
+  const date = toDateKey(now);
   const takenSet = new Set(
     doseLogs
       .filter((log) => log.takenAt)
       .map((log) => `${log.medId}|${log.date}|${log.time}`),
   );
+  const activeMeds = medications.filter((med) => med.active);
+  const medById = new Map(activeMeds.map((med) => [med.id, med]));
 
-  return medications
-    .filter((med) => med.active)
-    .flatMap((med) => {
-      const times = dayTimes(med);
+  let slots: DoseSlot[];
+  if (occurrences) {
+    slots = occurrences
+      .filter(
+        (occurrence) =>
+          occurrence.date === date &&
+          occurrence.status !== "dismissed" &&
+          medById.has(occurrence.medicationId),
+      )
+      .map((occurrence) => ({
+        med: medById.get(occurrence.medicationId)!,
+        date: occurrence.date,
+        time: occurrence.time,
+        taken:
+          occurrence.status === "taken" ||
+          takenSet.has(
+            `${occurrence.medicationId}|${occurrence.date}|${occurrence.time}`,
+          ),
+        overdue: false,
+        alarm: alarms.find((alarm) => alarm.id === occurrence.alarmId),
+        occurrenceId: occurrence.id,
+      }));
+  } else {
+    slots = activeMeds.flatMap((med) => {
+      const dayAlarms = alarmsForMedicationOnDate(alarms, med.id, now);
+      const times = dayAlarms.length
+        ? dayAlarms.map((alarm) => alarm.time)
+        : dayTimes(med);
+
       return times.map((time) => {
         const slot: DoseSlot = {
           med,
@@ -60,10 +127,20 @@ export function getTodayDoseSlots(
           time,
           taken: takenSet.has(`${med.id}|${date}|${time}`),
           overdue: false,
+          alarm: dayAlarms.find((alarm) => alarm.time === time),
         };
         return slot;
       });
-    })
+    });
+  }
+
+  return slots
+    .filter(
+      (slot, index) =>
+        slots.findIndex(
+          (other) => other.med.id === slot.med.id && other.time === slot.time,
+        ) === index,
+    )
     .sort((a, b) => a.time.localeCompare(b.time));
 }
 

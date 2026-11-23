@@ -1,8 +1,10 @@
 import HealthPageHeader from "../components/health-page-header";
 import MedicationList from "../components/medication-list";
 import {
+  getAlarmOccurrences,
   getMedications,
   getDoseLogs,
+  getMedicationAlarms,
 } from "@/app/infra/actions/health.actions";
 import { getPets } from "@/app/infra/actions/pet.actions";
 import { getHouseMembers } from "@/app/infra/actions/house.actions";
@@ -22,6 +24,9 @@ export default async function HealthMedicationsPage() {
     id: member.id,
     name: member.name,
   }));
+  const alarms = await getMedicationAlarms();
+  const safeAlarms = Array.isArray(alarms) ? alarms : [];
+  const occurrences = await getAlarmOccurrences();
 
   return (
     <div className="container mx-auto py-12 px-4 max-w-5xl">
@@ -34,6 +39,8 @@ export default async function HealthMedicationsPage() {
         <MedicationList
           medications={safeMedications}
           doseLogs={safeLogs}
+          alarms={safeAlarms}
+          occurrences={occurrences}
           pets={pets}
           houseMembers={houseMembers}
         />

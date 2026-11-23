@@ -6,6 +6,8 @@ import { userRepository } from "@/app/infra/lib/user.repository";
 import { healthRepository } from "@/app/infra/lib/health.repository";
 import {
   Medication,
+  MedicationAlarm,
+  MedicationAlarmOccurrence,
   DoseLog,
   HealthAppointment,
 } from "@/app/domain/entity/health/health.entities";
@@ -19,15 +21,22 @@ import logger from "@/app/infra/lib/logger";
 import { getDoseTimesForDate } from "@/app/infra/lib/health-schedule";
 
 const HEALTH_ROUTES = [
-  "/health/alerts",
+  "/health/alarms",
   "/health/medications",
   "/health/appointments",
+  "/health/statistics",
 ] as const;
 
 function revalidateHealth() {
   for (const route of HEALTH_ROUTES) {
     revalidatePath(route);
   }
+}
+
+function todayKey(date: Date): string {
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
 }
 
 /** Medication already resolved with the dose times computed for today. */
@@ -54,6 +63,25 @@ function parseOptionalDate(raw: FormDataEntryValue | null): Date | undefined {
   if (!value) return undefined;
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? undefined : date;
+}
+
+function parseDaysOfWeek(formData: FormData): number[] {
+  const days = formData
+    .getAll("daysOfWeek")
+    .map((value) => parseInt(String(value), 10))
+    .filter((day) => Number.isInteger(day) && day >= 0 && day <= 6);
+  return [...new Set(days)].sort((a, b) => a - b);
+}
+
+async function getOwnedMedication(medicationId: string, houseId: string) {
+  if (!medicationId) return null;
+  const medication = await healthRepository.findMedicationById(medicationId);
+  return medication?.houseId === houseId ? medication : null;
+}
+
+async function getOwnedAlarm(id: string, houseId: string) {
+  const alarm = await healthRepository.findAlarmById(id);
+  return alarm?.houseId === houseId ? alarm : null;
 }
 
 export async function getMedications(): Promise<MedicationWithToday[]> {
@@ -83,6 +111,107 @@ export async function getAppointments(): Promise<HealthAppointment[]> {
   if (!user) return [];
 
   return healthRepository.findAllAppointmentsByHouseId(user.houseId);
+}
+
+export async function getMedicationAlarms(): Promise<MedicationAlarm[]> {
+  const user = await getUserContext();
+  if (!user) return [];
+
+  return healthRepository.findAllAlarmsByHouseId(user.houseId);
+}
+
+/**
+ * Every dose shown in the UI is stored as its own alarm occurrence, so any
+ * occurrence (including overdue ones) can be edited or removed individually.
+ */
+export async function getAlarmOccurrences(): Promise<
+  MedicationAlarmOccurrence[]
+> {
+  const user = await getUserContext();
+  if (!user) return [];
+
+  const medications = await healthRepository.findAllMedicationsByHouseId(
+    user.houseId,
+  );
+  const alarms = await healthRepository.findAllAlarmsByHouseId(user.houseId);
+  const now = new Date();
+  const date = todayKey(now);
+  const logs = await healthRepository.findDoseLogsByMedIds(
+    medications.map((med) => med.id),
+  );
+  const takenSet = new Set(
+    logs.filter((log) => log.takenAt).map((log) => `${log.medId}|${log.time}`),
+  );
+
+  const desired = new Map<
+    string,
+    { medicationId: string; time: string; alarmId?: string; note?: string }
+  >();
+  for (const med of medications.filter((item) => item.active)) {
+    const dayAlarms = alarms.filter(
+      (alarm) =>
+        alarm.enabled &&
+        alarm.medicationId === med.id &&
+        alarm.daysOfWeek.includes(now.getDay()),
+    );
+    const times = dayAlarms.length
+      ? dayAlarms.map((alarm) => alarm.time)
+      : getDoseTimesForDate(med, now);
+
+    for (const time of times) {
+      const alarm = dayAlarms.find((item) => item.time === time);
+      desired.set(`${med.id}|${time}`, {
+        medicationId: med.id,
+        time,
+        alarmId: alarm?.id,
+        note: alarm?.note,
+      });
+    }
+  }
+
+  const existing = await healthRepository.findAlarmOccurrencesByHouseAndDate(
+    user.houseId,
+    date,
+  );
+  const staleIds = existing
+    .filter(
+      (occurrence) =>
+        occurrence.status !== "dismissed" &&
+        !desired.has(`${occurrence.medicationId}|${occurrence.time}`),
+    )
+    .map((occurrence) => occurrence.id);
+
+  if (staleIds.length > 0) {
+    await healthRepository.deleteStaleAlarmOccurrences(staleIds);
+  }
+
+  const existingKeys = new Set(
+    existing.map(
+      (occurrence) => `${occurrence.medicationId}|${occurrence.time}`,
+    ),
+  );
+  for (const [key, item] of desired) {
+    if (existingKeys.has(key)) continue;
+    await healthRepository.upsertAlarmOccurrence({
+      id: crypto.randomUUID(),
+      houseId: user.houseId,
+      medicationId: item.medicationId,
+      alarmId: item.alarmId,
+      date,
+      time: item.time,
+      status: takenSet.has(`${item.medicationId}|${item.time}`)
+        ? "taken"
+        : "pending",
+      note: item.note,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
+  return healthRepository.findAlarmOccurrencesByHouseAndDate(
+    user.houseId,
+    date,
+  );
 }
 
 export async function addMedication(formData: FormData) {
@@ -202,6 +331,137 @@ export async function deleteMedication(id: string) {
   }
 }
 
+export async function addMedicationAlarm(formData: FormData) {
+  const user = await getUserContext();
+  if (!user) throw new Error("Usuário não autenticado.");
+
+  const medicationId = (formData.get("medicationId") as string)?.trim();
+  if (!(await getOwnedMedication(medicationId, user.houseId))) {
+    return { success: false, error: "Selecione um medicamento válido." };
+  }
+
+  const time = parseTime(formData.get("time"));
+  if (!time) return { success: false, error: "Informe o horário do alarme." };
+
+  const daysOfWeek = parseDaysOfWeek(formData);
+  if (daysOfWeek.length === 0) {
+    return { success: false, error: "Selecione pelo menos um dia da semana." };
+  }
+
+  try {
+    const alarm: MedicationAlarm = {
+      id: crypto.randomUUID(),
+      houseId: user.houseId,
+      medicationId,
+      time,
+      daysOfWeek,
+      enabled: formData.get("enabled") !== "false",
+      note: (formData.get("note") as string)?.trim() || undefined,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    await healthRepository.createAlarm(alarm);
+    revalidateHealth();
+    return { success: true };
+  } catch (error) {
+    logger.error({ error, user: user.id }, "Error adding medication alarm");
+    return { success: false, error: "Erro ao adicionar alarme." };
+  }
+}
+
+export async function updateMedicationAlarm(id: string, formData: FormData) {
+  const user = await getUserContext();
+  if (!user) throw new Error("Usuário não autenticado.");
+
+  if (!(await getOwnedAlarm(id, user.houseId))) {
+    return { success: false, error: "Alarme não encontrado." };
+  }
+
+  const medicationId = (formData.get("medicationId") as string)?.trim();
+  if (!(await getOwnedMedication(medicationId, user.houseId))) {
+    return { success: false, error: "Selecione um medicamento válido." };
+  }
+
+  const time = parseTime(formData.get("time"));
+  if (!time) return { success: false, error: "Informe o horário do alarme." };
+
+  const daysOfWeek = parseDaysOfWeek(formData);
+  if (daysOfWeek.length === 0) {
+    return { success: false, error: "Selecione pelo menos um dia da semana." };
+  }
+
+  try {
+    await healthRepository.updateAlarm(id, {
+      medicationId,
+      time,
+      daysOfWeek,
+      enabled: formData.get("enabled") !== "false",
+      note: (formData.get("note") as string)?.trim() || undefined,
+    });
+    revalidateHealth();
+    return { success: true };
+  } catch (error) {
+    logger.error({ error, alarmId: id }, "Error updating medication alarm");
+    return { success: false, error: "Erro ao atualizar alarme." };
+  }
+}
+
+export async function deleteMedicationAlarm(id: string) {
+  const user = await getUserContext();
+  if (!user) throw new Error("Usuário não autenticado.");
+
+  if (!(await getOwnedAlarm(id, user.houseId))) {
+    return { success: false, error: "Alarme não encontrado." };
+  }
+
+  try {
+    await healthRepository.deleteAlarm(id);
+    revalidateHealth();
+    return { success: true };
+  } catch (error) {
+    logger.error({ error, alarmId: id }, "Error deleting medication alarm");
+    return { success: false, error: "Erro ao excluir alarme." };
+  }
+}
+
+export async function deleteAlarmOccurrence(id: string) {
+  const user = await getUserContext();
+  if (!user) throw new Error("Usuário não autenticado.");
+
+  const occurrence = await healthRepository.findAlarmOccurrenceById(id);
+  if (!occurrence || occurrence.houseId !== user.houseId) {
+    return { success: false, error: "Alarme não encontrado." };
+  }
+
+  try {
+    await healthRepository.deleteAlarmOccurrence(id);
+    revalidateHealth();
+    return { success: true };
+  } catch (error) {
+    logger.error({ error, alarmId: id }, "Error deleting alarm occurrence");
+    return { success: false, error: "Erro ao excluir alarme." };
+  }
+}
+
+export async function toggleMedicationAlarm(id: string, enabled: boolean) {
+  const user = await getUserContext();
+  if (!user) throw new Error("Usuário não autenticado.");
+
+  if (!(await getOwnedAlarm(id, user.houseId))) {
+    return { success: false, error: "Alarme não encontrado." };
+  }
+
+  try {
+    await healthRepository.updateAlarm(id, { enabled });
+    revalidateHealth();
+    return { success: true };
+  } catch (error) {
+    logger.error({ error, alarmId: id }, "Error toggling medication alarm");
+    return { success: false, error: "Erro ao atualizar alarme." };
+  }
+}
+
 export async function toggleMedicationActive(id: string, active: boolean) {
   const user = await getUserContext();
   if (!user) throw new Error("Usuário não autenticado.");
@@ -240,6 +500,12 @@ export async function setDoseTaken(
     } else {
       await healthRepository.deleteDoseLog(medId, date, time);
     }
+    await healthRepository.updateAlarmOccurrenceStatus(
+      medId,
+      date,
+      time,
+      taken ? "taken" : "pending",
+    );
     revalidateHealth();
     return { success: true };
   } catch (error) {

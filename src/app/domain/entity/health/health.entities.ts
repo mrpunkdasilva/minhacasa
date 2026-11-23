@@ -30,6 +30,29 @@ export interface Medication extends BaseEntity {
   active: boolean;
 }
 
+/** Days use JavaScript weekday indexes: 0 = Sunday, 6 = Saturday. */
+export interface MedicationAlarm extends BaseEntity {
+  houseId: string;
+  medicationId: string;
+  time: string;
+  daysOfWeek: number[];
+  enabled: boolean;
+  note?: string;
+}
+
+export type AlarmOccurrenceStatus = "pending" | "taken" | "dismissed";
+
+/** A concrete, persisted alarm for one dose on one date and time. */
+export interface MedicationAlarmOccurrence extends BaseEntity {
+  houseId: string;
+  medicationId: string;
+  alarmId?: string;
+  date: string;
+  time: string;
+  status: AlarmOccurrenceStatus;
+  note?: string;
+}
+
 export interface DoseLog extends BaseEntity {
   medId: string;
   date: string;
